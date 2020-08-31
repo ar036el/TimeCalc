@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">TimeCalc</string>
+
+
+    <string name="calculator_digit_1">1</string>
+    <string name="calculator_digit_2">2</string>
+    <string name="calculator_digit_3">3</string>
+    <string name="calculator_digit_4">4</string>
+    <string name="calculator_digit_5">5</string>
+    <string name="calculator_digit_6">6</string>
+    <string name="calculator_digit_7">7</string>
+    <string name="calculator_digit_8">8</string>
+    <string name="calculator_digit_9">9</string>
+    <string name="calculator_digit_0">0</string>
+
+    <string name="calculator_groupingPrefix">,</string>
+
+    <string name="calculator_decimalPoint">.</string>
+
+    <string name="calculator_operator_plus">+</string>
+    <string name="calculator_operator_minus">-</string>
+    <string name="calculator_operator_multiplication">*</string>
+    <string name="calculator_operator_division">÷</string>
+    <string name="calculator_operator_percent">%</string>
+
+    <string name="calculator_bracket_opening">(</string>
+    <string name="calculator_bracket_closing">)</string>
+
+
+    <string name="calculator_equals">=</string>
+    <string name="calculator_clear">CE</string> <!--todo C or CE?-->
+
+
+
+    <string name="calculator_timeUnit_millisecond_abbrev">ms</string>
+    <string name="calculator_timeUnit_second_abbrev">sec</string>
+    <string name="calculator_timeUnit_minute_abbrev">min</string>
+    <string name="calculator_timeUnit_hour_abbrev">hr</string>
+    <string name="calculator_timeUnit_day_abbrev">day</string>
+    <string name="calculator_timeUnit_week_abbrev">wk</string>
+    <string name="calculator_timeUnit_month_abbrev">mo</string>
+    <string name="calculator_timeUnit_year_abbrev">yr</string>
+
+    <string name="calculator_timeUnit_millisecond_full">millis</string>
+    <string name="calculator_timeUnit_second_full">seconds</string>
+    <string name="calculator_timeUnit_minute_full">minutes</string>
+    <string name="calculator_timeUnit_hour_full">hours</string>
+    <string name="calculator_timeUnit_day_full">days</string>
+    <string name="calculator_timeUnit_week_full">weeks</string>
+    <string name="calculator_timeUnit_month_full">months</string>
+    <string name="calculator_timeUnit_year_full">years</string>
+
+    <string name="calculator_timeUnit_millisecond_title">Millisecond</string>
+    <string name="calculator_timeUnit_second_title">Second</string>
+    <string name="calculator_timeUnit_minute_title">Minute</string>
+    <string name="calculator_timeUnit_hour_title">Hour</string>
+    <string name="calculator_timeUnit_day_title">Day</string>
+    <string name="calculator_timeUnit_week_title">Week</string>
+    <string name="calculator_timeUnit_month_title">Month</string>
+    <string name="calculator_timeUnit_year_title">Year</string>
+
+
+
+
+
+</resources>
