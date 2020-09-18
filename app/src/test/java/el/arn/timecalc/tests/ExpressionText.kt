@@ -12,13 +12,13 @@ import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 
-class ExpressionTest {
+class ExpressionBuilderTest {
 
-    private var tester: Expression? = null
+    private var tester: ExpressionBuilder? = null
 
     @Before
     fun setUp() {
-        tester = ExpressionImpl()
+        tester = ExpressionBuilderImpl()
     }
 
     @After
@@ -30,13 +30,13 @@ class ExpressionTest {
     @Test
     fun sliceLegalNumberIntoItsNumberParts_test() {
 
-        fun Expression.sliceLegalNumberIntoItsNumberParts(expression: List<ExpressionToken>, fromIndex: Int, toIndex: Int): ExpressionImpl.NumberParts {
-            return (tester as ExpressionImpl).invokePrivateFunction("sliceLegalNumberIntoItsNumberParts", expression, fromIndex, toIndex)
+        fun ExpressionBuilder.sliceLegalNumberIntoItsNumberParts(expression: List<ExpressionToken>, fromIndex: Int, toIndex: Int): ExpressionBuilderImpl.NumberParts {
+            return (tester as ExpressionBuilderImpl).invokePrivateFunction("sliceLegalNumberIntoItsNumberParts", expression, fromIndex, toIndex)
         }
 
         fun testNumberToItsParts(number: String, decimalPart: String?, decimalPoint: Boolean, fractionalPart: String?) {
             val expression = toNumberExprTokenSequence(number)
-            val numberParts: ExpressionImpl.NumberParts = tester!!.sliceLegalNumberIntoItsNumberParts(expression, 0, expression.lastIndex)
+            val numberParts: ExpressionBuilderImpl.NumberParts = tester!!.sliceLegalNumberIntoItsNumberParts(expression, 0, expression.lastIndex)
 
             assertEquals(numberParts.decimalPart?.asString(), decimalPart)
             assertEquals(numberParts.decimalPoint?.decimalPoint?.asChar,  if (decimalPoint) '.' else null)
@@ -79,8 +79,8 @@ class ExpressionTest {
 
     @Test
     fun testGetAllNumbersInExpression_privateFunc() {
-        fun Expression.testGetAllNumbersInExpression(expression: List<ExpressionToken>): List<List<NumberExpressionToken>> {
-            return (tester as ExpressionImpl).invokePrivateFunction("getAllNumbersInExpression", expression)
+        fun ExpressionBuilder.testGetAllNumbersInExpression(expression: List<ExpressionToken>): List<List<NumberExpressionToken>> {
+            return (tester as ExpressionBuilderImpl).invokePrivateFunction("getAllNumbersInExpression", expression)
         }
         fun testNumbers(expression: String, vararg numbers: String) {
             val expression = toExprTokenSequence(expression)

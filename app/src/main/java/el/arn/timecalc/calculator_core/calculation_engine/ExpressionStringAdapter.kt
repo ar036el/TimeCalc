@@ -5,18 +5,19 @@ import el.arn.timecalc.stringFromRes
 import java.lang.StringBuilder
 
 interface ExpressionStringAdapter {
-    fun expressionAsString(): String
+    fun expressionToString(): String
+    //fun stringToExpression??? todo if needed..
     fun stringIndexToExpressionIndex(stringPosIndex: Int): Int
     fun expressionIndexToStringIndex(expressionPosIndex: Int): Int
-    fun updateStringResourceData()
-    var expression: Expression
+    fun updateStringResourceData() //todo don't forget to use it when changing language or when activity resumes or something..
+    var expressionBuilder: ExpressionBuilder
     var useTimeUnitsFullSuffix: Boolean
     var showGrouping: Boolean
 }
 
 
 class ExpressionStringAdapterImpl(
-    override var expression: Expression,
+    override var expressionBuilder: ExpressionBuilder,
     override var useTimeUnitsFullSuffix: Boolean,
     override var showGrouping: Boolean
 ): ExpressionStringAdapter {
@@ -24,8 +25,8 @@ class ExpressionStringAdapterImpl(
     private val symbolsWithStrings = mutableMapOf<Symbol, String>()
     private lateinit var groupingPrefixString: String
 
-    override fun expressionAsString(): String {
-        val expressionTokens = expression.expressionTokens
+    override fun expressionToString(): String {
+        val expressionTokens = expressionBuilder.expressionTokens
         val stringBuilder = StringBuilder()
 
         expressionTokens.forEach {
@@ -41,7 +42,7 @@ class ExpressionStringAdapterImpl(
         var expressionPosIndex = 0
         var totalCharsPassed = 0
 
-        for (exprToken in expression.expressionTokens) {
+        for (exprToken in expressionBuilder.expressionTokens) {
             if (exprToken is DigitExprToken && exprToken.hasGroupingPrefix && showGrouping) {
                 totalCharsPassed++
             }
@@ -57,7 +58,7 @@ class ExpressionStringAdapterImpl(
     override fun expressionIndexToStringIndex(expressionPosIndex: Int): Int {
         var stringPosIndex = 0
         for (i in 0 until expressionPosIndex ) {
-            val exprToken = expression.expressionTokens[i]
+            val exprToken = expressionBuilder.expressionTokens[i]
             stringPosIndex += symbolsWithStrings[exprToken.symbol]!!.length
             if (exprToken is DigitExprToken && exprToken.hasGroupingPrefix && showGrouping) {
                 stringPosIndex++

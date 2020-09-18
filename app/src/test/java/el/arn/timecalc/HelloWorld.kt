@@ -17,16 +17,16 @@ private fun exprTokenSequenceToString(exprTokens: List<ExpressionToken>): String
 
 
 fun main(args: Array<String>) {
-    val expression: Expression = ExpressionImpl()
+    val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
     var inputAction: InputAction? = null
     while (inputAction != InputAction.Quit) {
-        println(exprTokenSequenceToString(expression.expressionTokens))
+        println(exprTokenSequenceToString(expressionBuilder.expressionTokens))
         print("command: ")
         val stringInput = readLine()!!
         inputAction = getInputAction(stringInput)
         when (inputAction) {
-            is InputAction.Insert -> expression.insertSymbolAt(inputAction.symbol, expression.expressionTokens.lastIndex + 1)
-            is InputAction.Backspace -> expression.backspaceSymbolFrom(expression.expressionTokens.lastIndex + 1)
+            is InputAction.Insert -> expressionBuilder.insertSymbolAt(inputAction.symbol, expressionBuilder.expressionTokens.lastIndex + 1)
+            is InputAction.Backspace -> expressionBuilder.backspaceSymbolFrom(expressionBuilder.expressionTokens.lastIndex + 1)
         }
 
     }

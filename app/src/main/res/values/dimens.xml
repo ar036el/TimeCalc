@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="calculatorBottomLayoutHeight">380dp</dimen>
+
+
+<!--    todo special case: do it dp or sp???-->
+    <dimen name="expressionEditText_maxTextSize">20sp</dimen>
+    <dimen name="expressionEditText_minTextSize">10sp</dimen>
+
+</resources>

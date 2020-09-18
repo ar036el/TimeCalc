@@ -1,4 +1,4 @@
-package el.arn.timecalc.calculator_core.calculation_engine
+package el.arn.timecalc
 
 @Target(AnnotationTarget.FUNCTION)
 annotation class TestedPrivateFunctionWithNoSideEffects

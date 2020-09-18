@@ -1,10 +1,11 @@
 package el.arn.timecalc.calculator_core.calculation_engine
 
+import el.arn.timecalc.TestedPrivateFunctionWithNoSideEffects
 import el.arn.timecalc.listeners_engine.HoldsListeners
 import el.arn.timecalc.listeners_engine.ListenersManager
 import java.lang.NumberFormatException
 
-interface Expression : HoldsListeners<Expression.Listener> {
+interface ExpressionBuilder : HoldsListeners<ExpressionBuilder.Listener> {
 
     fun insertSymbolAt(symbol: Symbol, index: Int): InsertionAction
     fun backspaceSymbolFrom(index: Int)
@@ -28,9 +29,9 @@ interface Expression : HoldsListeners<Expression.Listener> {
 }
 
 
-class ExpressionImpl(
-    private val listenersMgr: ListenersManager<Expression.Listener> = ListenersManager()
-): Expression, HoldsListeners<Expression.Listener> by listenersMgr {
+class ExpressionBuilderImpl(
+    private val listenersMgr: ListenersManager<ExpressionBuilder.Listener> = ListenersManager()
+): ExpressionBuilder, HoldsListeners<ExpressionBuilder.Listener> by listenersMgr {
 
 
     override val expressionTokens: MutableList<ExpressionToken> = mutableListOf()
@@ -38,7 +39,7 @@ class ExpressionImpl(
     //todo private val expressionTokens to make this as the source of expression?
 
 
-    override fun insertSymbolAt(symbol: Symbol, index: Int): Expression.InsertionAction {
+    override fun insertSymbolAt(symbol: Symbol, index: Int): ExpressionBuilder.InsertionAction {
         isIndexValid(index)
 
         val tokenToInsert = createTokenFromSymbol(symbol)
@@ -46,19 +47,19 @@ class ExpressionImpl(
 
         val actionToApply = getInsertionActionForGivenInsertionState(tokenBefore, tokenToInsert, index, expressionTokens)
         when (actionToApply) {
-            Expression.InsertionAction.Add -> {
+            ExpressionBuilder.InsertionAction.Add -> {
                 expressionTokens.add(index, tokenToInsert)
                 updateGroupingForAllNumbers()
                 listenersMgr.notifyAll { it.exprTokenWasAddedAt(tokenToInsert, index) }
                 listenersMgr.notifyAll { it.expressionWasChanged() }
             }
-            Expression.InsertionAction.Replace -> {
+            ExpressionBuilder.InsertionAction.Replace -> {
                 val replaced = expressionTokens.set(index-1, tokenToInsert)
                 updateGroupingForAllNumbers()
                 listenersMgr.notifyAll { it.exprTokenWasReplacedAt(tokenToInsert, replaced, index-1) }
                 listenersMgr.notifyAll { it.expressionWasChanged() }
             }
-            Expression.InsertionAction.NoAction -> Unit //do nothing
+            ExpressionBuilder.InsertionAction.NoAction -> Unit //do nothing
         }
         return actionToApply
     }
@@ -92,57 +93,57 @@ class ExpressionImpl(
     }
 
     @TestedPrivateFunctionWithNoSideEffects //yeah?? sure??
-    private fun getInsertionActionForGivenInsertionState(tokenBefore: ExpressionToken?, tokenToInsert: ExpressionToken, insertAtIndex: Int, expression: List<ExpressionToken>): Expression.InsertionAction {
-        val action: Expression.InsertionAction
+    private fun getInsertionActionForGivenInsertionState(tokenBefore: ExpressionToken?, tokenToInsert: ExpressionToken, insertAtIndex: Int, expression: List<ExpressionToken>): ExpressionBuilder.InsertionAction {
+        val action: ExpressionBuilder.InsertionAction
 
         when (tokenToInsert) {
             is DigitExprToken -> {
-                action = Expression.InsertionAction.Add
+                action = ExpressionBuilder.InsertionAction.Add
             }
             is DecimalPointExprToken -> {
                 if (willPuttingADecimalPointAtThisIndexBreakANumber(insertAtIndex, expression)) {
-                    action = Expression.InsertionAction.NoAction
+                    action = ExpressionBuilder.InsertionAction.NoAction
                 } else {
-                    action = Expression.InsertionAction.Add
+                    action = ExpressionBuilder.InsertionAction.Add
                 }
             }
             is OperatorExprToken -> {
                 if (tokenBefore is OperatorExprToken) {
                     if (isTryingToPutAMinusBeforeAMultiplicativeOperation(tokenBefore, tokenToInsert)) {
-                        action = Expression.InsertionAction.Add
+                        action = ExpressionBuilder.InsertionAction.Add
                     } else {
-                        action = Expression.InsertionAction.Replace
+                        action = ExpressionBuilder.InsertionAction.Replace
                     }
                 } else if (tokenBefore == null) {
                     if (tokenToInsert.operator == Operator.Minus) {
-                        action = Expression.InsertionAction.Add
+                        action = ExpressionBuilder.InsertionAction.Add
                     } else {
-                        action = Expression.InsertionAction.NoAction
+                        action = ExpressionBuilder.InsertionAction.NoAction
                     }
                 } else {
-                    action = Expression.InsertionAction.Add
+                    action = ExpressionBuilder.InsertionAction.Add
                 }
             }
             is BracketExprToken -> {
                 if (tokenBefore == null && tokenToInsert.bracket == Bracket.Closing) {
-                    action = Expression.InsertionAction.NoAction
+                    action = ExpressionBuilder.InsertionAction.NoAction
                 } else if (tokenBefore is BracketExprToken) {
                     if (tokenToInsert.bracket == Bracket.Closing && tokenBefore.bracket == Bracket.Opening) {
-                        action = Expression.InsertionAction.NoAction
+                        action = ExpressionBuilder.InsertionAction.NoAction
                     } else {
-                        action = Expression.InsertionAction.Add
+                        action = ExpressionBuilder.InsertionAction.Add
                     }
                 } else {
-                    action = Expression.InsertionAction.Add
+                    action = ExpressionBuilder.InsertionAction.Add
                 }
             }
             is TimeUnitExprToken -> {
                 if (tokenBefore is NumberExpressionToken) {
-                    action = Expression.InsertionAction.Add
+                    action = ExpressionBuilder.InsertionAction.Add
                 } else if (tokenBefore is TimeUnitExprToken) {
-                    action = Expression.InsertionAction.Replace
+                    action = ExpressionBuilder.InsertionAction.Replace
                 } else {
-                    action = Expression.InsertionAction.NoAction
+                    action = ExpressionBuilder.InsertionAction.NoAction
                 }
             }
             else -> throw InternalError()

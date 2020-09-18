@@ -19,7 +19,7 @@
 
     <string name="calculator_operator_plus">+</string>
     <string name="calculator_operator_minus">-</string>
-    <string name="calculator_operator_multiplication">*</string>
+    <string name="calculator_operator_multiplication">×</string>
     <string name="calculator_operator_division">÷</string>
     <string name="calculator_operator_percent">%</string>
 

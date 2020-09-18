@@ -1,9 +1,6 @@
 package el.arn.timecalc
 
-import el.arn.timecalc.calculator_core.calculation_engine.Expression
-import el.arn.timecalc.calculator_core.calculation_engine.ExpressionImpl
-import el.arn.timecalc.calculator_core.calculation_engine.ExpressionStringAdapter
-import el.arn.timecalc.calculator_core.calculation_engine.ExpressionStringAdapterImpl
+import el.arn.timecalc.calculator_core.calculation_engine.*
 
 lateinit var appRoot: AppRoot
 //@AcraCore(
@@ -12,16 +9,17 @@ lateinit var appRoot: AppRoot
 //)
 class AppRoot : android.app.Application() {
 
-    lateinit var expression: Expression
-    lateinit var expressionStringAdapter: ExpressionStringAdapter
+    lateinit var calculatorCoordinator: CalculatorCoordinator
 
 
 
     override fun onCreate() {
         super.onCreate()
         appRoot = this
-        expression = ExpressionImpl()
-        expressionStringAdapter = ExpressionStringAdapterImpl(expression, false, true)
+
+
+        calculatorCoordinator = CalculatorCoordinatorImpl()
+
         initAllVars()
     }
 //

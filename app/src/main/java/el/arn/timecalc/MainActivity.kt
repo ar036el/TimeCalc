@@ -1,42 +1,52 @@
 package el.arn.timecalc
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.FrameLayout
+import el.arn.timecalc.buttons_drawerlike_layout.ButtonsContainerBottomPart
+import el.arn.timecalc.buttons_drawerlike_layout.ButtonsContainerBottomPartImpl
+import el.arn.timecalc.buttons_drawerlike_layout.ButtonsContainerTopPart
+import el.arn.timecalc.buttons_drawerlike_layout.ButtonsContainerTopPartImpl
 import el.arn.timecalc.calculator_core.calculation_engine.*
+import el.arn.timecalc.custom_views.CustomEditText
+import el.arn.timecalc.custom_views.EditTextFontAutosizeMaker
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var editText: EditText
-    private val expression = appRoot.expression
-    private val expressionStringAdapter = appRoot.expressionStringAdapter
+    private lateinit var editText: CustomEditText
+    private val expression = appRoot.calculatorCoordinator.expressionBuilder
+    private val expressionStringAdapter = appRoot.calculatorCoordinator.expressionStringAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         editText = findViewById(R.id.calculator_expressionDisplayEditText)
-        editText.showSoftInputOnFocus = false
-        expression.addListener(expressionListener)
-
+        editText.showSoftInputOnFocus = false //todo put this at class itself. test and see if not crash
 
         val backspaceButton: Button = findViewById(R.id.backspace)
         backspaceButton.setOnLongClickListener { expression.clearAll(); true}
         backspaceButton.setOnClickListener { expression.backspaceSymbolFrom(
             expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart)) }
+
+        initAll.grantOneAccess()
+
+
+        EditTextFontAutosizeMaker(
+            editText,
+            dimenFromRes(R.dimen.expressionEditText_minTextSize),
+            dimenFromRes(R.dimen.expressionEditText_maxTextSize)
+        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        expression.removeListener(expressionListener)
     }
 
-    fun onCalculatorSymbolButtonClick(view: View) {
+    fun onCalculatorButtonClick(view: View) {
         val symbolAsChar = view.tag.toString()
         if (symbolAsChar.length != 1) {
             throw InternalError()
@@ -53,40 +63,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val expressionListener = object: Expression.Listener {
-        override fun expressionWasCleared() {
-            editText.setText(expressionStringAdapter.expressionAsString(), TextView.BufferType.EDITABLE)
-        }
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
 
-        override fun exprTokenWasAddedAt(token: ExpressionToken, index: Int) {
-            editText.setText(expressionStringAdapter.expressionAsString(), TextView.BufferType.EDITABLE)
-            val a= expressionStringAdapter.expressionIndexToStringIndex(index+1)
-            editText.setSelection(a)
-        }
-
-        override fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int) {
-            editText.setText(expressionStringAdapter.expressionAsString(), TextView.BufferType.EDITABLE)
-            editText.setSelection(expressionStringAdapter.expressionIndexToStringIndex(index+1))
-        }
-
-        override fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int) {
-            editText.setText(expressionStringAdapter.expressionAsString(), TextView.BufferType.EDITABLE)
-            editText.setSelection(expressionStringAdapter.expressionIndexToStringIndex(index))
-        }
+        initAll.invokeIfHasAccess()
     }
-}
 
+    private val initAll = LimitedAccessFunction({
+        val buttonsContainerTopPart: ButtonsContainerTopPart = ButtonsContainerTopPartImpl(this)
+        val buttonsContainerBottomPart: ButtonsContainerBottomPart = ButtonsContainerBottomPartImpl(this)
 
-class CustomEditText : androidx.appcompat.widget.AppCompatEditText {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+        val swipeGestureHandler: SwipeGestureHandler = SwipeGestureHandlerImpl(
+            this,
+            findViewById(R.id.touchSurface),
+            findViewById(R.id.calculatorButtonsDrawerlikeLayout),
+            SwipeGestureHandler.Bound.Static,
+            SwipeGestureHandler.Bound.Range(buttonsContainerTopPart.minHeight, buttonsContainerTopPart.maxHeight),
+            PxPoint(0f, buttonsContainerTopPart.minHeight),
+            false,
+            1.1f
+        )
 
-    override fun onSelectionChanged(selStart: Int, selEnd: Int) {
-        val selStart = appRoot.expressionStringAdapter.expressionIndexToStringIndex(
-            appRoot.expressionStringAdapter.stringIndexToExpressionIndex(selStart))
-        val selEnd = appRoot.expressionStringAdapter.expressionIndexToStringIndex(
-            appRoot.expressionStringAdapter.stringIndexToExpressionIndex(selEnd))
-        setSelection(selStart, selEnd)
+        appRoot.calculatorCoordinator.setActivityComponents(this, editText, buttonsContainerTopPart, buttonsContainerBottomPart, swipeGestureHandler)
+
+    })
+
+    private fun attachClickEventsToAllDrawerLayoutButtons() {
+        //this is done in order to allow a non-consuming behaviour so the swipe-behaviour will be ok
+
+        val drawerLayout: FrameLayout = findViewById(R.id.calculatorButtonsDrawerlikeLayout)
+
+        val allButtonsYo = getAllButtonsInViewGroupDeeply(drawerLayout)
+
+        allButtonsYo.forEach {
+//            it.setOnClickListener()
+        }
+
     }
+
+    private fun getAllButtonsInViewGroupDeeply(viewGroup: ViewGroup): Set<Button> {
+        val buttons = mutableSetOf<Button>()
+        for (i in 0 until viewGroup.childCount) {
+            val child: View = viewGroup.getChildAt(i)
+            if (child is ViewGroup) {
+                buttons.addAll(getAllButtonsInViewGroupDeeply(child))
+            }
+            else if (child is Button) {
+                buttons.add(child)
+            }
+        }
+        return buttons
+    }
+
 }
