@@ -17,6 +17,13 @@ private fun exprTokenSequenceToString(exprTokens: List<ExpressionToken>): String
 
 
 fun main(args: Array<String>) {
+    val list = listOf(1,2,3,4,5)
+    println(list.allNext(3))
+    println(list.prev(5))
+}
+
+
+fun lalala() {
     val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
     var inputAction: InputAction? = null
     while (inputAction != InputAction.Quit) {

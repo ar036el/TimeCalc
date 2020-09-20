@@ -3,4 +3,21 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+
+    <color name="timeResultBlock_timeUnit">#E6FFFFFF</color>
+
+    <color name="timeResultBackground_millisecond">#008949</color>
+    <color name="timeResultBackground_second">#43A047</color>
+    <color name="timeResultBackground_minute">#7CB342</color>
+    <color name="timeResultBackground_hour">#C0CA33</color>
+    <color name="timeResultBackground_day">#FDD835</color>
+    <color name="timeResultBackground_week">#FFB300</color>
+    <color name="timeResultBackground_month">#FB8C00</color>
+    <color name="timeResultBackground_year">#FB7500</color>
+
+
 </resources>

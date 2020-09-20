@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/timeResultBlock_year_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_year"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_year_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_year_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_month"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_month_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_month"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_month_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_month_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_week"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_week_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_week"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_week_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_week_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_day"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_day_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_day"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_day_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_day_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_hour"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_hour_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_hour"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_hour_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_hour_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_minute"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_minute_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_minute"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_minute_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_minute_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_second"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_second_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_second"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/timeResultBlock_marginStart"
+        app:layout_constraintEnd_toStartOf="@id/timeResultBlock_second_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_second_resizeAnchor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_millisecond"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_millisecond_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timeResultBlock_millisecond"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+        layout="@layout/artifact_single_time_result"
+        android:id="@+id/timeResultBlock_millisecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/timeResultBlock_millisecond_resizeAnchor" />
+
+    <View
+        android:id="@+id/timeResultBlock_millisecond_resizeAnchor"
+        android:layout_width="10dp"
+        android:translationX="10dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/timeResultBlock_end_backgroundCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/timeResultBlock_millisecond"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

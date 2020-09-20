@@ -1,5 +1,7 @@
 package el.arn.timecalc.calculator_core.calculation_engine
 
+import java.lang.StringBuilder
+
 interface Number {
     fun plus(number: Number): Number
     fun minus(number: Number): Number
@@ -8,15 +10,21 @@ interface Number {
     fun percent(number: Number): Number
 
     fun toStringUnformatted(): String //todo toStringNoFormatting
+    fun toStringWithGroupingFormatting(): String
 
-    companion object {
+    companion object { //TODO it has also string res for all of this. what to do?
         const val ALL_INPUT_CHARS = "0123456789.-"
         const val SPECIAL_INPUT_CHARS = ".-"
         const val DIGITS = "0123456789"
         const val DECIMAL_POINT = '.'
         const val UNARY_MINUS = '-'
+        const val GROUPING_SYMBOL = ','
+        const val GROUP_EVERY_X_DIGITS = 3
+
     }
 }
+
+
 
 object NumberFactory { //todo should I use or is overkill? it's mainly for not instantiating 'impl's
     fun createNumber(numberAsString: String): Number = NumberImpl(numberAsString)
@@ -50,6 +58,28 @@ class NumberImpl(numberAsString: String) : Number {
         return numberAsString
     }
 
+    override fun toStringWithGroupingFormatting(): String {
+        val reversedNumber = numberAsString.reversed()
+
+        val startingLocation = reversedNumber.indexOf(Number.DECIMAL_POINT) + 1
+
+        val number = StringBuilder(numberAsString)
+
+        var count = 0
+        for (i in startingLocation until reversedNumber.lastIndex) {
+            if (!isDigit(reversedNumber[i+1])) {
+                break
+            }
+            count++
+            if (count % 3 == 0) {
+                number.insert(reversedNumber.length - i - 1, Number.GROUPING_SYMBOL)
+            }
+        }
+
+        return number.toString()
+    }
+
+    private fun isDigit(char: Char) = Number.DIGITS.contains(char)
 
     private fun checkIfNumberIsOk(numberAsString: String) {
         if (numberAsString.isEmpty()) {

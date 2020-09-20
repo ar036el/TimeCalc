@@ -253,9 +253,7 @@ class SwipeGestureHandlerImpl(
     private fun doOnTouch(motionEvent: MotionEvent) {
         gestureDetector.onTouchEvent(motionEvent)
         additionalGestureDetector?.onTouchEvent(motionEvent)
-        println("hahaha")
         if (motionEvent.action == MotionEvent.ACTION_UP) {
-            println("hahahaNO")
             onTouchSubjectPress = false
             if (!flingAnimationX.isRunning && !flingAnimationY.isRunning) {
                 changeSwipeStateAndNotifyChangeIfAny(SwipeGestureHandler.SwipeState.Static)

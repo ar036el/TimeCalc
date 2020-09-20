@@ -1,11 +1,24 @@
 package el.arn.timecalc.calculator_core.calculation_engine
 
+import el.arn.timecalc.TimeVariable
+
 interface Result
 
 interface ErrorResult : Result
 
 class CantDivideBy0 : ErrorResult
 class BadFormula : ErrorResult
+
+class TimeResult(
+    millis: Long = 0,
+    seconds: Long = 0,
+    minutes: Long = 0,
+    hours: Long = 0,
+    days: Long = 0,
+    weeks: Long = 0,
+    months: Long = 0,
+    years: Long = 0,
+) : TimeVariable<Long>(millis, seconds, minutes, hours, days, weeks, months, years), Result
 
 //data class NumberResult(val result: NumberFormulaFragment) : Result
 //

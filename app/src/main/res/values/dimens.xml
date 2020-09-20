@@ -8,4 +8,11 @@
     <dimen name="expressionEditText_maxTextSize">20sp</dimen>
     <dimen name="expressionEditText_minTextSize">10sp</dimen>
 
+    <dimen name="timeResult_number">18sp</dimen>
+    <dimen name="timeResult_timeUnit">12sp</dimen>
+
+    <dimen name="timeResultBlock_marginStart">6dp</dimen>
+
+
+
 </resources>

@@ -23,7 +23,7 @@ class BigDecimalEngineTest {
     }
 
     @Test
-    fun createNumbersOfDifferentKinds() {
+    fun createNumbersOfDifferentKinds_toStringUnformatted() {
         fun testNumberAsPositiveAndNegative(positiveNumberAsString: String) {
             val negativeNumberAsString = "-$positiveNumberAsString"
             tester = NumberImpl(positiveNumberAsString)
@@ -166,4 +166,34 @@ class BigDecimalEngineTest {
         testIllegalNumber("1555555.....---....55555555555...............555")
 
     }
+
+
+    @Test
+    fun toStringWithGrouping() {
+        fun testNumber(input: String, output: String) {
+            tester = NumberImpl(input)
+            assertEquals(output, tester!!.toStringWithGroupingFormatting())
+        }
+
+
+        testNumber("1333", "1,333")
+        testNumber("133", "133")
+        testNumber("-133", "-133")
+        testNumber("-133.", "-133.")
+        testNumber("-1333", "-1,333")
+        testNumber("1333.", "1,333.")
+        testNumber("1333.00000", "1,333.00000")
+        testNumber("13333333333.00000", "13,333,333,333.00000")
+        testNumber("-13333333333.00000", "-13,333,333,333.00000")
+        testNumber("-.1333333333300000", "-.1333333333300000")
+        testNumber("-111.1333333333300000", "-111.1333333333300000")
+        testNumber("-1111.1333333333300000", "-1,111.1333333333300000")
+        testNumber("-11111.1333333333300000", "-11,111.1333333333300000")
+        testNumber("-111111.1333333333300000", "-111,111.1333333333300000")
+        testNumber("-1111111.1333333333300000", "-1,111,111.1333333333300000")
+        testNumber("1111111.1333333333300000", "1,111,111.1333333333300000")
+        testNumber("111111111111111", "111,111,111,111,111")
+        testNumber("000000000000000", "000,000,000,000,000") //todo "000000000000000" cannot bring "000,000,000,000,000"
+    }
+
 }

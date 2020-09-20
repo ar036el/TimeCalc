@@ -1,5 +1,10 @@
 package el.arn.timecalc.calculator_core.calculation_engine
 
+import el.arn.timecalc.allNext
+import el.arn.timecalc.allPrev
+import el.arn.timecalc.next
+import el.arn.timecalc.prev
+
 interface Symbol { //todo change to class I think
     val asChar: Char
     enum class Types { Digit, DecimalPoint, Operator, Bracket, TimeUnit }
@@ -94,10 +99,15 @@ sealed class TimeUnit(override val asChar: Char): Symbol {
                 Week.asChar -> Week
                 Month.asChar -> Month
                 Year.asChar -> Year
-                else -> throw NoSuchElementException()
+                else -> throw NoSuchElementException("char[$char]")
             }
         }
+        val asList: List<TimeUnit> by lazy { listOf(Milli, Second, Minute, Hour, Day, Week, Month, Year) }
     }
+    fun next() = asList.next(this)
+    fun allNext() = asList.allNext(this)
+    fun prev() = asList.prev(this)
+    fun allPrev() = asList.allPrev(this)
 }
 
 
