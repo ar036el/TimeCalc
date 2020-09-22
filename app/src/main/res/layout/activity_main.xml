@@ -33,49 +33,49 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="l"
             android:text="@string/calculator_timeUnit_millisecond_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="s"
             android:text="@string/calculator_timeUnit_second_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="m"
             android:text="@string/calculator_timeUnit_minute_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="h"
             android:text="@string/calculator_timeUnit_hour_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="d"
             android:text="@string/calculator_timeUnit_day_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="w"
             android:text="@string/calculator_timeUnit_week_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="o"
             android:text="@string/calculator_timeUnit_month_abbrev" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCalculatorButtonClick"
+            android:onClick="onCalculatorSymbolButtonClick"
             android:tag="y"
             android:text="@string/calculator_timeUnit_year_abbrev" />
 
@@ -101,63 +101,63 @@
                 android:id="@+id/digit1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="1"
                 android:text="1" />
             <Button
                 android:id="@+id/digit2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="2"
                 android:text="2" />
             <Button
                 android:id="@+id/digit3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="3"
                 android:text="3" />
             <Button
                 android:id="@+id/digit4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="4"
                 android:text="4" />
             <Button
                 android:id="@+id/digit5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="5"
                 android:text="5" />
             <Button
                 android:id="@+id/digit6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="6"
                 android:text="6" />
             <Button
                 android:id="@+id/digit7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="7"
                 android:text="7" />
             <Button
                 android:id="@+id/digit8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="8"
                 android:text="8" />
             <Button
                 android:id="@+id/digit9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="9"
                 android:text="9" />
             <Button
@@ -169,14 +169,14 @@
                 android:id="@+id/digit0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="0"
                 android:text="0" />
             <Button
                 android:id="@+id/decimalPoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="."
                 android:text="." />
 
@@ -190,43 +190,43 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="("
                 android:text="@string/calculator_bracket_opening" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag=")"
                 android:text="@string/calculator_bracket_closing" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="+"
                 android:text="@string/calculator_operator_plus" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="-"
                 android:text="@string/calculator_operator_minus" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="*"
                 android:text="@string/calculator_operator_multiplication" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="/"
                 android:text="@string/calculator_operator_division" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCalculatorButtonClick"
+                android:onClick="onCalculatorSymbolButtonClick"
                 android:tag="%"
                 android:text="@string/calculator_operator_percent" />
             <Button

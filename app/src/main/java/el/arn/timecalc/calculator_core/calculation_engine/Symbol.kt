@@ -56,17 +56,18 @@ object DecimalPoint : Symbol {
     }
 }
 
-enum class Operator(override val asChar: Char): Symbol {
-    Plus('+'),
-    Minus('-'),
-    Multiplication('*'),
-    Division('/'),
-    Percent('%');
+enum class Operator(override val asChar: Char, val type: Types): Symbol {
+    Plus('+', Types.Additive),
+    Minus('-', Types.Additive),
+    Multiplication('*', Types.Multiplicative),
+    Division('/', Types.Multiplicative),
+    Percent('%', Types.Multiplicative);
     companion object {
         fun charOf(char: Char): Operator {
             return values().firstOrNull { it.asChar == char } ?: throw NoSuchElementException()
         }
     }
+    enum class Types { Additive, Multiplicative }
 }
 
 enum class Bracket(override val asChar: Char) : Symbol {

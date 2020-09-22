@@ -1,7 +1,7 @@
 package el.arn.timecalc.tests
 
-import el.arn.timecalc.calculator_core.calculation_engine.Number
-import el.arn.timecalc.calculator_core.calculation_engine.NumberImpl
+import el.arn.timecalc.calculator_core.calculation_engine.Num
+import el.arn.timecalc.calculator_core.calculation_engine.NumImpl
 import org.junit.Test
 import org.junit.After
 import org.junit.Assert.*
@@ -10,7 +10,7 @@ import java.lang.NumberFormatException
 
 class BigDecimalEngineTest {
 
-    private var tester: Number? = null
+    private var tester: Num? = null
 
 //    @Before
 //    fun setUp() {
@@ -26,13 +26,13 @@ class BigDecimalEngineTest {
     fun createNumbersOfDifferentKinds_toStringUnformatted() {
         fun testNumberAsPositiveAndNegative(positiveNumberAsString: String) {
             val negativeNumberAsString = "-$positiveNumberAsString"
-            tester = NumberImpl(positiveNumberAsString)
+            tester = NumImpl(positiveNumberAsString)
             assertEquals(positiveNumberAsString, tester!!.toStringUnformatted())
-            tester = NumberImpl(negativeNumberAsString)
+            tester = NumImpl(negativeNumberAsString)
             assertEquals(negativeNumberAsString, tester!!.toStringUnformatted())
         }
         fun testNumber(numberAsString: String, expected: String? = null) {
-            tester = NumberImpl(numberAsString)
+            tester = NumImpl(numberAsString)
             assertEquals(expected ?: numberAsString, tester!!.toStringUnformatted())
         }
 
@@ -94,7 +94,7 @@ class BigDecimalEngineTest {
     fun createIllegalNumbers() {
         fun testIllegalNumber(numberAsString: String) {
             try {
-                tester = NumberImpl(numberAsString)
+                tester = NumImpl(numberAsString)
                 fail("suppose to throw ${NumberFormatException::class}")
             } catch (e: NumberFormatException) {
                 assertTrue(true)
@@ -171,7 +171,7 @@ class BigDecimalEngineTest {
     @Test
     fun toStringWithGrouping() {
         fun testNumber(input: String, output: String) {
-            tester = NumberImpl(input)
+            tester = NumImpl(input)
             assertEquals(output, tester!!.toStringWithGroupingFormatting())
         }
 

@@ -5,19 +5,20 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/timeResultBlock_container1"
-        android:layout_width="20dp"
+        android:id="@+id/timeResultBlock_resizableContainer"
+        android:layout_width="45dp"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/timeResultBlock_container2"
-            android:layout_width="40dp"
+            android:layout_width="@dimen/timeResultBlock_middleContainerMaxWidth"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/timeResultBlock_container3"
+                android:paddingEnd="@dimen/timeResultBlock_layoutPaddingStart"
+                android:id="@+id/timeResultBlock_fixedSizeContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -36,10 +37,10 @@
                     android:background="@color/timeResultBackground_day"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="1dp">
+                    android:padding="@dimen/timeResultBlock_backgroundStroke">
 
                     <TextView
-                        android:id="@+id/timeResultBlock_number"
+                        android:id="@+id/timeResultBlock_numberTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/timeResultBlock_timeUnit"
@@ -47,7 +48,7 @@
                         android:maxLines="1"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:text="300"
+                        android:text="301"
                         android:textSize="@dimen/timeResult_number" />
 
                     <TextView

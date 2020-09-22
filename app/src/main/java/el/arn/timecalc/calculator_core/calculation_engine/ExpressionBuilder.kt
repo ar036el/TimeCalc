@@ -265,7 +265,7 @@ class ExpressionBuilderImpl(
             val asReversed = getDecimalPartOfANumber(number).reversed()
             var counter = 1
             for (index in 0..asReversed.lastIndex) {
-                val hasGroupingPrefix = ((index+1) % Number.GROUP_EVERY_X_DIGITS == 0 && index != asReversed.lastIndex)
+                val hasGroupingPrefix = ((index+1) % Num.GROUP_EVERY_X_DIGITS == 0 && index != asReversed.lastIndex)
                 asReversed[index].hasGroupingPrefix = hasGroupingPrefix
             }
             number.forEach{ it.isLegalNumber = true }

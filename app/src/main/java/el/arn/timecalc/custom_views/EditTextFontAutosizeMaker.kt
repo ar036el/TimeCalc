@@ -3,6 +3,7 @@ package el.arn.timecalc.custom_views
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import el.arn.timecalc.android_extensions.doWhenDynamicVariablesAreReady
+import el.arn.timecalc.measureTextWidth
 import el.arn.timecalc.pxToSp
 import kotlin.math.max
 import kotlin.math.min
@@ -22,7 +23,7 @@ class EditTextFontAutosizeMaker(
     }
 
     private fun updateTextSize() {
-        val currentTextWidth = editText.paint.measureText(editText.text, 0, editText.text.length)
+        val currentTextWidth = editText.measureTextWidth()
         if (currentTextWidth != 0f) {
             val resizeTextBy = textWidthThreshold / currentTextWidth
             var newTextSize = pxToSp(editText.textSize) * resizeTextBy

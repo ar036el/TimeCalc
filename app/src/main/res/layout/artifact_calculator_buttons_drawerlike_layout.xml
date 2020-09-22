@@ -32,48 +32,46 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
-                    android:id="@+id/backspace"
+                    android:id="@+id/calculator_actionButton_backspace"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="CE"
+                    android:text="bsp"
                     android:textSize="20sp" />
-                <!--                android:onClick="onCalculatorButtonClick" todo needs to use this-->
-                <!--                android:tag="c"-->
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="7"
-                    android:text="7"
+                    android:text="@string/calculator_digit_7"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="4"
-                    android:text="4"
+                    android:text="@string/calculator_digit_4"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="1"
-                    android:text="1"
+                    android:text="@string/calculator_digit_1"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="."
-                    android:text="."
+                    android:text="@string/calculator_decimalPoint"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -90,45 +88,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="("
-                    android:text="("
+                    android:text="@string/calculator_bracket_opening"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="8"
-                    android:text="8"
+                    android:text="@string/calculator_digit_8"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="5"
-                    android:text="5"
+                    android:text="@string/calculator_digit_5"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="2"
-                    android:text="2"
+                    android:text="@string/calculator_digit_2"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="0"
-                    android:text="0"
+                    android:text="@string/calculator_digit_0"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -145,45 +143,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag=")"
-                    android:text=")"
+                    android:text="@string/calculator_bracket_closing"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="9"
-                    android:text="9"
+                    android:text="@string/calculator_digit_9"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="6"
-                    android:text="6"
+                    android:text="@string/calculator_digit_6"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="3"
-                    android:text="3"
+                    android:text="@string/calculator_digit_3"
                     android:textSize="20sp" />
 
                 <Button
+                    android:id="@+id/calculator_actionButton_equals"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
-                    android:tag="="
-                    android:text="="
+                    android:text="@string/calculator_equals"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -200,25 +197,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="+"
-                    android:text="+"
+                    android:text="@string/calculator_operator_plus"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="-"
-                    android:text="-"
+                    android:text="@string/calculator_operator_minus"
                     android:textSize="20sp" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="*"
                     android:text="@string/calculator_operator_multiplication"
                     android:textSize="20sp" />
@@ -227,7 +224,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="/"
                     android:text="@string/calculator_operator_division"
                     android:textSize="20sp" />
@@ -236,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="%"
                     android:text="@string/calculator_operator_percent"
                     android:textSize="20sp" />
@@ -263,7 +260,7 @@
                     android:id="@+id/timeUnitButtonMillisecond"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onCalculatorButtonClick"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="l"
                     android:text="milli" />
 
@@ -276,7 +273,7 @@
                         android:id="@+id/timeUnitButtonDay1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="d"
                         android:text="day"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonHour"
@@ -287,7 +284,7 @@
                         android:id="@+id/timeUnitButtonHour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="h"
                         android:text="hour"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonMinute"
@@ -298,7 +295,7 @@
                         android:id="@+id/timeUnitButtonMinute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="m"
                         android:text="minute"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonSecond"
@@ -309,7 +306,7 @@
                         android:id="@+id/timeUnitButtonSecond"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="s"
                         android:text="second"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -337,7 +334,7 @@
                         android:id="@+id/timeUnitButtonYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="y"
                         android:text="year"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonMonth"
@@ -348,7 +345,7 @@
                         android:id="@+id/timeUnitButtonMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="o"
                         android:text="month"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonWeek"
@@ -359,7 +356,7 @@
                         android:id="@+id/timeUnitButtonWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="w"
                         android:text="week"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonDay2"
@@ -370,7 +367,7 @@
                         android:id="@+id/timeUnitButtonDay2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="onCalculatorButtonClick"
+                        android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="d"
                         android:text="day"
                         app:layout_constraintEnd_toEndOf="parent"

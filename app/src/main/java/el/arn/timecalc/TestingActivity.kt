@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import el.arn.timecalc.calculator_core.calculation_engine.TimeResult
 import el.arn.timecalc.calculator_core.calculation_engine.TimeUnit
+import el.arn.timecalc.calculator_core.calculation_engine.millisToTimeVariable
+import el.arn.timecalc.calculator_core.calculation_engine.timeVariableToMillis
 import java.util.*
 
 class TestingActivity : AppCompatActivity() {
@@ -14,8 +16,8 @@ class TestingActivity : AppCompatActivity() {
 
         val timeResultLayout = TimeResultLayout(
             findViewById(R.id.time_result),
-            TimeResult(1, 2, 3, 4, 5, 6, 7, 177)
-        )
+            TimeResult(
+                millisToTimeVariable(timeVariableToMillis(TimeVariable(0, 0, 0, 14, 5, 0, 0, 0)))))
 //
 //        var percent = 0
 //        Timer().scheduleAtFixedRate(object : TimerTask() {

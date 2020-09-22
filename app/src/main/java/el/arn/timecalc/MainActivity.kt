@@ -27,11 +27,8 @@ class MainActivity : AppCompatActivity() {
         editText = findViewById(R.id.calculator_expressionDisplayEditText)
         editText.showSoftInputOnFocus = false //todo put this at class itself. test and see if not crash
 
-        val backspaceButton: Button = findViewById(R.id.backspace)
-        backspaceButton.setOnLongClickListener { expression.clearAll(); true}
-        backspaceButton.setOnClickListener { expression.backspaceSymbolFrom(
-            expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart)) }
 
+        initCalculatorActionButtons()
         initAll.grantOneAccess()
 
 
@@ -46,21 +43,41 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun onCalculatorButtonClick(view: View) {
-        val symbolAsChar = view.tag.toString()
-        if (symbolAsChar.length != 1) {
-            throw InternalError()
-        }
-        expression.insertSymbolAt(Symbol.charOf(symbolAsChar[0]),
-            expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart))
+    fun onCalculatorSymbolButtonClick(view: View) {
+        val selectedSymbol = Symbol.charOf(view.getTagAsChar())
+        expression.insertSymbolAt(selectedSymbol, getExpressionCurrentLocation())
     }
 
-    fun onCalculatorActionButtonClick(view: View) {
-        when(view.tag) {
-            "backspace" -> expression.backspaceSymbolFrom(
-                expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart))
-            else -> TODO("not yet implemented")
+    private fun initCalculatorActionButtons() {
+
+        //backspace button
+        val backspaceButton: Button = findViewById(R.id.calculator_actionButton_backspace)
+        backspaceButton.setOnLongClickListener {
+            expression.clearAll(); true
         }
+        backspaceButton.setOnClickListener {
+            expression.backspaceSymbolFrom(getExpressionCurrentLocation())
+        }
+
+        //equals button
+        val equalsButton: Button = findViewById(R.id.calculator_actionButton_equals)
+        equalsButton.setOnClickListener {
+            println("ahahahahahha")
+            true
+        }
+    }
+
+
+    private fun View.getTagAsChar(): Char {
+        val asString = tag.toString()
+        if (asString.length != 1) {
+            throw InternalError()
+        }
+        return asString[0]
+    }
+
+    private fun getExpressionCurrentLocation(): Int {
+        return expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

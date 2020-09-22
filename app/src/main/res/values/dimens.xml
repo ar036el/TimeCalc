@@ -11,7 +11,9 @@
     <dimen name="timeResult_number">18sp</dimen>
     <dimen name="timeResult_timeUnit">12sp</dimen>
 
-    <dimen name="timeResultBlock_marginStart">6dp</dimen>
+    <dimen name="timeResultBlock_layoutPaddingStart">6dp</dimen>
+    <dimen name="timeResultBlock_middleContainerMaxWidth">3000dp</dimen>
+    <dimen name="timeResultBlock_backgroundStroke">1dp</dimen>
 
 
 

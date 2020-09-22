@@ -19,12 +19,12 @@ object TimeUnitConverter {
     private const val millisInMonth = millisInWeek * WEEKS_IN_MONTH
     private const val millisInYear = millisInMonth * MONTHS_IN_YEARS
 
-    fun convert(num: Long, from: TimeUnit, to: TimeUnit): Double {
-        return toMillis(num, from).toDouble() / toMillis(1, to)
+    fun convert(num: Num, from: TimeUnit, to: TimeUnit): Num {
+        return toMillis(num, from) / toMillis(toNum(1), to)
     }
 
-    private fun toMillis(num: Long, timeUnit: TimeUnit): Long {
-        return when (timeUnit) {
+    private fun toMillis(num: Num, timeUnit: TimeUnit): Num {
+        val factor = when (timeUnit) {
             is TimeUnit.Milli -> 1
             is TimeUnit.Second -> millisInSec
             is TimeUnit.Minute -> millisInMin
@@ -33,7 +33,8 @@ object TimeUnitConverter {
             is TimeUnit.Week -> millisInWeek
             is TimeUnit.Month -> millisInMonth
             is TimeUnit.Year -> millisInYear
-        } * num
+        }
+        return num * toNum(factor)
     }
 }
 

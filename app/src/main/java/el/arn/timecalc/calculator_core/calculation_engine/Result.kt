@@ -7,43 +7,49 @@ interface Result
 interface ErrorResult : Result
 
 class CantDivideBy0 : ErrorResult
+class CantMultiplyTimeQuantities : ErrorResult
 class BadFormula : ErrorResult
 
-class TimeResult(
-    millis: Long = 0,
-    seconds: Long = 0,
-    minutes: Long = 0,
-    hours: Long = 0,
-    days: Long = 0,
-    weeks: Long = 0,
-    months: Long = 0,
-    years: Long = 0,
-) : TimeVariable<Long>(millis, seconds, minutes, hours, days, weeks, months, years), Result
+data class TimeResult(val timeVariable: TimeVariable<Num>): Result
 
-//data class NumberResult(val result: NumberFormulaFragment) : Result
-//
-//data class TimeResult(
-//    val millis: TimeFormulaFragment<TimeUnit.Milli>? = null,
-//    val seconds: TimeFormulaFragment<TimeUnit.Second>? = null,
-//    val minutes: TimeFormulaFragment<TimeUnit.Minute>? = null,
-//    val hours: TimeFormulaFragment<TimeUnit.Hour>? = null,
-//    val days: TimeFormulaFragment<TimeUnit.Day>? = null,
-//    val weeks: TimeFormulaFragment<TimeUnit.Week>? = null,
-//    val months: TimeFormulaFragment<TimeUnit.Month>? = null,
-//    val years: TimeFormulaFragment<TimeUnit.Year>? = null,
-//) : Result {
-//    val asList = createList()
-//
-//    private fun createList(): List<TimeFormulaFragment<out TimeUnit>> {
-//        val list = mutableListOf<TimeFormulaFragment<out TimeUnit>>()
-//        millis?.let { list.add(it) }
-//        seconds?.let { list.add(it) }
-//        minutes?.let { list.add(it) }
-//        hours?.let { list.add(it) }
-//        days?.let { list.add(it) }
-//        weeks?.let { list.add(it) }
-//        months?.let { list.add(it) }
-//        years?.let { list.add(it) }
-//        return list.toList()
-//    }
-//}
+data class NumberResult(val number: Num) : Result
+
+data class MixedResult(val number: Num, val time: TimeVariable<Num>): Result
+
+
+
+
+
+fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num> {
+    return TimeVariable(
+        years = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Year),
+        months = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Month) % toNum(MONTHS_IN_YEARS),
+        weeks = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Week) % toNum(WEEKS_IN_MONTH),
+        days = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Day) % toNum(DAYS_IN_WEEK),
+        hours = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Hour) % toNum(HOURS_IN_DAY),
+        minutes = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Minute) % toNum(MINS_IN_HOUR),
+        seconds = TimeUnitConverter.convert(totalMillis, TimeUnit.Milli, TimeUnit.Second) % toNum(SECS_IN_MIN),
+        millis = totalMillis % toNum(MILLIS_IN_SEC)
+    )
+}
+@JvmName("timeVariableToMillis1")
+fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num {
+    return TimeUnitConverter.convert(timeVariable.years, TimeUnit.Year, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.months, TimeUnit.Month, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.weeks, TimeUnit.Month, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.days, TimeUnit.Week, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.hours, TimeUnit.Day, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.minutes, TimeUnit.Hour, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.seconds, TimeUnit.Minute, TimeUnit.Milli) +
+            TimeUnitConverter.convert(timeVariable.millis, TimeUnit.Second, TimeUnit.Milli)
+}
+fun timeVariableToMillis(timeVariable: TimeVariable<Number>): Num {
+    return TimeUnitConverter.convert(toNum(timeVariable.years), TimeUnit.Year, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.months), TimeUnit.Month, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.weeks), TimeUnit.Month, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.days), TimeUnit.Week, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.hours), TimeUnit.Day, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.minutes), TimeUnit.Hour, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.seconds), TimeUnit.Minute, TimeUnit.Milli) +
+            TimeUnitConverter.convert(toNum(timeVariable.millis), TimeUnit.Second, TimeUnit.Milli)
+}

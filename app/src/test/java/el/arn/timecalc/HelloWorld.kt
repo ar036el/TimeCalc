@@ -15,11 +15,62 @@ private fun exprTokenSequenceToString(exprTokens: List<ExpressionToken>): String
     return strBuilder.toString()
 }
 
+fun stringToExpressionTokens(string: String): List<ExpressionToken> {
+    val expressionTokens = mutableListOf<ExpressionToken>()
+    string.forEach { char ->
+        val expressionToken = when {
+            Digit.values().map { it.asChar }.contains(char) -> DigitExprToken(Digit.charOf(char), false, true)
+            DecimalPoint.asChar == char -> DecimalPointExprToken(true)
+            Operator.values().map { it.asChar }.contains(char) -> OperatorExprToken(Operator.charOf(char))
+            Bracket.values().map { it.asChar }.contains(char) -> BracketExprToken(Bracket.charOf(char))
+            TimeUnit.asList.map { it.asChar }.contains(char) -> TimeUnitExprToken(TimeUnit.charOf(char))
+            else -> throw NotImplementedError()
+        }
+        expressionTokens.add(expressionToken)
+    }
+    return expressionTokens.toList()
+}
+
 
 fun main(args: Array<String>) {
-    val list = listOf(1,2,3,4,5)
-    println(list.allNext(3))
-    println(list.prev(5))
+    val resultBuilder: ResultBuilder = ResultBuilderImpl()
+
+    val tokens = stringToExpressionTokens("14y(3+1)+1m")
+
+    val result = resultBuilder.build(tokens)
+
+    when (result) {
+        is NumberResult -> println("NumberResult: ${result.number.toStringWithGroupingFormatting()}")
+        is TimeResult -> {
+            println("TimeResult: ${timeVariableToMillis(result.timeVariable)} total millis")
+            println("years: ${result.timeVariable.years}")
+            println("months: ${result.timeVariable.months}")
+            println("weeks: ${result.timeVariable.weeks}")
+            println("days: ${result.timeVariable.days}")
+            println("hours: ${result.timeVariable.hours}")
+            println("minutes: ${result.timeVariable.minutes}")
+            println("seconds: ${result.timeVariable.seconds}")
+            println("milliseconds: ${result.timeVariable.millis}")
+        }
+        is MixedResult -> {
+            println("MixedResult:")
+            println("Number: ${result.number.toStringWithGroupingFormatting()}")
+            println("Time: ${timeVariableToMillis(result.time)} total millis")
+            println("years: ${result.time.years}")
+            println("months: ${result.time.months}")
+            println("weeks: ${result.time.weeks}")
+            println("days: ${result.time.days}")
+            println("hours: ${result.time.hours}")
+            println("minutes: ${result.time.minutes}")
+            println("seconds: ${result.time.seconds}")
+            println("milliseconds: ${result.time.millis}")
+        }
+        is ErrorResult -> {
+            println("ErrorResult: $result")
+        }
+        else -> throw InternalError()
+
+    }
 }
 
 
