@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/holo_green_dark">
 
-    <el.arn.timecalc.custom_views.TouchSurfaceConstraintLayout
+    <el.arn.timecalc.mainActivity.ui.swipeGestureHandler.TouchSurfaceConstraintLayout
         android:id="@+id/touchSurface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -398,6 +398,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </el.arn.timecalc.custom_views.TouchSurfaceConstraintLayout>
+    </el.arn.timecalc.mainActivity.ui.swipeGestureHandler.TouchSurfaceConstraintLayout>
 
 </LinearLayout>

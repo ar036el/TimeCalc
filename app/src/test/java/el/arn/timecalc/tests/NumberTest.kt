@@ -1,7 +1,7 @@
 package el.arn.timecalc.tests
 
-import el.arn.timecalc.calculator_core.calculation_engine.Num
-import el.arn.timecalc.calculator_core.calculation_engine.NumImpl
+import el.arn.timecalc.calculation_engine.atoms.Num
+import el.arn.timecalc.calculation_engine.atoms.NumImpl
 import org.junit.Test
 import org.junit.After
 import org.junit.Assert.*
@@ -194,6 +194,17 @@ class BigDecimalEngineTest {
         testNumber("1111111.1333333333300000", "1,111,111.1333333333300000")
         testNumber("111111111111111", "111,111,111,111,111")
         testNumber("000000000000000", "000,000,000,000,000") //todo "000000000000000" cannot bring "000,000,000,000,000"
+
+
+
+        //todo put this in another
+
+        tester = NumImpl("111111.232")
+        assertEquals("111111", tester!!.floor().toStringUnformatted())
+
+
+
+
     }
 
 }

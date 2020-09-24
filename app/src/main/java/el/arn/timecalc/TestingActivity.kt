@@ -2,11 +2,10 @@ package el.arn.timecalc
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import el.arn.timecalc.calculator_core.calculation_engine.TimeResult
-import el.arn.timecalc.calculator_core.calculation_engine.TimeUnit
-import el.arn.timecalc.calculator_core.calculation_engine.millisToTimeVariable
-import el.arn.timecalc.calculator_core.calculation_engine.timeVariableToMillis
-import java.util.*
+import el.arn.timecalc.calculation_engine.atoms.TimeExpression
+import el.arn.timecalc.calculation_engine.result.TimeResult
+import el.arn.timecalc.calculation_engine.atoms.toNum
+import el.arn.timecalc.mainActivity.ui.TimeResultLayoutMaker
 
 class TestingActivity : AppCompatActivity() {
 
@@ -14,10 +13,11 @@ class TestingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_testing)
 
-        val timeResultLayout = TimeResultLayout(
-            findViewById(R.id.time_result),
-            TimeResult(
-                millisToTimeVariable(timeVariableToMillis(TimeVariable(0, 0, 0, 14, 5, 0, 0, 0)))))
+//        val timeResultLayout = TimeResultLayoutMaker(
+//            findViewById(R.id.time_result),
+//            TimeResult(
+//                millisToTimeExpression(timeExpressionToMillis(TimeExpression(toNum(0), toNum(0), toNum(0), toNum(14), toNum(5), toNum(0), toNum(0), toNum(0)))))
+//        )
 //
 //        var percent = 0
 //        Timer().scheduleAtFixedRate(object : TimerTask() {

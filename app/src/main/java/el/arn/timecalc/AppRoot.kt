@@ -1,8 +1,9 @@
 package el.arn.timecalc
 
-import el.arn.timecalc.calculator_core.calculation_engine.*
+import el.arn.timecalc.calculation_engine.*
 
 lateinit var appRoot: AppRoot
+lateinit var rootUtils: RootUtils
 //@AcraCore(
 //    buildConfigClass = BuildConfig::class,
 //    reportSenderFactoryClasses = [CustomReportSenderFactory::class]
@@ -16,6 +17,7 @@ class AppRoot : android.app.Application() {
     override fun onCreate() {
         super.onCreate()
         appRoot = this
+        rootUtils = RootUtilsImpl()
 
 
         calculatorCoordinator = CalculatorCoordinatorImpl()
