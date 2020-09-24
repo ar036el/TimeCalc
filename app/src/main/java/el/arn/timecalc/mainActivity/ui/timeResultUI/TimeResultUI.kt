@@ -96,6 +96,7 @@ class TimeResultUI(
     }
 
     private fun updateBlockMaximizationState(timeBlock: TimeBlock) {
+        blocksAsList.forEach {
         if (blocksAsList.getAllCollapsedIn(timeBlock).isNullOrEmpty()) {
             //set as normal
             timeBlock.currentNumber = timeBlock.originalNumber
@@ -110,6 +111,7 @@ class TimeResultUI(
             timeBlock.currentNumber = number
             timeBlock.isMaximizedSymbolVisible = true
         }
+            }
     }
 
 

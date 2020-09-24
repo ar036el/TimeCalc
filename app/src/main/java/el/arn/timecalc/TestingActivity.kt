@@ -20,12 +20,12 @@ class TestingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_testing)
 
-        val timeResultUIConfig = TimeResultUIConfig(true, MutableTimeVariable{false}.apply { set(TimeUnit.Milli, true) })
+        val timeResultUIConfig = TimeResultUIConfig(true, MutableTimeVariable{false}.apply { set(TimeUnit.Milli, false) })
 
         val timeResultUI = TimeResultUI(
             findViewById(R.id.time_result),
             TimeResult(
-                timeConverter.timeVariableToMillis(TimeVariable(toNum(0), toNum(1), toNum(1), toNum(0), toNum(0), toNum(0), toNum(1), toNum(1)))), timeResultUIConfig)
+                timeConverter.timeVariableToMillis(TimeVariable(toNum(0), toNum(0), toNum(1), toNum(1), toNum(0), toNum(1), toNum(0), toNum(1)))), timeResultUIConfig)
 
     }
 

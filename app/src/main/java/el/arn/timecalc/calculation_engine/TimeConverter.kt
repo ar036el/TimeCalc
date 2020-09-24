@@ -7,11 +7,17 @@ interface TimeConverter {
     fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num>
     fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num
     fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num
+    fun getAsCollapsed(timeVariable: TimeVariable<Num>, from: TimeUnit, to: TimeUnit)
 
     companion object {
         const val DECIMAL_PLACES_TO_ROUND_FOR_MILLIS = 2
     }
 }
+
+class TimeConverterConfig(
+    val daysInAMonth: Float,
+    val daysInAYear: Float
+)
 
 class TimeConverterImpl : TimeConverter {
     override fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num> {
@@ -61,6 +67,10 @@ class TimeConverterImpl : TimeConverter {
 
     override fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num {
         return toMillis(quantity, from) / toMillis(toNum(1), to)
+    }
+
+    override fun getAsCollapsed(timeVariable: TimeVariable<Num>, from: TimeUnit, to: TimeUnit) {
+        TODO("Not yet implemented")
     }
 
     private fun toMillis(quantity: Num, timeUnit: TimeUnit): Num {
