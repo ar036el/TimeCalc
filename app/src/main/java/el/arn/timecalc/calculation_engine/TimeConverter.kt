@@ -4,8 +4,8 @@ import el.arn.timecalc.calculation_engine.atoms.*
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
 
 interface TimeConverter {
-    fun millisToTimeExpression(totalMillis: Num): TimeExpression<Num>
-    fun timeExpressionToMillis(timeExpression: TimeExpression<Num>): Num
+    fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num>
+    fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num
     fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num
 
     companion object {
@@ -14,8 +14,8 @@ interface TimeConverter {
 }
 
 class TimeConverterImpl : TimeConverter {
-    override fun millisToTimeExpression(totalMillis: Num): TimeExpression<Num> {
-        return TimeExpression(
+    override fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num> {
+        return TimeVariable(
             years = convertTimeUnit(totalMillis, TimeUnit.Milli, TimeUnit.Year).floor(),
             months = convertTimeUnit(totalMillis, TimeUnit.Milli, TimeUnit.Month).floor() % toNum(
                 MONTHS_IN_YEARS
@@ -39,15 +39,15 @@ class TimeConverterImpl : TimeConverter {
         )
     }
 
-    override fun timeExpressionToMillis(timeExpression: TimeExpression<Num>): Num {
-        return convertTimeUnit(timeExpression.years, TimeUnit.Year, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.months, TimeUnit.Month, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.weeks, TimeUnit.Week, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.days, TimeUnit.Day, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.hours, TimeUnit.Hour, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.minutes, TimeUnit.Minute, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.seconds, TimeUnit.Second, TimeUnit.Milli) +
-                convertTimeUnit(timeExpression.millis, TimeUnit.Milli, TimeUnit.Milli)
+    override fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num {
+        return convertTimeUnit(timeVariable.years, TimeUnit.Year, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.months, TimeUnit.Month, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.weeks, TimeUnit.Week, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.days, TimeUnit.Day, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.hours, TimeUnit.Hour, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.minutes, TimeUnit.Minute, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.seconds, TimeUnit.Second, TimeUnit.Milli) +
+                convertTimeUnit(timeVariable.millis, TimeUnit.Milli, TimeUnit.Milli)
     }
 
     //todo change "seconds and minutes in blocks to sec and min??"

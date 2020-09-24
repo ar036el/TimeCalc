@@ -3,7 +3,7 @@ package el.arn.timecalc.tests
 import el.arn.timecalc.calculation_engine.TimeConverter
 import el.arn.timecalc.calculation_engine.TimeConverterImpl
 import el.arn.timecalc.calculation_engine.atoms.Num
-import el.arn.timecalc.calculation_engine.atoms.TimeExpression
+import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.atoms.toNum
 import el.arn.timecalc.calculation_engine.expression.*
 import el.arn.timecalc.calculation_engine.result.*
@@ -82,7 +82,7 @@ class ResultBuilderTest {
     fun testForTimeResult_SeparateUnits(expressionAsString: String, millis: Number = 0, seconds: Number = 0, minutes: Number = 0, hours: Number = 0, days: Number = 0, weeks: Number = 0, months: Number = 0, years: Number = 0) {
         testForTimeResult(
             expressionAsString,
-            timeConverter.timeExpressionToMillis(TimeExpression(
+            timeConverter.timeVariableToMillis(TimeVariable(
                 toNum(millis.toString()),
                 toNum(seconds.toString()),
                 toNum(minutes.toString()),
@@ -96,8 +96,8 @@ class ResultBuilderTest {
     }
 
     fun assertTime(totalMillisExpected: Num, totalMillisActual: Num) {
-        val excepted = timeConverter.millisToTimeExpression(totalMillisExpected)
-        val actual = timeConverter.millisToTimeExpression(totalMillisActual)
+        val excepted = timeConverter.millisToTimeVariable(totalMillisExpected)
+        val actual = timeConverter.millisToTimeVariable(totalMillisActual)
         assertEquals(totalMillisExpected.toStringUnformatted(), totalMillisActual.toStringUnformatted())
 
         assertEquals(excepted.millis.toString(), actual.millis.toString())
@@ -115,7 +115,7 @@ class ResultBuilderTest {
         testForMixedResult(
             expressionAsString,
             number,
-            timeConverter.timeExpressionToMillis(TimeExpression(
+            timeConverter.timeVariableToMillis(TimeVariable(
                 toNum(millis.toString()),
                 toNum(seconds.toString()),
                 toNum(minutes.toString()),

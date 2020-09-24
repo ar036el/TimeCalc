@@ -17,7 +17,7 @@ class AppRoot : android.app.Application() {
     override fun onCreate() {
         super.onCreate()
         appRoot = this
-        rootUtils = RootUtilsImpl()
+        rootUtils = RootUtilsImpl(this)
 
 
         calculatorCoordinator = CalculatorCoordinatorImpl()

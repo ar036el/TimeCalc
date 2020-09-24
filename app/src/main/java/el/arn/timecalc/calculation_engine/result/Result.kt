@@ -1,6 +1,5 @@
 package el.arn.timecalc.calculation_engine.result
 
-import el.arn.timecalc.calculation_engine.atoms.TimeExpression
 import el.arn.timecalc.calculation_engine.atoms.Num
 
 interface Result

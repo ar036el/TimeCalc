@@ -38,7 +38,9 @@ fun ExpressionBuilder.asString(showGrouping: Boolean): String {
 }
 
 fun main() {
-    repeat(200) { buildRandomExpressionFromExpressionBuilder(0, 20) }
+    val aa= listOf(1,2,3,4,5,6)
+
+    println(aa.firstOrNull { aa.indexOf(it) > aa.indexOf(5) })
 }
 
 fun buildRandomExpressionFromExpressionBuilder(minSymbols: Int, maxSymbols: Int) {
@@ -82,8 +84,8 @@ fun buildRandomExpressionFromExpressionBuilder(minSymbols: Int, maxSymbols: Int)
     when (result) {
         is NumberResult -> println("number result:'${result.number}")
         is TimeResult -> println("number result:'${
-            timeConverter.millisToTimeExpression(result.totalMillis)}")
-        is MixedResult -> println("mixed result: number:'${result.number}, time:'${timeConverter.millisToTimeExpression(result.totalMillis)}")
+            timeConverter.millisToTimeVariable(result.totalMillis)}")
+        is MixedResult -> println("mixed result: number:'${result.number}, time:'${timeConverter.millisToTimeVariable(result.totalMillis)}")
         else -> println("result:'${result}")
     }
 
@@ -108,7 +110,7 @@ fun mainOld(args: Array<String>) {
 //    when (result) {
 //        is NumberResult -> println("NumberResult: ${result.number.toStringWithGroupingFormatting()}")
 //        is TimeResult -> {
-//            println("TimeResult: ${timeConverter.timeExpressionToMillis(result.time)} total millis")
+//            println("TimeResult: ${timeConverter.timeVariableToMillis(result.time)} total millis")
 //            println("years: ${result.time.years}")
 //            println("months: ${result.time.months}")
 //            println("weeks: ${result.time.weeks}")
@@ -121,7 +123,7 @@ fun mainOld(args: Array<String>) {
 //        is MixedResult -> {
 //            println("MixedResult:")
 //            println("Number: ${result.number.toStringWithGroupingFormatting()}")
-//            println("Time: ${timeConverter.timeExpressionToMillis(result.time)} total millis")
+//            println("Time: ${timeConverter.timeVariableToMillis(result.time)} total millis")
 //            println("years: ${result.time.years}")
 //            println("months: ${result.time.months}")
 //            println("weeks: ${result.time.weeks}")

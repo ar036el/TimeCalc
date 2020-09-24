@@ -1,8 +1,12 @@
 package el.arn.timecalc.calculation_engine.atoms
 
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
+import el.arn.timecalc.helpers.native_.allNext
+import el.arn.timecalc.helpers.native_.allPrev
+import el.arn.timecalc.helpers.native_.next
+import el.arn.timecalc.helpers.native_.prev
 
-open class TimeExpression<T>(
+open class TimeVariable<T>(
     open val millis: T,
     open val seconds: T,
     open val minutes: T,
@@ -13,7 +17,8 @@ open class TimeExpression<T>(
     open val years: T,
 ) {
 
-    fun toList(): List<Pair<TimeUnit, T>> {
+    fun toList() = toListPaired().map { it.second }
+    fun toListPaired(): List<Pair<TimeUnit, T>> {
         val list = listOf(
             TimeUnit.Milli to millis,
             TimeUnit.Second to seconds,
@@ -28,19 +33,24 @@ open class TimeExpression<T>(
         return list
     }
 
+    fun prev(item: T): T? = toListPaired().map { it.second }.prev(item)
+    fun next(item: T): T? = toListPaired().map { it.second }.next(item)
+    fun allNext(item: T): List<T> = toListPaired().map { it.second }.allNext(item)
+    fun allPrev(item: T): List<T> = toListPaired().map { it.second }.allPrev(item)
+
     operator fun get(timeUnit: TimeUnit) = map.getValue(timeUnit)
 
-    protected val map: MutableMap<TimeUnit, T> by lazy { toList().toMap().toMutableMap() }
+    protected val map: MutableMap<TimeUnit, T> by lazy { toListPaired().toMap().toMutableMap() }
 
-    constructor(timeExpression: TimeExpression<T>) : this(
-        timeExpression.millis,
-        timeExpression.seconds,
-        timeExpression.minutes,
-        timeExpression.hours,
-        timeExpression.days,
-        timeExpression.weeks,
-        timeExpression.months,
-        timeExpression.years,
+    constructor(timeVariable: TimeVariable<T>) : this(
+        timeVariable.millis,
+        timeVariable.seconds,
+        timeVariable.minutes,
+        timeVariable.hours,
+        timeVariable.days,
+        timeVariable.weeks,
+        timeVariable.months,
+        timeVariable.years,
     )
 
     override fun toString(): String {
@@ -49,7 +59,7 @@ open class TimeExpression<T>(
 
 }
 
-class MutableTimeExpression<T>(
+class MutableTimeVariable<T>(
     override var millis: T,
     override var seconds: T,
     override var minutes: T,
@@ -58,7 +68,7 @@ class MutableTimeExpression<T>(
     override var weeks: T,
     override var months: T,
     override var years: T,
-) : TimeExpression<T>(millis, seconds, minutes, hours, days, weeks, months, years) {
+) : TimeVariable<T>(millis, seconds, minutes, hours, days, weeks, months, years) {
     fun set(
         millis: T? = null,
         seconds: T? = null,
@@ -82,15 +92,17 @@ class MutableTimeExpression<T>(
         map[timeUnit] = value
     }
 
-    constructor(timeExpression: TimeExpression<T>) : this(
-        timeExpression.millis,
-        timeExpression.seconds,
-        timeExpression.minutes,
-        timeExpression.hours,
-        timeExpression.days,
-        timeExpression.weeks,
-        timeExpression.months,
-        timeExpression.years,
+    constructor(init: () -> T) :this(init(), init(), init(), init(), init(), init(), init(), init())
+
+    constructor(timeVariable: TimeVariable<T>) : this(
+        timeVariable.millis,
+        timeVariable.seconds,
+        timeVariable.minutes,
+        timeVariable.hours,
+        timeVariable.days,
+        timeVariable.weeks,
+        timeVariable.months,
+        timeVariable.years,
     )
 }
 
