@@ -1,26 +1,14 @@
 package el.arn.timecalc.tests
 
 import TimeBlock
-import androidx.constraintlayout.widget.ConstraintLayout
-import el.arn.timecalc.calculation_engine.TimeConverter
-import el.arn.timecalc.calculation_engine.TimeConverterImpl
 import el.arn.timecalc.calculation_engine.atoms.Num
-import el.arn.timecalc.calculation_engine.result.ResultBuilder
-import el.arn.timecalc.calculation_engine.result.ResultBuilderImpl
-import el.arn.timecalc.calculation_engine.result.TimeResult
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
-import el.arn.timecalc.helpers.assert.pass
-import el.arn.timecalc.mainActivity.ui.TimeResultUI
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 
 class TimeResultUITest {
 
     class TimeBlockMock(
         override val timeUnit: TimeUnit,
-        override var currentNumber: Num,
+        override var number: Num,
         override val originalNumber: Num,
         override var visibilityPercentage: Float,
         override var isMaximizedSymbolVisible: Boolean

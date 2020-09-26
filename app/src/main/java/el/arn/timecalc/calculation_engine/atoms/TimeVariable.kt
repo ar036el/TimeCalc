@@ -57,6 +57,9 @@ open class TimeVariable<T>(
         return "millis[$millis],seconds[$seconds],minutes[$minutes],hours[$hours],days[$days],weeks[$weeks],months[$months],years[$years]"
     }
 
+    constructor(init: (TimeUnit) -> T) :this(init(TimeUnit.Milli), init(TimeUnit.Second), init(TimeUnit.Minute), init(TimeUnit.Hour),
+        init(TimeUnit.Day), init(TimeUnit.Week), init(TimeUnit.Month), init(TimeUnit.Year))
+
 }
 
 class MutableTimeVariable<T>(

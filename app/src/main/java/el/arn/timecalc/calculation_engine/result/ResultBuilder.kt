@@ -43,7 +43,7 @@ class ResultBuilderImpl(private val timeConverter: TimeConverter) : ResultBuilde
         return when (preResultNumeral) {
             is PreResultNumeral_SimpleNumber -> NumberResult(preResultNumeral.number)
             is PreResultNumeral_TimeAsMillis -> TimeResult(preResultNumeral.milliseconds)
-            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, preResultNumeral.milliseconds)
+            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, preResultNumeral.milliseconds) //todo change all this to timeExpression when ready
             else -> throw NotImplementedError()
         }
     }

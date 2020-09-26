@@ -4,12 +4,13 @@
     <dimen name="calculatorBottomLayoutHeight">380dp</dimen>
 
 
-<!--    todo special case: do it dp or sp???-->
+    <!--    todo special case: do it dp or sp???-->
+    <!--    TODO how is that possible that this is 20sp and number is 18' and it's so small?????-->
     <dimen name="expressionEditText_maxTextSize">20sp</dimen>
     <dimen name="expressionEditText_minTextSize">10sp</dimen>
 
-    <dimen name="timeResult_number">18sp</dimen>
-    <dimen name="timeResult_timeUnit">12sp</dimen>
+    <dimen name="timeResult_number">26sp</dimen>
+    <dimen name="timeResult_timeUnit">18sp</dimen>
 
     <dimen name="timeResultBlock_layoutPaddingStart">6dp</dimen>
     <dimen name="timeResultBlock_middleContainerMaxWidth">3000dp</dimen>

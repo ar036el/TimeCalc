@@ -3,7 +3,9 @@
     <words>
       <w>autosize</w>
       <w>ctor</w>
+      <w>decollapse</w>
       <w>timecalc</w>
+      <w>uncollapsed</w>
     </words>
   </dictionary>
 </component>

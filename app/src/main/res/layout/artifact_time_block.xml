@@ -27,8 +27,9 @@
                 <ImageView
                     android:id="@+id/timeResultBlock_maximizeIcon"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_dot_crap" />
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_dot_crap"
+                    android:scaleType="fitCenter"/>
 
                 <LinearLayout
                     android:id="@+id/timeResultBlock_background"

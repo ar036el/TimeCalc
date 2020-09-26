@@ -26,6 +26,7 @@ fun View.doWhenDynamicVariablesAreReady(function: (it: View) -> Unit) { //todo d
             function.invoke(this@doWhenDynamicVariablesAreReady)
         }
     })
+    requestLayout()
 }
 
 fun View.observeWhenDynamicVariablesAreReady() {

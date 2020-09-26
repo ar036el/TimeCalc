@@ -9,17 +9,15 @@ interface TimeConverter {
     fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num
     fun getAsCollapsed(timeVariable: TimeVariable<Num>, from: TimeUnit, to: TimeUnit)
 
+
     companion object {
         const val DECIMAL_PLACES_TO_ROUND_FOR_MILLIS = 2
     }
 }
 
-class TimeConverterConfig(
-    val daysInAMonth: Float,
-    val daysInAYear: Float
-)
 
-class TimeConverterImpl : TimeConverter {
+
+class TimeConverterImpl() : TimeConverter {
     override fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num> {
         return TimeVariable(
             years = convertTimeUnit(totalMillis, TimeUnit.Milli, TimeUnit.Year).floor(),

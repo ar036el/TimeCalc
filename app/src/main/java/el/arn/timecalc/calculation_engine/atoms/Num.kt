@@ -50,7 +50,7 @@ fun toNum(number: Number): Num {
         is Int -> NumImpl(BigDecimal(number).toString())
         is Long -> NumImpl(BigDecimal(number).toString())
         is Double -> NumImpl(BigDecimal(number).toString())
-        is Long -> NumImpl(BigDecimal(number).toString())
+        is Float -> NumImpl(BigDecimal(number.toDouble()).toString())
         else -> throw NotImplementedError()
     }
 }
@@ -77,7 +77,7 @@ class NumImpl(numberAsString: String) : Num {
         if (other.isZero()) {
             throw CantDivideByZeroException()
         }
-        return NumImpl(BigDecimal(numberAsString).divide(BigDecimal(other.toStringUnformatted()), 2, RoundingMode.HALF_UP).toPlainString().stripTrailingZerosAfterDecimalPoint())
+        return NumImpl(BigDecimal(numberAsString).divide(BigDecimal(other.toStringUnformatted()), 8, RoundingMode.HALF_UP).toPlainString().stripTrailingZerosAfterDecimalPoint())
     }
 
     override fun percent(other: Num): Num {

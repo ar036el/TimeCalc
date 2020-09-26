@@ -4,30 +4,122 @@ import TimeBlock
 import TimeBlockImpl
 import android.animation.ValueAnimator
 import android.util.Log
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.constraintlayout.widget.ConstraintLayout
 import el.arn.timecalc.R
+import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.result.TimeResult
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic.TIMEBLOCK_VISIBILITY_THRESHOLD
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic.getAllCollapsedIn
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic.isAllegHidden
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic.isCollapsed
-import el.arn.timecalc.mainActivity.ui.TimeResultUILogic.isHidden
+import el.arn.timecalc.helpers.android.doWhenDynamicVariablesAreReady
+import el.arn.timecalc.helpers.android.heightByLayoutParams
+import el.arn.timecalc.helpers.android.widthByLayoutParams
+import el.arn.timecalc.organize_later.DynamicFieldsDispatcher
 import el.arn.timecalc.rootUtils
 
-class TimeResultUI(
-    private val timeResultLayout: ConstraintLayout,
+class TimeResultLayout(
+    private val layout: ViewGroup,
     timeResult: TimeResult,
     private val config: TimeResultUIConfig
 ) {
+
+    private val originalWidth: Int by lazy { layout.width }
+    private val originalHeight: Int by lazy { container.height }
+
+    private val container = layout.findViewById<ViewGroup>(R.id.timeResult_container)
+
+//    var customWidth: Float? = null
+//        set(width) {
+//            field = width
+//            layout.doWhenDynamicVariablesAreReady {
+//                val scaleFactor =  if (width != null) width / originalWidth else 1f
+////                setLayoutSize(scaleFactor)
+//            }
+//        }
+//    var customHeight: Float? = null
+//        set(height) {
+//            field = height
+//            container.doWhenDynamicVariablesAreReady {
+//                val scaleFactor =  if (height != null) height / originalHeight else 1f
+//
+//                container.pivotX = (originalWidth/2).toFloat()
+//                container.pivotY = (originalHeight/2).toFloat()
+//                container.scaleY = scaleFactor
+//                container.scaleX = scaleFactor
+//                layout.heightByLayoutParams = (layout.height*scaleFactor).toInt()
+//                layout.widthByLayoutParams = (layout.width*scaleFactor).toInt()
+//                val a= 3
+//            }
+//
+//        }
+
+
+    var customHeight: Float? = null
+        set(height) {
+            field = height
+            container.doWhenDynamicVariablesAreReady {
+                blocks.toList().forEach {
+                    val a = (height ?: originalHeight.toFloat()) / originalHeight
+                    it.sizePercentage = a
+                }
+            }
+
+        }
+
+//    private fun setLayoutSize(scaleFactor: Float) {
+//        val oldScale = container.scaleX
+//        val oldHeight = container.height
+//        println("mamam a[${oldScale * originalHeight}] b[$oldHeight]")
+//
+//
+//        container.scaleY = scaleFactor
+//        container.scaleX = scaleFactor
+//
+//
+//        layout.requestLayout()
+//    }
+
+
+
+    private var timeResult: TimeResult = timeResult
+        set(value) {
+            field = value
+//            updateTimeResult()
+        }
+    init { this.timeResult = timeResult}
 
     private val fullTimeResult = rootUtils.timeConverter.millisToTimeVariable(timeResult.totalMillis)
 
     private val blocks: TimeVariable<TimeBlock>
     private val blocksAsList: List<TimeBlock>
 
+    private val blocksExtensions: TimeVariable<DynamicFieldsDispatcher<TimeBlock>>
+    private val TimeBlock.extension get() = blocksExtensions[this.timeUnit]
+    private val ORIGINAL_NUMBER_PROP_KEY = "originalNumber"
+
+
+
+        val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
+
+        val TimeBlock.isHidden get() = visibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD
+        val TimeBlock.isCompletelyHidden get() = visibilityPercentage == 0f
+        val TimeBlock.isAllegHidden get() = extension.get<Num>(ORIGINAL_NUMBER_PROP_KEY).isZero()
+        val TimeBlock.isCollapsed get() = isHidden && !isAllegHidden
+
+        fun List<TimeBlock>.getAllCollapsedIn(timeBlock: TimeBlock): List<TimeBlock>? {
+            val timeBlock1 = timeBlock.timeUnit
+            var firstVisibleBlockAfterThis = indexOfFirst {
+                indexOf(it) > indexOf(timeBlock)
+                        && !it.isHidden }
+            val untilIndex = if (firstVisibleBlockAfterThis == -1) lastIndex+1 else firstVisibleBlockAfterThis
+
+            return filter {
+                indexOf(it) > indexOf(timeBlock)
+                        && indexOf(it) < untilIndex
+                        && it.isCollapsed }.ifEmpty { null }
+
+
+        }
 
 
     val VISIBITITY_ANIMATION_DURATION = 200L
@@ -99,16 +191,16 @@ class TimeResultUI(
         blocksAsList.forEach {
         if (blocksAsList.getAllCollapsedIn(timeBlock).isNullOrEmpty()) {
             //set as normal
-            timeBlock.currentNumber = timeBlock.originalNumber
+            timeBlock.number = timeBlock.extension[ORIGINAL_NUMBER_PROP_KEY]
             timeBlock.isMaximizedSymbolVisible = false
         } else {
             //set as maximized
             val allCollapsedInBlock = blocksAsList.getAllCollapsedIn(timeBlock)
-            var number = timeBlock.originalNumber
+            var number: Num = timeBlock.extension[ORIGINAL_NUMBER_PROP_KEY]
             allCollapsedInBlock?.forEach {
-                number += rootUtils.timeConverter.convertTimeUnit(it.originalNumber, it.timeUnit, timeBlock.timeUnit)
+                number += rootUtils.timeConverter.convertTimeUnit(it.extension[ORIGINAL_NUMBER_PROP_KEY], it.timeUnit, timeBlock.timeUnit)
             }
-            timeBlock.currentNumber = number
+            timeBlock.number = number
             timeBlock.isMaximizedSymbolVisible = true
         }
             }
@@ -129,10 +221,10 @@ class TimeResultUI(
         }
     }
 
-    private fun initTimeBlocksAndGetMap(): TimeVariable<TimeBlock> {
+    private fun createTimeBlocks(): TimeVariable<TimeBlock> {
         return TimeVariable(
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Milli,
                 R.id.timeResultBlock_millisecond,
                 R.color.timeResultBackground_millisecond,
@@ -141,7 +233,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Second,
                 R.id.timeResultBlock_second,
                 R.color.timeResultBackground_second,
@@ -150,7 +242,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Minute,
                 R.id.timeResultBlock_minute,
                 R.color.timeResultBackground_minute,
@@ -159,7 +251,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Hour,
                 R.id.timeResultBlock_hour,
                 R.color.timeResultBackground_hour,
@@ -168,7 +260,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Day,
                 R.id.timeResultBlock_day,
                 R.color.timeResultBackground_day,
@@ -177,7 +269,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Week,
                 R.id.timeResultBlock_week,
                 R.color.timeResultBackground_week,
@@ -186,7 +278,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Month,
                 R.id.timeResultBlock_month,
                 R.color.timeResultBackground_month,
@@ -195,7 +287,7 @@ class TimeResultUI(
             )
             ,
             TimeBlockImpl(
-                timeResultLayout,
+                layout,
                 TimeUnit.Year,
                 R.id.timeResultBlock_year,
                 R.color.timeResultBackground_year,
@@ -205,7 +297,7 @@ class TimeResultUI(
         )
     }
 
-    private fun initBlocksClickListeners() {
+    private fun setBlocksClickListeners() {
         blocks.toList().forEach{
             it.addListener(object: TimeBlock.Listener {
                 override fun onBlockSingleClick(subject: TimeBlock) {
@@ -221,11 +313,18 @@ class TimeResultUI(
 
 
     init {
-        blocks = initTimeBlocksAndGetMap()
+
+
+        blocks = createTimeBlocks()
         blocksAsList = blocks.toList()
-        initBlocksClickListeners()
+        blocksExtensions = TimeVariable { DynamicFieldsDispatcher(blocks[it]) }
+        setBlocksClickListeners()
+
 
         blocks.toList().forEach{
+            it.number = fullTimeResult[it.timeUnit]
+            blocksExtensions.toList().forEach { it2 -> it2[ORIGINAL_NUMBER_PROP_KEY] = it2.obj.number }
+
             if (config.hideEmptyTimeValues && it.isAllegHidden) {
                 it.visibilityPercentage = 0f
             }
@@ -243,27 +342,3 @@ class TimeResultUIConfig(
     val hideEmptyTimeValues: Boolean,
     val autoCollapseTimeValues: TimeVariable<Boolean> //todo auto??
 )
-
-object TimeResultUILogic {
-    val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
-
-    val TimeBlock.isHidden get() = visibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD
-    val TimeBlock.isCompletelyHidden get() = visibilityPercentage == 0f
-    val TimeBlock.isAllegHidden get() = originalNumber.isZero()
-    val TimeBlock.isCollapsed get() = isHidden && !isAllegHidden
-
-    fun List<TimeBlock>.getAllCollapsedIn(timeBlock: TimeBlock): List<TimeBlock>? {
-        val timeBlock1 = timeBlock.timeUnit
-        var firstVisibleBlockAfterThis = indexOfFirst {
-            indexOf(it) > indexOf(timeBlock)
-                    && !it.isHidden }
-        val untilIndex = if (firstVisibleBlockAfterThis == -1) lastIndex+1 else firstVisibleBlockAfterThis
-
-        return filter {
-            indexOf(it) > indexOf(timeBlock)
-                    && indexOf(it) < untilIndex
-                    && it.isCollapsed }.ifEmpty { null }
-
-
-    }
-}

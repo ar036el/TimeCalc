@@ -15,10 +15,9 @@ import el.arn.timecalc.R
 import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.atoms.createZero
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
-import el.arn.timecalc.helpers.android.doWhenDynamicVariablesAreReady
-import el.arn.timecalc.helpers.android.measureTextWidth
-import el.arn.timecalc.helpers.android.stringFromRes
-import el.arn.timecalc.helpers.android.widthByLayoutParams
+import el.arn.timecalc.helpers.android.*
+import el.arn.timecalc.helpers.android.PixelConverter.pxToDp
+import el.arn.timecalc.helpers.android.PixelConverter.pxToSp
 import el.arn.timecalc.helpers.listeners_engine.HoldsListeners
 import el.arn.timecalc.helpers.listeners_engine.ListenersManager
 import el.arn.timecalc.helpers.native_.checkIfPercentIsLegal
@@ -28,10 +27,11 @@ import kotlin.properties.Delegates
 
 interface TimeBlock : HoldsListeners<TimeBlock.Listener> {
     val timeUnit: TimeUnit
-    var currentNumber: Num
-    val originalNumber: Num
+    var number: Num
     var visibilityPercentage: Float
     var isMaximizedSymbolVisible: Boolean
+
+    var sizePercentage: Float
 
     interface Listener {
         fun onBlockSingleClick(subject: TimeBlock)
@@ -39,13 +39,13 @@ interface TimeBlock : HoldsListeners<TimeBlock.Listener> {
     }
 }
 
-class TimeBlockImpl(
+open class TimeBlockImpl(
     private val containerLayout: ViewGroup,
     override val timeUnit: TimeUnit,
     @IdRes layout: Int,
     @ColorRes color: Int,
     @StringRes timeUnitString: Int,
-    override val originalNumber: Num,
+    number: Num,
     private val listenersMgr: ListenersManager<TimeBlock.Listener> = ListenersManager()
 ): TimeBlock, HoldsListeners<TimeBlock.Listener> by listenersMgr {
 
@@ -57,11 +57,27 @@ class TimeBlockImpl(
     private val numberValueTextView = blockLayout.findViewById<TextView>(R.id.timeResultBlock_numberTextView)
     private val timeUnitTextView = blockLayout.findViewById<TextView>(R.id.timeResultBlock_timeUnit)
 
-    override var currentNumber = createZero()
+    override var number = createZero()
         set(value) {
             setNumberValueTextViewAndUpdateContainersWidth(value)
             field = value
         }
+
+    override var sizePercentage: Float = 1f
+    set(raw) {
+        val value = raw / sizePercentage
+        blockBackground.apply {
+            setPadding((paddingLeft*value).toInt(), (paddingTop*value).toInt(), (paddingRight*value).toInt(), (paddingBottom*value).toInt())
+        }
+        maximizeIcon.apply { heightByLayoutParams = (height*value).toInt() }
+
+        numberValueTextView.apply { textSize = pxToSp(textSize)*value }
+        timeUnitTextView.apply { textSize = pxToSp(textSize)*value }
+
+        visibilityPercentage = visibilityPercentage
+
+        field = value
+    }
 
     override var visibilityPercentage: Float = 0f //lateinit
         set(percent) {
@@ -128,7 +144,7 @@ class TimeBlockImpl(
 
         blockMaxWidthByTextSizeMeasurement.init()
         visibilityPercentage = 1f
-        this.currentNumber = originalNumber
+        this.number = number
 
     }
 }
