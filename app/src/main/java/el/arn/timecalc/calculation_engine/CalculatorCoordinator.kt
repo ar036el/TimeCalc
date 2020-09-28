@@ -12,11 +12,12 @@ import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainer
 import el.arn.timecalc.calculation_engine.expression.*
 import el.arn.timecalc.mainActivity.custom_views.CustomEditText
 import el.arn.timecalc.helpers.native_.PxPoint
+import el.arn.timecalc.mainActivity.ui.TimeResultLayoutManager
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandler
 
 
 interface CalculatorCoordinator {
-    fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler)
+    fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, timeResultLayoutManager: TimeResultLayoutManager)
     val expressionBuilder: ExpressionBuilder //todo remove after
     val expressionToStringConverter: ExpressionToStringConverter //todo remove after
 }
@@ -31,9 +32,10 @@ class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
     private var buttonsContainerTopPart: ButtonsContainerTopPart? = null
     private var buttonsContainerBottomPart: ButtonsContainerBottomPart? = null
     private var swipeGestureHandler: SwipeGestureHandler? = null
+    private var timeResultLayoutManager: TimeResultLayoutManager? = null
 
 
-    override fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler) {
+    override fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, timeResultLayoutManager: TimeResultLayoutManager) {
         this.activity = activity
 
         this.customEditText?.listenersHolder?.removeListener(expressionEditTextListener)
@@ -49,6 +51,8 @@ class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
         this.swipeGestureHandler = swipeGestureHandler
         swipeGestureHandler.addListener(swipeGestureHandlerListener)
         swipeGestureHandler.additionalGestureListenerForTouchSubject = swipeGestureHandlerAdditionalGestureListener
+        
+        this.timeResultLayoutManager = timeResultLayoutManager
     }
 
     private val expressionEditTextListener = object: CustomEditText.Listener {

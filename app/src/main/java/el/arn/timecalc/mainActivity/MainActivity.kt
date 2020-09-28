@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import el.arn.timecalc.R
 import el.arn.timecalc.appRoot
+import el.arn.timecalc.calculation_engine.TimeExpressionConfig
+import el.arn.timecalc.calculation_engine.TimeExpressionFactory
+import el.arn.timecalc.calculation_engine.result.ResultBuilder
+import el.arn.timecalc.calculation_engine.result.ResultBuilderImpl
+import el.arn.timecalc.calculation_engine.result.TimeResult
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPart
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPartImpl
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerTopPart
@@ -18,21 +22,24 @@ import el.arn.timecalc.mainActivity.ui.EditTextFontAutosizeMaker
 import el.arn.timecalc.helpers.android.dimenFromResAsPx
 import el.arn.timecalc.helpers.native_.LimitedAccessFunction
 import el.arn.timecalc.helpers.native_.PxPoint
+import el.arn.timecalc.mainActivity.ui.TimeResultLayoutManager
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandler
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandlerImpl
+import el.arn.timecalc.rootUtils
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var editText: CustomEditText
-    private val expression = appRoot.calculatorCoordinator.expressionBuilder
+    private lateinit var expressionEditText: CustomEditText
+    private val expressionBuilder = appRoot.calculatorCoordinator.expressionBuilder
     private val expressionStringAdapter = appRoot.calculatorCoordinator.expressionToStringConverter
+    private lateinit var timeResultLayoutManager: TimeResultLayoutManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        editText = findViewById(R.id.calculator_expressionDisplayEditText)
-        editText.showSoftInputOnFocus = false //todo put this at class itself. test and see if not crash
+        expressionEditText = findViewById(R.id.calculator_expressionDisplayEditText)
+        expressionEditText.showSoftInputOnFocus = false //todo put this at class itself. test and see if not crash
 
 
         initCalculatorActionButtons()
@@ -40,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
 
         EditTextFontAutosizeMaker(
-            editText,
+            expressionEditText,
             dimenFromResAsPx(R.dimen.expressionEditText_minTextSize),
             dimenFromResAsPx(R.dimen.expressionEditText_maxTextSize)
         )
@@ -52,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onCalculatorSymbolButtonClick(view: View) {
         val selectedSymbol = Symbol.charOf(view.getTagAsChar())
-        expression.insertSymbolAt(selectedSymbol, getExpressionCurrentLocation())
+        expressionBuilder.insertSymbolAt(selectedSymbol, getExpressionCurrentLocation())
     }
 
     private fun initCalculatorActionButtons() {
@@ -60,16 +67,20 @@ class MainActivity : AppCompatActivity() {
         //backspace button
         val backspaceButton: Button = findViewById(R.id.calculator_actionButton_backspace)
         backspaceButton.setOnLongClickListener {
-            expression.clearAll(); true
+            expressionBuilder.clearAll(); true
         }
         backspaceButton.setOnClickListener {
-            expression.backspaceSymbolFrom(getExpressionCurrentLocation())
+            expressionBuilder.backspaceSymbolFrom(getExpressionCurrentLocation())
         }
 
+        val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, TimeExpressionFactory(TimeExpressionConfig(30f, 365f)))
         //equals button
         val equalsButton: Button = findViewById(R.id.calculator_actionButton_equals)
         equalsButton.setOnClickListener {
-            println("ahahahahahha")
+            val result = resultBuilder.solveAndGetResult(expressionBuilder.getExpression())
+            if (result is TimeResult) {
+                timeResultLayoutManager.consumeTimeResult(result)
+            }
             true
         }
     }
@@ -84,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getExpressionCurrentLocation(): Int {
-        return expressionStringAdapter.stringIndexToExpressionIndex(editText.selectionStart)
+        return expressionStringAdapter.stringIndexToExpressionIndex(expressionEditText.selectionStart)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -107,9 +118,31 @@ class MainActivity : AppCompatActivity() {
             1.1f
         )
 
-        appRoot.calculatorCoordinator.setActivityComponents(this, editText, buttonsContainerTopPart, buttonsContainerBottomPart, swipeGestureHandler)
+        timeResultLayoutManager = TimeResultLayoutManager(
+            findViewById(R.id.timeResultLayout),
+            null,
+            rootUtils.configManager.getConfigForTimeResultLayoutManager(),
+            1080f,
+            70f,
+            200f,
+        )
+
+
+        appRoot.calculatorCoordinator.setActivityComponents(
+            this,
+            expressionEditText,
+            buttonsContainerTopPart,
+            buttonsContainerBottomPart,
+            swipeGestureHandler,
+            timeResultLayoutManager
+        )
+
+
 
     })
+
+
+
 
     private fun attachClickEventsToAllDrawerLayoutButtons() {
         //this is done in order to allow a non-consuming behaviour so the swipe-behaviour will be ok

@@ -27,7 +27,7 @@
                 <ImageView
                     android:id="@+id/timeResultBlock_maximizeIcon"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="6dp"
                     android:src="@drawable/ic_dot_crap"
                     android:scaleType="fitCenter"/>
 
@@ -49,7 +49,8 @@
                         android:maxLines="1"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:text="301"
+                        android:layout_marginTop="-4dp"
+                        android:text="101"
                         android:textSize="@dimen/timeResult_number" />
 
                     <TextView
@@ -60,7 +61,9 @@
                         android:maxLines="1"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:text="@string/calculator_timeUnit_day_full"
+                        android:layout_marginTop="-4dp"
+                        android:layout_marginBottom="-3dp"
+                        android:text="stub!"
                         android:textSize="@dimen/timeResult_timeUnit" />
 
                 </LinearLayout>

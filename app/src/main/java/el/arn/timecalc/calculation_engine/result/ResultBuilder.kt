@@ -52,7 +52,8 @@ class ResultBuilderImpl(
         }
     }
 
-    inner class FormulaBuilder {
+    // todo לעבור על כל המשתנים והקלאסים והמתודות לבדוק שאין סתם פבליק בכל מקום
+    private inner class FormulaBuilder {
         private val segmentBuilder = SegmentsBuilder()
         private val numberBuilder = NumberBuilder()
 
