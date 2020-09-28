@@ -16,8 +16,6 @@ import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.atoms.createZero
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
 import el.arn.timecalc.helpers.android.*
-import el.arn.timecalc.helpers.android.PixelConverter.pxToDp
-import el.arn.timecalc.helpers.android.PixelConverter.pxToSp
 import el.arn.timecalc.helpers.listeners_engine.HoldsListeners
 import el.arn.timecalc.helpers.listeners_engine.ListenersManager
 import el.arn.timecalc.helpers.native_.checkIfPercentIsLegal
@@ -31,15 +29,14 @@ interface TimeBlock : HoldsListeners<TimeBlock.Listener> {
     var visibilityPercentage: Float
     var isMaximizedSymbolVisible: Boolean
 
-    var sizePercentage: Float
-
     interface Listener {
         fun onBlockSingleClick(subject: TimeBlock)
         fun onBlockDoubleClick(subject: TimeBlock)
+        fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int)
     }
 }
 
-open class TimeBlockImpl(
+class TimeBlockImpl(
     private val containerLayout: ViewGroup,
     override val timeUnit: TimeUnit,
     @IdRes layout: Int,
@@ -54,62 +51,59 @@ open class TimeBlockImpl(
     private val blockResizableContainer = blockLayout.findViewById<ViewGroup>(R.id.timeResultBlock_resizableContainer)
     private val blockFixedSizeContainer = blockLayout.findViewById<ViewGroup>(R.id.timeResultBlock_fixedSizeContainer)
     private val maximizeIcon = blockLayout.findViewById<ImageView>(R.id.timeResultBlock_maximizeIcon)
-    private val numberValueTextView = blockLayout.findViewById<TextView>(R.id.timeResultBlock_numberTextView)
+    private val numberTextView = blockLayout.findViewById<TextView>(R.id.timeResultBlock_numberTextView)
     private val timeUnitTextView = blockLayout.findViewById<TextView>(R.id.timeResultBlock_timeUnit)
 
     override var number = createZero()
         set(value) {
-            setNumberValueTextViewAndUpdateContainersWidth(value)
+            setNumberTextView(value)
             field = value
         }
-
-    override var sizePercentage: Float = 1f
-    set(raw) {
-        val value = raw / sizePercentage
-        blockBackground.apply {
-            setPadding((paddingLeft*value).toInt(), (paddingTop*value).toInt(), (paddingRight*value).toInt(), (paddingBottom*value).toInt())
-        }
-        maximizeIcon.apply { heightByLayoutParams = (height*value).toInt() }
-
-        numberValueTextView.apply { textSize = pxToSp(textSize)*value }
-        timeUnitTextView.apply { textSize = pxToSp(textSize)*value }
-
-        visibilityPercentage = visibilityPercentage
-
-        field = value
-    }
 
     override var visibilityPercentage: Float = 0f //lateinit
         set(percent) {
             checkIfPercentIsLegal(percent)
-            blockResizableContainer.widthByLayoutParams = percentToValue(percent, 0f, blockMaxWidthByTextSizeMeasurement.get().toFloat()).toInt()
             field = percent
+            updateWidth()
         }
+
+    private fun updateWidth() {
+        val newWidth = percentToValue(visibilityPercentage, 0f, estimatedLayoutMaxWidth.get()).toInt()
+        if (blockResizableContainer.width == newWidth) {
+            return
+        }
+        blockResizableContainer.widthByLayoutParams = newWidth
+        blockResizableContainer.doWhenDynamicVariablesAreReady {
+            listenersMgr.notifyAll { it.blockWidthHasChanged(this, newWidth) }
+        }
+    }
 
 
     override var isMaximizedSymbolVisible: Boolean
         get() = maximizeIcon.visibility == View.INVISIBLE
-        set(value) { maximizeIcon.visibility = if (value) View.VISIBLE else View.INVISIBLE }
+        set(isVisible) { maximizeIcon.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE }
 
 
-    private fun setNumberValueTextViewAndUpdateContainersWidth(numberValue: Num) {
-        numberValueTextView.text = numberValue.toStringWithGroupingFormatting()
-        numberValueTextView.requestLayout()
-        numberValueTextView.invalidate()
-        visibilityPercentage = visibilityPercentage
+    private fun setNumberTextView(number: Num) {
+        numberTextView.text = number.toStringWithGroupingFormatting()
+        numberTextView.requestLayout()
+        numberTextView.invalidate()
+        numberTextView.doWhenDynamicVariablesAreReady {
+            updateWidth()
+        }
     }
 
-    private val blockMaxWidthByTextSizeMeasurement = object {
-        private var blockMaxWidthWithoutAnyTextWidth by Delegates.notNull<Float>()
-        fun get(): Int {
-            return (blockMaxWidthWithoutAnyTextWidth + max(numberValueTextView.measureTextWidth(), timeUnitTextView.measureTextWidth())).toInt()
+    private val estimatedLayoutMaxWidth = object {
+        private var widthWithoutAnyTextContent by Delegates.notNull<Float>()
+        fun get(): Float {
+            return (widthWithoutAnyTextContent + max(numberTextView.measureTextWidth(), timeUnitTextView.measureTextWidth()))
         }
         fun init() {
             fun View.getAllPaddingAndMarginsInWidth() = paddingStart + paddingEnd + marginStart + marginEnd
-            val numberValueTextWidthAtInit = numberValueTextView.measureTextWidth()
+            val numberValueTextWidthAtInit = numberTextView.measureTextWidth()
             val timeUnitTextWidthAtInit = timeUnitTextView.measureTextWidth()
-            val blockWidthMock = blockFixedSizeContainer.getAllPaddingAndMarginsInWidth() + blockBackground.getAllPaddingAndMarginsInWidth() + max(numberValueTextView.measureTextWidth() + numberValueTextView.getAllPaddingAndMarginsInWidth(), timeUnitTextView.measureTextWidth() + timeUnitTextView.getAllPaddingAndMarginsInWidth())
-            blockMaxWidthWithoutAnyTextWidth = blockWidthMock - max(numberValueTextWidthAtInit, timeUnitTextWidthAtInit)
+            val blockWidthMock = blockFixedSizeContainer.getAllPaddingAndMarginsInWidth() + blockBackground.getAllPaddingAndMarginsInWidth() + max(numberTextView.measureTextWidth() + numberTextView.getAllPaddingAndMarginsInWidth(), timeUnitTextView.measureTextWidth() + timeUnitTextView.getAllPaddingAndMarginsInWidth())
+            widthWithoutAnyTextContent = blockWidthMock - max(numberValueTextWidthAtInit, timeUnitTextWidthAtInit)
             blockFixedSizeContainer.doWhenDynamicVariablesAreReady {
                 if (blockWidthMock != blockFixedSizeContainer.width.toFloat()) {
                     Log.w("", "widths are lot the same. blockFixedSizeContainer.width[${ blockFixedSizeContainer.width}] blockWidthMock[$blockWidthMock]") //todo take care of that!! somehow it works but it does not suppose to!!
@@ -142,7 +136,7 @@ open class TimeBlockImpl(
 
         isMaximizedSymbolVisible = false
 
-        blockMaxWidthByTextSizeMeasurement.init()
+        estimatedLayoutMaxWidth.init()
         visibilityPercentage = 1f
         this.number = number
 

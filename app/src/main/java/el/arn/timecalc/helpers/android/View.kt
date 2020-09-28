@@ -18,8 +18,10 @@ var View.widthByLayoutParams: Int
         this.layoutParams = layoutParams
     }
 
+val View.paddingX: Int get() = paddingStart + paddingEnd
+val View.paddingY: Int get() = paddingTop + paddingBottom
 
-fun View.doWhenDynamicVariablesAreReady(function: (it: View) -> Unit) { //todo does it work multiple times on same view?
+fun <T : View>T.doWhenDynamicVariablesAreReady(function: (it: T) -> Unit) { //todo does it work multiple times on same view?
     this.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             this@doWhenDynamicVariablesAreReady.viewTreeObserver.removeOnGlobalLayoutListener(this)

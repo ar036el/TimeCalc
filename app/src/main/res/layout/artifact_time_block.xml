@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/timeResultBlock_resizableContainer"
-        android:layout_width="45dp"
+        android:layout_width="55dp"
         android:layout_height="wrap_content">
 
         <LinearLayout

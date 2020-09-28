@@ -7,6 +7,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import el.arn.timecalc.calculation_engine.TimeConverter
 import el.arn.timecalc.calculation_engine.TimeConverterImpl
+import el.arn.timecalc.calculation_engine.TimeExpressionConfig
+import el.arn.timecalc.calculation_engine.TimeExpressionFactory
 import el.arn.timecalc.calculation_engine.atoms.MutableTimeVariable
 import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.atoms.toNum
@@ -21,7 +23,7 @@ import java.util.*
 
 class TestingActivity : AppCompatActivity() {
 
-    val timeConverter: TimeConverter = TimeConverterImpl()
+    private val timeConverter: TimeConverter = TimeConverterImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +36,18 @@ class TestingActivity : AppCompatActivity() {
             )
         })
 
-        val timeResultUI = TimeResultLayout(
-            findViewById(R.id.time_result),
-            TimeResult(
+        val timeResult = TimeResult(
+            TimeExpressionFactory(TimeExpressionConfig(30f, 365f)).createTimeExpression(
                 timeConverter.timeVariableToMillis(
-                    TimeVariable(
-                        toNum(0), toNum(0), toNum(1), toNum(
-                            1
-                        ), toNum(0), toNum(1), toNum(0), toNum(1)
-                    )
-                )
-            ), timeResultUIConfig
+                    TimeVariable(toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1)))))
+
+        val timeResultUI = TimeResultLayout(
+            findViewById(R.id.timeResultLayout),
+            timeResult,
+            timeResultUIConfig,
+            1000f,
+            60f,
+            80f
         )
 
 //        var counter = 100f
@@ -55,6 +58,9 @@ class TestingActivity : AppCompatActivity() {
 
 //        timeResultUI.customHeight = 1000f
 
+        testSetInterval(this, 50) {
+            timeResultUI.maxHeight+=1
+        }
 
         niceDate()
     }
@@ -76,6 +82,7 @@ class TestingActivity : AppCompatActivity() {
         println("haho $niceDateStr")
 
         println("haho ${date.time}")
+
     }
 
 }

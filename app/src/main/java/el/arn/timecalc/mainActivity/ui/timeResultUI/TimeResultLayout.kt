@@ -2,6 +2,7 @@ package el.arn.timecalc.mainActivity.ui
 
 import TimeBlock
 import TimeBlockImpl
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.util.Log
 import android.view.ViewGroup
@@ -11,84 +12,87 @@ import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.result.TimeResult
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
-import el.arn.timecalc.helpers.android.doWhenDynamicVariablesAreReady
-import el.arn.timecalc.helpers.android.heightByLayoutParams
-import el.arn.timecalc.helpers.android.widthByLayoutParams
+import el.arn.timecalc.helpers.android.*
 import el.arn.timecalc.organize_later.DynamicFieldsDispatcher
 import el.arn.timecalc.rootUtils
+import kotlin.math.max
+import kotlin.math.min
 
 class TimeResultLayout(
     private val layout: ViewGroup,
     timeResult: TimeResult,
-    private val config: TimeResultUIConfig
+    private val config: TimeResultUIConfig,
+    desiredWidth: Float,
+    minHeight: Float,
+    maxHeight: Float,
 ) {
 
-    private val originalWidth: Int by lazy { layout.width }
-    private val originalHeight: Int by lazy { container.height }
-
-    private val container = layout.findViewById<ViewGroup>(R.id.timeResult_container)
-
-//    var customWidth: Float? = null
-//        set(width) {
-//            field = width
-//            layout.doWhenDynamicVariablesAreReady {
-//                val scaleFactor =  if (width != null) width / originalWidth else 1f
-////                setLayoutSize(scaleFactor)
-//            }
-//        }
-//    var customHeight: Float? = null
-//        set(height) {
-//            field = height
-//            container.doWhenDynamicVariablesAreReady {
-//                val scaleFactor =  if (height != null) height / originalHeight else 1f
-//
-//                container.pivotX = (originalWidth/2).toFloat()
-//                container.pivotY = (originalHeight/2).toFloat()
-//                container.scaleY = scaleFactor
-//                container.scaleX = scaleFactor
-//                layout.heightByLayoutParams = (layout.height*scaleFactor).toInt()
-//                layout.widthByLayoutParams = (layout.width*scaleFactor).toInt()
-//                val a= 3
-//            }
-//
-//        }
-
-
-    var customHeight: Float? = null
-        set(height) {
-            field = height
-            container.doWhenDynamicVariablesAreReady {
-                blocks.toList().forEach {
-                    val a = (height ?: originalHeight.toFloat()) / originalHeight
-                    it.sizePercentage = a
-                }
-            }
-
+    var desiredWidth = desiredWidth
+        set(value) {
+            field = value
+            updateLayoutSize()
+        }
+    var minHeight = minHeight
+        set(value) {
+            field = value
+            updateLayoutSize()
+        }
+    var maxHeight = maxHeight
+        set(value) {
+            field = value
+            updateLayoutSize()
         }
 
-//    private fun setLayoutSize(scaleFactor: Float) {
-//        val oldScale = container.scaleX
-//        val oldHeight = container.height
-//        println("mamam a[${oldScale * originalHeight}] b[$oldHeight]")
-//
-//
-//        container.scaleY = scaleFactor
-//        container.scaleX = scaleFactor
-//
-//
-//        layout.requestLayout()
-//    }
+
+    private val containerResizable: ViewGroup by lazy { layout.findViewById<ViewGroup>(R.id.timeResultLayout_containerResizable) }
+    private val containerSource: ViewGroup by lazy { layout.findViewById<ViewGroup>(R.id.timeResultLayout_containerSource) }
+    private var layoutSizeScale = 1f
+    private var prevUnscaledWidth: Float? = null
+    private var prevUnscaledHeight: Float? = null
+
+    var areGesturedEnabled: Boolean = true
+
+    private fun updateLayoutSize() {
+        containerResizable.doWhenDynamicVariablesAreReady {
+            containerSource.doWhenDynamicVariablesAreReady {
+
+                //containerSource.width and containerSource.height are never affected by scaleX/scaleY changes. been tested! :#
+                val unscaledWidth = containerSource.width.toFloat()
+                val unscaledHeight = containerSource.height.toFloat()
+
+                prevUnscaledWidth = unscaledWidth
+                prevUnscaledHeight = unscaledHeight
+
+                val unboundedScale = desiredWidth / unscaledWidth
+                val unboundedHeight = unboundedScale * unscaledHeight
+                val boundedHeight = min(max(unboundedScale * unscaledHeight, minHeight), maxHeight)
+                val boundedScale = unboundedScale * (boundedHeight / unboundedHeight)
+
+
+                if (layoutSizeScale == boundedScale) {
+                    return@doWhenDynamicVariablesAreReady
+                }
+                layoutSizeScale = boundedScale
+
+                containerSource.scaleX = layoutSizeScale
+                containerSource.scaleY = layoutSizeScale
+                containerResizable.widthByLayoutParams = (unscaledWidth*layoutSizeScale).toInt() + containerResizable.paddingX
+                containerResizable.heightByLayoutParams = (unscaledHeight*layoutSizeScale).toInt() + containerResizable.paddingY
+                containerSource.invalidate()
+                containerSource.requestLayout()
+            }
+        }
+    }
 
 
 
     private var timeResult: TimeResult = timeResult
         set(value) {
             field = value
-//            updateTimeResult()
+            blocksAsList.forEach {
+                setBlockInitialState(it)
+            }
         }
-    init { this.timeResult = timeResult}
-
-    private val fullTimeResult = rootUtils.timeConverter.millisToTimeVariable(timeResult.totalMillis)
 
     private val blocks: TimeVariable<TimeBlock>
     private val blocksAsList: List<TimeBlock>
@@ -96,6 +100,7 @@ class TimeResultLayout(
     private val blocksExtensions: TimeVariable<DynamicFieldsDispatcher<TimeBlock>>
     private val TimeBlock.extension get() = blocksExtensions[this.timeUnit]
     private val ORIGINAL_NUMBER_PROP_KEY = "originalNumber"
+
 
 
 
@@ -181,9 +186,15 @@ class TimeResultLayout(
             addUpdateListener { animation ->
                 setBlockVisibilityFun(animatedValue as Float)
             }
+            addListener(object: AnimatorListener {
+                override fun onAnimationEnd(animation: Animator?) {
+//                    updateContainerSize()
+                }
+            })
             duration = VISIBITITY_ANIMATION_DURATION
             interpolator = AccelerateDecelerateInterpolator()
             start()
+
         }
     }
 
@@ -229,7 +240,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_millisecond,
                 R.color.timeResultBackground_millisecond,
                 R.string.calculator_timeUnit_millisecond_full,
-                fullTimeResult.millis
+                timeResult.time.units.millis
             )
             ,
             TimeBlockImpl(
@@ -238,7 +249,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_second,
                 R.color.timeResultBackground_second,
                 R.string.calculator_timeUnit_second_full,
-                fullTimeResult.seconds
+                timeResult.time.units.seconds
             )
             ,
             TimeBlockImpl(
@@ -247,7 +258,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_minute,
                 R.color.timeResultBackground_minute,
                 R.string.calculator_timeUnit_minute_full,
-                fullTimeResult.minutes
+                timeResult.time.units.minutes
             )
             ,
             TimeBlockImpl(
@@ -256,7 +267,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_hour,
                 R.color.timeResultBackground_hour,
                 R.string.calculator_timeUnit_hour_full,
-                fullTimeResult.hours
+                timeResult.time.units.hours
             )
             ,
             TimeBlockImpl(
@@ -265,7 +276,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_day,
                 R.color.timeResultBackground_day,
                 R.string.calculator_timeUnit_day_full,
-                fullTimeResult.days
+                timeResult.time.units.days
             )
             ,
             TimeBlockImpl(
@@ -274,7 +285,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_week,
                 R.color.timeResultBackground_week,
                 R.string.calculator_timeUnit_week_full,
-                fullTimeResult.weeks
+                timeResult.time.units.weeks
             )
             ,
             TimeBlockImpl(
@@ -283,7 +294,7 @@ class TimeResultLayout(
                 R.id.timeResultBlock_month,
                 R.color.timeResultBackground_month,
                 R.string.calculator_timeUnit_month_full,
-                fullTimeResult.months
+                timeResult.time.units.months
             )
             ,
             TimeBlockImpl(
@@ -292,49 +303,58 @@ class TimeResultLayout(
                 R.id.timeResultBlock_year,
                 R.color.timeResultBackground_year,
                 R.string.calculator_timeUnit_year_full,
-                fullTimeResult.years
+                timeResult.time.units.years
             )
         )
     }
 
-    private fun setBlocksClickListeners() {
-        blocks.toList().forEach{
-            it.addListener(object: TimeBlock.Listener {
-                override fun onBlockSingleClick(subject: TimeBlock) {
-                    collapseInAnimation(subject.timeUnit)
-                }
+    private val timeBlockListener = object: TimeBlock.Listener {
+        override fun onBlockSingleClick(subject: TimeBlock) {
+            if (areGesturedEnabled) {
+                collapseInAnimation(subject.timeUnit)
+            }
+        }
+        override fun onBlockDoubleClick(subject: TimeBlock) {
+            if (areGesturedEnabled) {
+                revealInAnimation(subject.timeUnit)
+            }
+        }
+        override fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int) {
+            updateLayoutSize()
+        }
+    }
 
-                override fun onBlockDoubleClick(subject: TimeBlock) {
-                    revealInAnimation(subject.timeUnit)
-                }
-            })
+    private fun setBlockInitialState(block: TimeBlock) {
+        block.number = timeResult.time.units[block.timeUnit]
+        blocksExtensions.toList().forEach { it2 -> it2[ORIGINAL_NUMBER_PROP_KEY] = it2.obj.number }
+
+        if (config.hideEmptyTimeValues && block.isAllegHidden) {
+            block.visibilityPercentage = 0f
+        }
+        else if (config.autoCollapseTimeValues[block.timeUnit]) {
+            val successful = tryToCollapse(block, false)
+            if (!successful) {
+                Log.w("TimeResultUI", "cannot auto collapse ${block.timeUnit}")
+            }
         }
     }
 
 
-    init {
 
+    init {
+        if (minHeight > maxHeight) { throw InternalError("minWidth[$minHeight] > maxWidth[$maxHeight]")}
 
         blocks = createTimeBlocks()
         blocksAsList = blocks.toList()
         blocksExtensions = TimeVariable { DynamicFieldsDispatcher(blocks[it]) }
-        setBlocksClickListeners()
 
 
-        blocks.toList().forEach{
-            it.number = fullTimeResult[it.timeUnit]
-            blocksExtensions.toList().forEach { it2 -> it2[ORIGINAL_NUMBER_PROP_KEY] = it2.obj.number }
-
-            if (config.hideEmptyTimeValues && it.isAllegHidden) {
-                it.visibilityPercentage = 0f
-            }
-            else if (config.autoCollapseTimeValues[it.timeUnit]) {
-                val successful = tryToCollapse(it, false)
-                if (!successful) {
-                    Log.e("TimeResultUI", "cannot auto collapse ${it.timeUnit}")
-                }
-            }
+        blocksAsList.forEach{
+            it.addListener(timeBlockListener)
+            setBlockInitialState(it)
         }
+
+        updateLayoutSize()
     }
 }
 

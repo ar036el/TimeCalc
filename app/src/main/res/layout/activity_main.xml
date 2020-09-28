@@ -50,7 +50,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
-        <include layout="@layout/artifact_time_result" />
+        <include layout="@layout/artifact_time_result_layout" />
     </LinearLayout>
 
 

@@ -28,7 +28,7 @@ class TimeExpressionConfig(
 
 interface TimeExpression {
     val totalMillis: Num
-    val time: TimeVariable<Num>
+    val units: TimeVariable<Num>
     val uncollapsedTime: TimeVariable<Num>
     fun setCollapsed(isCollapsed: TimeVariable<Boolean>)
     fun isCollapsed(timeUnit: TimeUnit): Boolean
@@ -44,13 +44,13 @@ class TimeExpressionImpl(
     private val _uncollapsedTime = calculateTime(TimeVariable{false})
     override val uncollapsedTime: TimeVariable<Num> = _uncollapsedTime
 
-    override var time = TimeVariable(uncollapsedTime)
+    override var units = TimeVariable(uncollapsedTime)
 
     private val _isCollapsed = MutableTimeVariable { false }
 
     override fun setCollapsed(isCollapsed: TimeVariable<Boolean>) {
         if (isCollapsed[TimeUnit.Milli]) { throw InternalError("cannot collapse Milli") }
-        time = calculateTime(isCollapsed)
+        units = calculateTime(isCollapsed)
     }
 
     override fun isCollapsed(timeUnit: TimeUnit) = _isCollapsed[timeUnit]

@@ -11,8 +11,14 @@ fun percentToValue(percent: Float, minValue: Float, maxValue: Float): Float {
     return (maxValue - minValue) * percent + minValue
 }
 
+
 fun valueToPercent(value: Float, minValue: Float, maxValue: Float): Float {
     val percent = 1 - (maxValue - value) / (maxValue - minValue)
     checkIfPercentIsLegal(percent)
+    return if (!percent.isNaN()) percent else 1f
+}
+
+fun valueToUncheckedPercent(value: Float, minValue: Float, maxValue: Float): Float {
+    val percent = 1 - (maxValue - value) / (maxValue - minValue)
     return if (!percent.isNaN()) percent else 1f
 }

@@ -5,7 +5,6 @@ import el.arn.timecalc.calculation_engine.TimeExpressionConfig
 import el.arn.timecalc.calculation_engine.TimeExpressionFactory
 import el.arn.timecalc.calculation_engine.atoms.MutableTimeVariable
 import el.arn.timecalc.calculation_engine.atoms.toNum
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,6 +40,6 @@ fun mainTimeExpression() { //todo do it afterwards
 
     timeExpression.setCollapsed(collapsed)
 
-    println(timeExpression.time)
+    println(timeExpression.units)
 
 }

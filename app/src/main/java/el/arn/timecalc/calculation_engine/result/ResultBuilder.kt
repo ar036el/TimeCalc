@@ -1,6 +1,7 @@
 package el.arn.timecalc.calculation_engine.result
 
 import el.arn.timecalc.calculation_engine.TimeConverter
+import el.arn.timecalc.calculation_engine.TimeExpressionFactory
 import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.atoms.createZero
 import el.arn.timecalc.calculation_engine.atoms.toNum
@@ -14,7 +15,10 @@ interface ResultBuilder {
     fun solveAndGetResult(expression: Expression): Result
 }
 
-class ResultBuilderImpl(private val timeConverter: TimeConverter) : ResultBuilder {
+class ResultBuilderImpl(
+    private val timeConverter: TimeConverter,
+    private val timeExpressionFactory: TimeExpressionFactory
+) : ResultBuilder {
 
     override fun solveAndGetResult(expression: Expression): Result {
         try {
@@ -42,8 +46,8 @@ class ResultBuilderImpl(private val timeConverter: TimeConverter) : ResultBuilde
     private fun createResult(preResultNumeral: PreResultNumeral): Result {
         return when (preResultNumeral) {
             is PreResultNumeral_SimpleNumber -> NumberResult(preResultNumeral.number)
-            is PreResultNumeral_TimeAsMillis -> TimeResult(preResultNumeral.milliseconds)
-            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, preResultNumeral.milliseconds) //todo change all this to timeExpression when ready
+            is PreResultNumeral_TimeAsMillis -> TimeResult(timeExpressionFactory.createTimeExpression(preResultNumeral.milliseconds))
+            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, timeExpressionFactory.createTimeExpression(preResultNumeral.milliseconds)) //todo change all this to timeExpression when ready
             else -> throw NotImplementedError()
         }
     }
