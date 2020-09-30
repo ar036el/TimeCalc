@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="internal_daysInAMonth_values">
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>average</item>
+    </string-array>
+
+    <string-array name="internal_daysInAYear_values">
+        <item>365</item>
+        <item>366</item>
+        <item>average</item>
+    </string-array>
+
+
+</resources>

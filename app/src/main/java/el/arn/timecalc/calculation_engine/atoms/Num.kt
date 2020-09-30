@@ -1,5 +1,6 @@
 package el.arn.timecalc.calculation_engine.atoms
 
+import el.arn.timecalc.calculation_engine.atoms.Num.Companion.UNARY_MINUS
 import el.arn.timecalc.calculation_engine.result.CantDivideByZeroException
 import el.arn.timecalc.calculation_engine.symbol.DecimalPoint
 import el.arn.timecalc.calculation_engine.symbol.Digit
@@ -31,6 +32,8 @@ interface Num {
 
     fun toStringUnformatted(): String
     fun toStringWithGroupingFormatting(): String
+    fun toStringFormatted(formatAfterInput: Boolean, showGrouping: Boolean, forceSign: Boolean, ): String
+
 
     companion object { //TODO it has also string res for all of this. what to do?
         const val ALL_INPUT_CHARS = "0123456789.-"
@@ -38,6 +41,7 @@ interface Num {
         const val DIGITS = "0123456789"
         const val DECIMAL_POINT = '.'
         const val UNARY_MINUS = '-'
+        const val UNARY_PLUS = '+'
         const val GROUPING_SYMBOL = ','
         const val GROUP_EVERY_X_DIGITS = 3
 
@@ -133,7 +137,10 @@ class NumImpl(numberAsString: String) : Num {
         return numberAsString
     }
 
-    override fun toStringWithGroupingFormatting(): String {
+    override fun toStringWithGroupingFormatting() = toStringWithGroupingFormatting(numberAsString)
+
+
+    private fun toStringWithGroupingFormatting(numberAsString: String): String {
         val reversedNumber = numberAsString.reversed()
 
         val startingLocation = reversedNumber.indexOf(Num.DECIMAL_POINT) + 1
@@ -152,6 +159,25 @@ class NumImpl(numberAsString: String) : Num {
         }
 
         return number.toString()
+    }
+
+    override fun toStringFormatted(formatAfterInput: Boolean, showGrouping: Boolean, forceSign: Boolean): String {
+        var numberAsString = numberAsString
+        if (formatAfterInput) {
+            numberAsString = toNum(numberAsString).format().toStringUnformatted()
+        }
+        if (showGrouping) {
+            numberAsString = toStringWithGroupingFormatting(numberAsString)
+        }
+        if (forceSign) {
+            numberAsString = tryToAddPositiveSign(numberAsString)
+        }
+        return numberAsString
+    }
+
+    private fun tryToAddPositiveSign(numberAsString: String): String {
+        return if (numberAsString[0] != UNARY_MINUS) "+$numberAsString" else numberAsString
+
     }
 
     private fun isDigit(char: Char) = Num.DIGITS.contains(char)

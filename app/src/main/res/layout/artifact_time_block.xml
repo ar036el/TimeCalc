@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/timeResultBlock_resizableContainer"
-        android:layout_width="55dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -28,6 +28,7 @@
                     android:id="@+id/timeResultBlock_maximizeIcon"
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
+                    android:layout_margin="1dp"
                     android:src="@drawable/ic_dot_crap"
                     android:scaleType="fitCenter"/>
 
@@ -40,18 +41,26 @@
                     android:orientation="vertical"
                     android:padding="@dimen/timeResultBlock_backgroundStroke">
 
-                    <TextView
-                        android:id="@+id/timeResultBlock_numberTextView"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/timeResultBlock_timeUnit"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:paddingStart="3dp"
-                        android:paddingEnd="3dp"
-                        android:layout_marginTop="-4dp"
-                        android:text="101"
-                        android:textSize="@dimen/timeResult_number" />
+                        >
+
+                        <TextView
+                            android:id="@+id/timeResultBlock_numberTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp"
+                            android:layout_marginTop="-7dp"
+                            android:layout_marginBottom="-4dp"
+                            android:text="101"
+                            android:textSize="@dimen/timeResult_number" />
+
+                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/timeResultBlock_timeUnit"
@@ -61,8 +70,8 @@
                         android:maxLines="1"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:layout_marginTop="-4dp"
-                        android:layout_marginBottom="-3dp"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginBottom="-2dp"
                         android:text="stub!"
                         android:textSize="@dimen/timeResult_timeUnit" />
 

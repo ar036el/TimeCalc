@@ -8,12 +8,10 @@ import el.arn.timecalc.calculation_engine.TimeConverter
 import el.arn.timecalc.calculation_engine.TimeConverterImpl
 import el.arn.timecalc.calculation_engine.TimeExpressionConfig
 import el.arn.timecalc.calculation_engine.TimeExpressionFactory
-import el.arn.timecalc.calculation_engine.atoms.MutableTimeVariable
 import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.atoms.toNum
 import el.arn.timecalc.calculation_engine.result.TimeResult
-import el.arn.timecalc.calculation_engine.symbol.TimeUnit
-import el.arn.timecalc.mainActivity.ui.TimeResultLayoutManager
+import el.arn.timecalc.mainActivity.ui.ResultLayoutManager
 import el.arn.timecalc.organize_later.testSetInterval
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +20,7 @@ class TestingActivity : AppCompatActivity() {
 
     private val timeConverter: TimeConverter = TimeConverterImpl()
 
-    private lateinit var timeResultLayoutManager: TimeResultLayoutManager
+    private lateinit var resultLayoutManager: ResultLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +31,8 @@ class TestingActivity : AppCompatActivity() {
                 timeConverter.timeVariableToMillis(
                     TimeVariable(toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1)))))
 
-        timeResultLayoutManager = TimeResultLayoutManager(
-            findViewById(R.id.timeResultLayout),
+        resultLayoutManager = ResultLayoutManager(
+            findViewById(R.id.resultLayout),
             timeResult,
             rootUtils.configManager.getConfigForTimeResultLayoutManager(),
             1000f,
@@ -51,7 +49,7 @@ class TestingActivity : AppCompatActivity() {
 //        timeResultUI.customHeight = 1000f
 
         testSetInterval(this, 50) {
-            timeResultLayoutManager.maxHeight+=1
+            resultLayoutManager.maxHeight+=1
         }
 
         niceDate()
@@ -76,7 +74,7 @@ class TestingActivity : AppCompatActivity() {
             TimeExpressionFactory(TimeExpressionConfig(30f, 365f)).createTimeExpression(
                 timeConverter.timeVariableToMillis(timeVars[currentVar++])
             ))
-        timeResultLayoutManager.consumeTimeResult(timeResult)
+        resultLayoutManager.updateResult(timeResult)
 
     }
 

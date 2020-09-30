@@ -4,12 +4,11 @@ import TimeBlock
 import el.arn.timecalc.calculation_engine.atoms.Num
 import el.arn.timecalc.calculation_engine.symbol.TimeUnit
 
-class TimeResultUITest {
+class TimeResultLayoutTest {
 
     class TimeBlockMock(
         override val timeUnit: TimeUnit,
         override var number: Num,
-        override val originalNumber: Num,
         override var visibilityPercentage: Float,
         override var isMaximizedSymbolVisible: Boolean
     ) : TimeBlock {

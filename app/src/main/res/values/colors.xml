@@ -19,5 +19,15 @@
     <color name="timeResultBackground_month">#FB8C00</color>
     <color name="timeResultBackground_year">#FB7500</color>
 
+    <color name="errorResultText">#E53935</color>
+    <color name="normalResultText">#000000</color>
+
+    <color name="options_background">#A6A6A6</color>
+    <color name="options_item">#FF9C9C</color>
+
+
+
+    <color name="revealColor">#666666</color>
+
 
 </resources>

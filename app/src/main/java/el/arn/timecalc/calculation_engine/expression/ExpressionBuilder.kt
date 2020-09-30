@@ -10,7 +10,9 @@ import java.lang.NumberFormatException
 interface ExpressionBuilder : HoldsListeners<ExpressionBuilder.Listener> {
 
     fun insertSymbolAt(symbol: Symbol, index: Int): InsertionAction
+    fun insertSymbolAtEnd(symbol: Symbol): InsertionAction
     fun backspaceSymbolFrom(index: Int)
+    fun backspaceSymbolFromEnd(index: Int)
     fun clearAll()
 //    fun getCurrentlyIllegalSymbolsToInsertAtThisIndex(index: Int): Set<Symbol>
 
@@ -20,7 +22,7 @@ interface ExpressionBuilder : HoldsListeners<ExpressionBuilder.Listener> {
     enum class InsertionAction { Add, Replace, NoAction }
 
     interface Listener {
-        fun expressionWasChanged() {}
+        fun expressionWasChanged(subject: ExpressionBuilder) {}
         fun expressionWasCleared()
         fun exprTokenWasAddedAt(token: ExpressionToken, index: Int)
         fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int)
@@ -47,6 +49,10 @@ class ExpressionBuilderImpl(
         return Expression(expressionTokens.toList())
     }
 
+    override fun insertSymbolAtEnd(symbol: Symbol): ExpressionBuilder.InsertionAction {
+        return insertSymbolAt(symbol, ExpressionBuilder.END_OF_EXPRESSION)
+    }
+
     override fun insertSymbolAt(symbol: Symbol, index: Int): ExpressionBuilder.InsertionAction {
         val index = if (index == ExpressionBuilder.END_OF_EXPRESSION) expressionTokens.lastIndex + 1 else index
         isIndexValid(index)
@@ -60,19 +66,22 @@ class ExpressionBuilderImpl(
                 expressionTokens.add(index, tokenToInsert)
                 updateGroupingForAllNumbers()
                 listenersMgr.notifyAll { it.exprTokenWasAddedAt(tokenToInsert, index) }
-                listenersMgr.notifyAll { it.expressionWasChanged() }
+                listenersMgr.notifyAll { it.expressionWasChanged(this) }
             }
             ExpressionBuilder.InsertionAction.Replace -> {
                 val replaced = expressionTokens.set(index-1, tokenToInsert)
                 updateGroupingForAllNumbers()
                 listenersMgr.notifyAll { it.exprTokenWasReplacedAt(tokenToInsert, replaced, index-1) }
-                listenersMgr.notifyAll { it.expressionWasChanged() }
+                listenersMgr.notifyAll { it.expressionWasChanged(this) }
             }
             ExpressionBuilder.InsertionAction.NoAction -> Unit //do nothing
         }
         return actionToApply
     }
 
+    override fun backspaceSymbolFromEnd(index: Int) {
+        return backspaceSymbolFrom(ExpressionBuilder.END_OF_EXPRESSION)
+    }
 
     override fun backspaceSymbolFrom(index: Int) {
         val index = if (index == ExpressionBuilder.END_OF_EXPRESSION) expressionTokens.lastIndex else index
@@ -83,14 +92,14 @@ class ExpressionBuilderImpl(
         val removed = expressionTokens.removeAt(index-1)
         updateGroupingForAllNumbers()
         listenersMgr.notifyAll { it.exprTokenWasRemovedAt(removed, index-1) }
-        listenersMgr.notifyAll { it.expressionWasChanged() }
+        listenersMgr.notifyAll { it.expressionWasChanged(this) }
     }
 
     override fun clearAll() {
         if (expressionTokens.isNotEmpty()) {
             expressionTokens.clear()
             listenersMgr.notifyAll { it.expressionWasCleared() }
-            listenersMgr.notifyAll { it.expressionWasChanged() }
+            listenersMgr.notifyAll { it.expressionWasChanged(this) }
 
         }
     }

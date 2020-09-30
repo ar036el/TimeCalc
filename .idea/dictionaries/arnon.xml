@@ -2,6 +2,7 @@
   <dictionary name="arnon">
     <words>
       <w>autosize</w>
+      <w>coords</w>
       <w>ctor</w>
       <w>decollapse</w>
       <w>timecalc</w>

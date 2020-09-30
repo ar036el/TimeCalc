@@ -7,12 +7,15 @@ import el.arn.timecalc.calculation_engine.atoms.createZero
 import el.arn.timecalc.calculation_engine.atoms.toNum
 import el.arn.timecalc.calculation_engine.expression.*
 import el.arn.timecalc.calculation_engine.symbol.*
+import el.arn.timecalc.helpers.native_.next
+import el.arn.timecalc.helpers.native_.prev
 import java.lang.Exception
 import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 interface ResultBuilder {
-    fun solveAndGetResult(expression: Expression): Result
+    fun getOfficialResult(expression: Expression): Result
+    fun getTempResult(expression: Expression): Result?
 }
 
 class ResultBuilderImpl(
@@ -20,12 +23,34 @@ class ResultBuilderImpl(
     private val timeExpressionFactory: TimeExpressionFactory
 ) : ResultBuilder {
 
-    override fun solveAndGetResult(expression: Expression): Result {
+    override fun getTempResult(expression: Expression): Result? {
+        val tokens = expression.tokens.toMutableList()
+        if (tokens.isEmpty()) {
+            return null
+        }
+        if (tokens.last() is OperatorExprToken) {
+            tokens.removeAt(tokens.lastIndex)
+        }
+        if (tokens.all { it is NumberExpressionToken }) {
+            return null
+        }
+        val result = getOfficialResult(tokens)
+        if (result is ErrorResult) {
+            return null
+        }
+        return result
+    }
+
+    override fun getOfficialResult(expression: Expression): Result {
+        return getOfficialResult(expression.tokens)
+    }
+
+    private fun getOfficialResult(tokens: List<ExpressionToken>): Result {
         try {
             val formulaBuilder = FormulaBuilder()
-            val expressionTokens = expression.expressionTokens
+            tokens
 
-            expressionTokens.forEach {
+            tokens.forEach {
                 formulaBuilder.addExpressionToken(it)
             }
 
@@ -33,7 +58,7 @@ class ResultBuilderImpl(
             return createResult(preResultNumeral)
 
         } catch (e: BadExpressionException) {
-//            e.printStackTrace()
+            e.printStackTrace()
             return when (e) {
                 is CantMultiplyTimeQuantitiesException -> CantMultiplyTimeQuantitiesErrorResult()
                 is CantDivideByZeroException -> CantDivideByZeroErrorResult()
@@ -41,8 +66,8 @@ class ResultBuilderImpl(
                 else -> BadFormulaErrorResult()
             }
         }
-
     }
+
     private fun createResult(preResultNumeral: PreResultNumeral): Result {
         return when (preResultNumeral) {
             is PreResultNumeral_SimpleNumber -> NumberResult(preResultNumeral.number)
@@ -68,7 +93,7 @@ class ResultBuilderImpl(
                     if (getLastComponent() is Segment) {
                         segmentBuilder.addOperator(Operator.Multiplication)
                     }
-                    else if (getLastComponent() is SegmentComponent_Numeral && (getLastComponent() as SegmentComponent_Numeral).numeral is PreResultNumeral_TimeAsMillis) {
+                    else if (getLastComponent() is Numeral_SegmentComponent && (getLastComponent() as Numeral_SegmentComponent).numeral is PreResultNumeral_TimeAsMillis) {
                         segmentBuilder.addOperator(Operator.Plus)
                     }
                     when (exprToken) {
@@ -84,7 +109,7 @@ class ResultBuilderImpl(
                     closeAndAddNumberIfInQueue()
                     when (exprToken.bracket) {
                         Bracket.Opening -> {
-                            if (getLastComponent() is SegmentComponent_SegmentOrNumeral) {
+                            if (getLastComponent() is SegmentOrNumeral_SegmentComponent) {
                                 segmentBuilder.addOperator(Operator.Multiplication)
                             }
                             segmentBuilder.openSegment()
@@ -139,13 +164,13 @@ class ResultBuilderImpl(
         private var currentSegment = rootSegment
         val lastComponentOfCurrentSegment get() = currentSegment.lastComponent
         fun addNumber(number: Num) {
-            currentSegment.add(SegmentComponent_Numeral(PreResultNumeral_SimpleNumber(number)))
+            currentSegment.add(Numeral_SegmentComponent(PreResultNumeral_SimpleNumber(number)))
         }
         fun addMilliseconds(number: Num) {
-            currentSegment.add(SegmentComponent_Numeral(PreResultNumeral_TimeAsMillis(number)))
+            currentSegment.add(Numeral_SegmentComponent(PreResultNumeral_TimeAsMillis(number)))
         }
         fun addOperator(operator: Operator) {
-            currentSegment.add(SegmentComponent_Operator(operator))
+            currentSegment.add(Operator_SegmentComponent(operator))
         }
         fun openSegment() {
             val newSegment = Segment(currentSegment)
@@ -159,45 +184,82 @@ class ResultBuilderImpl(
         fun isEmpty() = rootSegment.lastComponent == null
 
 
-        private fun Segment.add(component: SegmentComponent) {
-            if ((lastComponent == null && component is SegmentComponent_Operator && !component.isAdditive)
-                || (component is SegmentComponent_SegmentOrNumeral && lastComponent is SegmentComponent_SegmentOrNumeral)
-                || (component is SegmentComponent_Operator && lastComponent is SegmentComponent_Operator)) {
+        private fun Segment.add(newComponent: SegmentComponent) {
+            if (
+                (components.isEmpty() && newComponent is Operator_SegmentComponent && newComponent.isAdditive)
+                || (newComponent is SegmentOrNumeral_SegmentComponent && lastComponent is SegmentOrNumeral_SegmentComponent)
+                || (newComponent is Operator_SegmentComponent && lastComponent is Operator_SegmentComponent && !((lastComponent as Operator_SegmentComponent).isMultiplicative && newComponent.isAdditive))
+            ){
                 throw BadExpressionException()
             }
 
             //add zero to start if first component is 'minus'
-            if (lastComponent == null && component is SegmentComponent_Operator && component.isAdditive) {
-                components.add(SegmentComponent_Numeral(PreResultNumeral_SimpleNumber(createZero())))
+            if (lastComponent == null && newComponent is Operator_SegmentComponent && newComponent.isAdditive) {
+                components.add(createZeroSegmentComponent())
             }
 
-            components.add(component)
+            //if there is something like "3*-2", it makes it to "3*(0-2)
+            val prevComponentBeforeLastIfAny = lastComponent?.let { components.prev(it) }
+            if (newComponent is SegmentOrNumeral_SegmentComponent
+                && lastComponent is Operator_SegmentComponent && (lastComponent as Operator_SegmentComponent).isAdditive
+                && prevComponentBeforeLastIfAny is Operator_SegmentComponent && prevComponentBeforeLastIfAny.isMultiplicative) {
+
+                val segment = Segment(currentSegment)
+                segment.add(createZeroSegmentComponent())
+                segment.add(lastComponent as Operator_SegmentComponent)
+                segment.add(newComponent)
+                replaceLastComponent(segment)
+                return
+            }
+
+            components.add(newComponent)
         }
 
-        private fun Segment.solve(): SegmentComponent_Numeral {
+        private fun Segment.solve(): Numeral_SegmentComponent {
             //check if the expression was parsed right
             if (components.isEmpty()) {
                 throw BadExpressionException()
             }
             components.forEachIndexed {index, component ->
-                if (index % 2 == 0 && component !is SegmentComponent_SegmentOrNumeral
-                    || index % 2 == 1 && component !is SegmentComponent_Operator
+                if (index % 2 == 0 && component !is SegmentOrNumeral_SegmentComponent
+                    || index % 2 == 1 && component !is Operator_SegmentComponent
                     || index % 2 == 1 && index == components.lastIndex) {
                     throw BadExpressionException() //todo maybe internalError?
                 }
             }
+
+            while (true) {
+                val firstItemIndex = components.indexOfFirst {
+                    val firstItem = it
+                    val secondItem = components.next(it)
+                    val thirdItem = secondItem?.let { components.next(it) }
+
+                    //return:
+                    firstItem is Operator_SegmentComponent && firstItem.isMultiplicative &&
+                    secondItem is Operator_SegmentComponent && firstItem.isAdditive &&
+                    thirdItem is SegmentOrNumeral_SegmentComponent
+                }
+                if (firstItemIndex == -1) {
+                    break
+                }
+                components.add(firstItemIndex+1, createZeroSegmentComponent())
+                solveSingleOperation(firstItemIndex+2)
+            }
+
             //solve all multiplicative operations
             while (true) {
-                val operatorIndex = components.indexOfFirst { it is SegmentComponent_Operator && it.isMultiplicative }
+                val operatorIndex = components.indexOfFirst { it is Operator_SegmentComponent && it.isMultiplicative }
                 if (operatorIndex == -1) {
                     break
                 }
                 solveSingleOperation(operatorIndex)
             }
-            if (components.any { it is SegmentComponent_Operator && it.isMultiplicative }) { throw InternalError() }
+
+
+            if (components.any { it is Operator_SegmentComponent && it.isMultiplicative }) { throw InternalError() }
             //solve all additive operations
             while (true) {
-                val operatorIndex = components.indexOfFirst { it is SegmentComponent_Operator && it.isAdditive }
+                val operatorIndex = components.indexOfFirst { it is Operator_SegmentComponent && it.isAdditive }
                 if (operatorIndex == -1) {
                     break
                 }
@@ -206,7 +268,7 @@ class ResultBuilderImpl(
             //you are left with only 1 Numeral or Segment. just format() it to eliminate weird formatting and that's your result
             if  (components.size > 1) { throw InternalError() }
             var lastSegment = components[0]
-            lastSegment = if (lastSegment is Segment) lastSegment.solve() else lastSegment as SegmentComponent_Numeral
+            lastSegment = if (lastSegment is Segment) lastSegment.solve() else lastSegment as Numeral_SegmentComponent
 
             val formattedNumeral =  when (val numeral = lastSegment.numeral) {
                 is PreResultNumeral_SimpleNumber -> PreResultNumeral_SimpleNumber(numeral.number.format())
@@ -215,37 +277,42 @@ class ResultBuilderImpl(
                 else -> throw NotImplementedError()
             }
 
-            return SegmentComponent_Numeral(formattedNumeral)
+            return Numeral_SegmentComponent(formattedNumeral)
+        }
+
+        private fun createZeroSegmentComponent(): Numeral_SegmentComponent {
+            return Numeral_SegmentComponent(PreResultNumeral_SimpleNumber(createZero()))
         }
 
 
-        private fun Segment.solveSingleOperation(operatorComponentIndex: Int) {
-            val index = operatorComponentIndex
-            fun SegmentComponent_SegmentOrNumeral.getNumeral() = if (this is Segment) solve().numeral else (this as SegmentComponent_Numeral).numeral
-            val numeralA = components[index -1] as SegmentComponent_SegmentOrNumeral
-            val operation = components[index] as SegmentComponent_Operator
-            val numeralB = components[index+1] as SegmentComponent_SegmentOrNumeral
+        private fun Segment.solveSingleOperation(indexOfOperatorInBetween: Int) {
+            val index = indexOfOperatorInBetween
+            fun SegmentOrNumeral_SegmentComponent.getNumeral() = if (this is Segment) solve().numeral else (this as Numeral_SegmentComponent).numeral
+            val numeralA = components[index -1] as SegmentOrNumeral_SegmentComponent
+            val operation = components[index] as Operator_SegmentComponent
+            val numeralB = components[index+1] as SegmentOrNumeral_SegmentComponent
 
             val result =  numeralA.getNumeral().doOperation(operation.operator, numeralB.getNumeral())
 
             components.removeAt(index-1)
             components.removeAt(index-1)
             components.removeAt(index-1)
-            components.add(index-1, SegmentComponent_Numeral(result))
+            components.add(index-1, Numeral_SegmentComponent(result))
         }
 
     }
 
     interface SegmentComponent
-    interface SegmentComponent_SegmentOrNumeral : SegmentComponent
+    interface SegmentOrNumeral_SegmentComponent : SegmentComponent
 
-    class Segment(val parent: Segment?) : SegmentComponent_SegmentOrNumeral {
+    class Segment(val parent: Segment?) : SegmentOrNumeral_SegmentComponent {
         val components = mutableListOf<SegmentComponent>()
         val lastComponent get() = components.getOrNull(components.lastIndex)
+        fun replaceLastComponent(newComponent: SegmentComponent) { components[components.lastIndex] = newComponent }
     }
-    class SegmentComponent_Numeral(val numeral: PreResultNumeral) :
-        SegmentComponent_SegmentOrNumeral
-    class SegmentComponent_Operator(val operator: Operator) : SegmentComponent {    //todo change all 'operator' to 'operation'?
+    class Numeral_SegmentComponent(val numeral: PreResultNumeral) :
+        SegmentOrNumeral_SegmentComponent
+    class Operator_SegmentComponent(val operator: Operator) : SegmentComponent {    //todo change all 'operator' to 'operation'?
         val isAdditive = operator.type == Operator.Types.Additive
         val isMultiplicative = !isAdditive
     }

@@ -1,6 +1,8 @@
 package el.arn.timecalc
 
+import android.content.Intent
 import el.arn.timecalc.calculation_engine.*
+import el.arn.timecalc.organize_later.SettingsActivity
 
 lateinit var appRoot: AppRoot
 lateinit var rootUtils: RootUtils

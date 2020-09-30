@@ -5,41 +5,128 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
 import android.widget.TextView
+import el.arn.timecalc.R
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPart
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerTopPart
 import el.arn.timecalc.calculation_engine.expression.*
+import el.arn.timecalc.calculation_engine.result.ResultBuilder
+import el.arn.timecalc.calculation_engine.result.ResultBuilderImpl
+import el.arn.timecalc.calculation_engine.symbol.Symbol
 import el.arn.timecalc.mainActivity.custom_views.CustomEditText
 import el.arn.timecalc.helpers.native_.PxPoint
-import el.arn.timecalc.mainActivity.ui.TimeResultLayoutManager
+import el.arn.timecalc.mainActivity.ui.ResultLayoutManager
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandler
+import el.arn.timecalc.organize_later.reveal_maker.RevealMakerImpl
+import el.arn.timecalc.rootUtils
 
 
 interface CalculatorCoordinator {
-    fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, timeResultLayoutManager: TimeResultLayoutManager)
-    val expressionBuilder: ExpressionBuilder //todo remove after
-    val expressionToStringConverter: ExpressionToStringConverter //todo remove after
+    fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, resultLayoutManager: ResultLayoutManager)
+    fun symbolButtonPressed(buttonView: Button)
 }
 
 class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
 
-    override val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
-    override val expressionToStringConverter: ExpressionToStringConverter = ExpressionToStringConverterImpl(expressionBuilder, false, true)
+    private val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
+    private val expressionToStringConverter: ExpressionToStringConverter = ExpressionToStringConverterImpl(expressionBuilder, false, true)
+    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, TimeExpressionFactory(rootUtils.configManager.getTimeExpressionConfig()))
+
+
+    override fun symbolButtonPressed(buttonView: Button) {
+        insertSymbol(buttonView.getTagAsChar())
+    }
+
+    private fun setActionButtonsClickListeners(activity: Activity) {
+        val backspaceButton: Button = activity.findViewById(R.id.calculator_actionButton_backspace)
+        backspaceButton.apply {
+            backspaceButton.setOnClickListener { backspace() }
+            setOnLongClickListener { clear(); true }
+        }
+        val equalsButton: Button = activity.findViewById(R.id.calculator_actionButton_equals)
+        equalsButton.setOnClickListener {
+            crapMakeBubbleReveal(activity)
+            setOfficialResult(); true }
+    }
+
+    private fun crapMakeBubbleReveal(activity: Activity) {
+        RevealMakerImpl(activity.findViewById(R.id.RevealMakerDrawingSurface),
+            500,
+            500).startBubbleReveal(
+            PxPoint(
+                activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).width.toFloat(),
+                activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).height.toFloat()
+            ),
+            PxPoint(0f,0f)
+        )
+    }
+
+    private fun crapMakeVerticalRectReveal(activity: Activity) {
+        RevealMakerImpl(activity.findViewById(R.id.RevealMakerDrawingSurface),
+            250,
+            500).startVerticalRectReveal(
+            0f,
+            activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).width.toFloat(),
+            activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).height.toFloat(),
+            0f
+        )
+    }
+    
+    private fun insertSymbol(symbolAsChar: Char) {
+        val selectedSymbol = Symbol.charOf(symbolAsChar)
+        val currentLocation = gerExpressionCurrentLocationByExpressionEditText()
+        expressionBuilder.insertSymbolAt(selectedSymbol, currentLocation)
+    }
+
+    private fun clear() {
+        expressionBuilder.clearAll()
+        resultLayoutManager?.updateResult(null)
+    }
+    
+    private fun backspace() {
+        val currentLocation = gerExpressionCurrentLocationByExpressionEditText()
+        expressionBuilder.backspaceSymbolFrom(currentLocation)
+    }
+
+    private fun setTempResult() {
+        val officialResult = resultBuilder.getTempResult(expressionBuilder.getExpression())
+        resultLayoutManager?.updateResult(officialResult)
+    }
+
+    private fun setOfficialResult() {
+        val officialResult = resultBuilder.getOfficialResult(expressionBuilder.getExpression())
+        resultLayoutManager?.updateResult(officialResult)
+    }
+
+
+    private fun gerExpressionCurrentLocationByExpressionEditText() = expressionToStringConverter.stringIndexToExpressionIndex(expressionEditText!!.selectionStart)
+
+    
+    private fun View.getTagAsChar(): Char {
+        val asString = tag.toString()
+        if (asString.length != 1) {
+            throw InternalError()
+        }
+        return asString[0]
+    }
 
     private var activity: Activity? = null
-    private var customEditText: CustomEditText? = null
+    private var expressionEditText: CustomEditText? = null
     private var buttonsContainerTopPart: ButtonsContainerTopPart? = null
     private var buttonsContainerBottomPart: ButtonsContainerBottomPart? = null
     private var swipeGestureHandler: SwipeGestureHandler? = null
-    private var timeResultLayoutManager: TimeResultLayoutManager? = null
+    private var resultLayoutManager: ResultLayoutManager? = null
 
 
-    override fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, timeResultLayoutManager: TimeResultLayoutManager) {
+    override fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, resultLayoutManager: ResultLayoutManager) {
         this.activity = activity
 
-        this.customEditText?.listenersHolder?.removeListener(expressionEditTextListener)
-        this.customEditText = customEditText
+        this.expressionEditText?.listenersHolder?.removeListener(expressionEditTextListener)
+        this.expressionEditText = customEditText
         customEditText.listenersHolder.addListener(expressionEditTextListener)
 
         this.buttonsContainerTopPart = buttonsContainerTopPart
@@ -52,7 +139,10 @@ class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
         swipeGestureHandler.addListener(swipeGestureHandlerListener)
         swipeGestureHandler.additionalGestureListenerForTouchSubject = swipeGestureHandlerAdditionalGestureListener
         
-        this.timeResultLayoutManager = timeResultLayoutManager
+        this.resultLayoutManager = resultLayoutManager
+
+
+        setActionButtonsClickListeners(activity)
     }
 
     private val expressionEditTextListener = object: CustomEditText.Listener {
@@ -107,23 +197,27 @@ class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
 
 
     private val expressionBuilderListener = object: ExpressionBuilder.Listener {
+        override fun expressionWasChanged(subject: ExpressionBuilder) {
+            setTempResult()
+        }
+
         override fun expressionWasCleared() {
-            customEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
+            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
         }
 
         override fun exprTokenWasAddedAt(token: ExpressionToken, index: Int) {
-            customEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            customEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
+            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
+            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
         }
 
         override fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int) {
-            customEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            customEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
+            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
+            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
         }
 
         override fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int) {
-            customEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            customEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index))
+            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
+            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index))
         }
     }
 

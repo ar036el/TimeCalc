@@ -60,7 +60,31 @@
     <string name="calculator_timeUnit_year_title">Year</string>
 
 
+    <string name="errorResult_cantDivideBy0">Cannot divide by 0</string>
+    <string name="errorResult_cantMultiplyTimeQuantities">Cannot multiply time</string>
+    <string name="errorResult_badFormula">Bad formula</string>
 
+
+    <string-array name="options_daysInAMonth">
+        <item>28 Days</item>
+        <item>29 Days</item>
+        <item>30 Days</item>
+        <item>31 Days</item>
+        <item>Average (30.8888009crap)</item>
+    </string-array>
+
+    <string-array name="options_daysInAYear">
+        <item>365 Days</item>
+        <item>366 Days</item>
+        <item>average (365.8888009crap)</item>
+    </string-array>
+
+
+    <string name="days_in_a_year">Days in a year</string>
+    <string name="days_in_a_month">Days in a month</string>
+    <string name="vibrate_on_button_press">Vibrate on button press</string>
+    <string name="getPremiumButton">Get Premium</string>
+    <string name="premiumDesc">No more ads</string>
 
 
 </resources>

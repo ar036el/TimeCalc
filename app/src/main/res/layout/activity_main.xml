@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".mainActivity.MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/calculatorTopPart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/calculator_drawerLayoutButtons">
+
     <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="35dp"
@@ -39,18 +46,17 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:id="@+id/resultLayoutContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/calculator_drawerLayoutButtons"
+        app:layout_constraintTop_toBottomOf="@id/calculator_expressionDisplayEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
-
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp">
         <include
-            android:id="@+id/timeResultLayout"
+            android:id="@+id/resultLayout"
             layout="@layout/artifact_time_result_layout" />
     </LinearLayout>
 
@@ -66,227 +72,17 @@
         android:inputType="text"
         android:requiresFadingEdge="horizontal"
         android:textSize="@dimen/expressionEditText_maxTextSize"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/resultLayoutContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <GridLayout
-        android:visibility="gone"
-        android:id="@+id/topButtonsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/bottomButtonsLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:columnCount="4">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="l"
-            android:text="@string/calculator_timeUnit_millisecond_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="s"
-            android:text="@string/calculator_timeUnit_second_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="m"
-            android:text="@string/calculator_timeUnit_minute_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="h"
-            android:text="@string/calculator_timeUnit_hour_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="d"
-            android:text="@string/calculator_timeUnit_day_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="w"
-            android:text="@string/calculator_timeUnit_week_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="o"
-            android:text="@string/calculator_timeUnit_month_abbrev" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCalculatorSymbolButtonClick"
-            android:tag="y"
-            android:text="@string/calculator_timeUnit_year_abbrev" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/RevealMakerDrawingSurface"/>
 
-    </GridLayout>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/bottomButtonsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="3">
-
-            <Button
-                android:id="@+id/digit1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="1"
-                android:text="1" />
-            <Button
-                android:id="@+id/digit2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="2"
-                android:text="2" />
-            <Button
-                android:id="@+id/digit3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="3"
-                android:text="3" />
-            <Button
-                android:id="@+id/digit4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="4"
-                android:text="4" />
-            <Button
-                android:id="@+id/digit5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="5"
-                android:text="5" />
-            <Button
-                android:id="@+id/digit6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="6"
-                android:text="6" />
-            <Button
-                android:id="@+id/digit7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="7"
-                android:text="7" />
-            <Button
-                android:id="@+id/digit8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="8"
-                android:text="8" />
-            <Button
-                android:id="@+id/digit9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="9"
-                android:text="9" />
-            <Button
-                android:id="@+id/backspaceOLD"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="del" />
-            <Button
-                android:id="@+id/digit0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="0"
-                android:text="0" />
-            <Button
-                android:id="@+id/decimalPoint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="."
-                android:text="." />
-
-        </GridLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="("
-                android:text="@string/calculator_bracket_opening" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag=")"
-                android:text="@string/calculator_bracket_closing" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="+"
-                android:text="@string/calculator_operator_plus" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="-"
-                android:text="@string/calculator_operator_minus" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="*"
-                android:text="@string/calculator_operator_multiplication" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="/"
-                android:text="@string/calculator_operator_division" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCalculatorSymbolButtonClick"
-                android:tag="%"
-                android:text="@string/calculator_operator_percent" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/calculator_equals" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout

@@ -1,38 +1,35 @@
 package el.arn.timecalc.mainActivity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import el.arn.timecalc.R
 import el.arn.timecalc.appRoot
-import el.arn.timecalc.calculation_engine.TimeExpressionConfig
-import el.arn.timecalc.calculation_engine.TimeExpressionFactory
-import el.arn.timecalc.calculation_engine.result.ResultBuilder
-import el.arn.timecalc.calculation_engine.result.ResultBuilderImpl
-import el.arn.timecalc.calculation_engine.result.TimeResult
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPart
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPartImpl
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerTopPart
 import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerTopPartImpl
-import el.arn.timecalc.calculation_engine.symbol.Symbol
 import el.arn.timecalc.mainActivity.custom_views.CustomEditText
 import el.arn.timecalc.mainActivity.ui.EditTextFontAutosizeMaker
 import el.arn.timecalc.helpers.android.dimenFromResAsPx
 import el.arn.timecalc.helpers.native_.LimitedAccessFunction
 import el.arn.timecalc.helpers.native_.PxPoint
-import el.arn.timecalc.mainActivity.ui.TimeResultLayoutManager
+import el.arn.timecalc.mainActivity.ui.ResultLayoutManager
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandler
 import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandlerImpl
+import el.arn.timecalc.organize_later.SettingsActivity
 import el.arn.timecalc.rootUtils
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var expressionEditText: CustomEditText
-    private val expressionBuilder = appRoot.calculatorCoordinator.expressionBuilder
-    private val expressionStringAdapter = appRoot.calculatorCoordinator.expressionToStringConverter
-    private lateinit var timeResultLayoutManager: TimeResultLayoutManager
+    private lateinit var resultLayoutManager: ResultLayoutManager
+
+    private val calculatorCoordinator by lazy { appRoot.calculatorCoordinator }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         expressionEditText = findViewById(R.id.calculator_expressionDisplayEditText)
         expressionEditText.showSoftInputOnFocus = false //todo put this at class itself. test and see if not crash
 
-
-        initCalculatorActionButtons()
         initAll.grantOneAccess()
 
 
@@ -51,6 +46,19 @@ class MainActivity : AppCompatActivity() {
             dimenFromResAsPx(R.dimen.expressionEditText_minTextSize),
             dimenFromResAsPx(R.dimen.expressionEditText_maxTextSize)
         )
+
+
+
+    findViewById<ImageButton>(R.id.settingsButton).setOnClickListener {
+        openSettingsActivity()
+    }
+
+}
+
+
+private fun openSettingsActivity() {
+        val settingsActivity = Intent(this, SettingsActivity::class.java)
+        startActivity(settingsActivity)
     }
 
     override fun onDestroy() {
@@ -58,44 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onCalculatorSymbolButtonClick(view: View) {
-        val selectedSymbol = Symbol.charOf(view.getTagAsChar())
-        expressionBuilder.insertSymbolAt(selectedSymbol, getExpressionCurrentLocation())
-    }
-
-    private fun initCalculatorActionButtons() {
-
-        //backspace button
-        val backspaceButton: Button = findViewById(R.id.calculator_actionButton_backspace)
-        backspaceButton.setOnLongClickListener {
-            expressionBuilder.clearAll(); true
-        }
-        backspaceButton.setOnClickListener {
-            expressionBuilder.backspaceSymbolFrom(getExpressionCurrentLocation())
-        }
-
-        val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, TimeExpressionFactory(TimeExpressionConfig(30f, 365f)))
-        //equals button
-        val equalsButton: Button = findViewById(R.id.calculator_actionButton_equals)
-        equalsButton.setOnClickListener {
-            val result = resultBuilder.solveAndGetResult(expressionBuilder.getExpression())
-            if (result is TimeResult) {
-                timeResultLayoutManager.consumeTimeResult(result)
-            }
-            true
-        }
-    }
-
-
-    private fun View.getTagAsChar(): Char {
-        val asString = tag.toString()
-        if (asString.length != 1) {
-            throw InternalError()
-        }
-        return asString[0]
-    }
-
-    private fun getExpressionCurrentLocation(): Int {
-        return expressionStringAdapter.stringIndexToExpressionIndex(expressionEditText.selectionStart)
+        calculatorCoordinator.symbolButtonPressed(view as Button)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -118,12 +89,12 @@ class MainActivity : AppCompatActivity() {
             1.1f
         )
 
-        timeResultLayoutManager = TimeResultLayoutManager(
-            findViewById(R.id.timeResultLayout),
+        resultLayoutManager = ResultLayoutManager(
+            findViewById(R.id.resultLayout),
             null,
             rootUtils.configManager.getConfigForTimeResultLayoutManager(),
             1080f,
-            70f,
+            150f,
             200f,
         )
 
@@ -134,7 +105,7 @@ class MainActivity : AppCompatActivity() {
             buttonsContainerTopPart,
             buttonsContainerBottomPart,
             swipeGestureHandler,
-            timeResultLayoutManager
+            resultLayoutManager
         )
 
 

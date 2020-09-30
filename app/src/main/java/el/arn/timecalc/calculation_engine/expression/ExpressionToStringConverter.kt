@@ -27,7 +27,7 @@ class ExpressionToStringConverterImpl(
     private lateinit var groupingPrefixString: String
 
     override fun expressionToString(): String {
-        val expressionTokens = expressionBuilder.getExpression().expressionTokens
+        val expressionTokens = expressionBuilder.getExpression().tokens
         val stringBuilder = StringBuilder()
 
         expressionTokens.forEach {
@@ -43,7 +43,7 @@ class ExpressionToStringConverterImpl(
         var expressionPosIndex = 0
         var totalCharsPassed = 0
 
-        for (exprToken in expressionBuilder.getExpression().expressionTokens) {
+        for (exprToken in expressionBuilder.getExpression().tokens) {
             if (exprToken is DigitExprToken && exprToken.hasGroupingPrefix && showGrouping) {
                 totalCharsPassed++
             }
@@ -59,7 +59,7 @@ class ExpressionToStringConverterImpl(
     override fun expressionIndexToStringIndex(expressionPosIndex: Int): Int {
         var stringPosIndex = 0
         for (i in 0 until expressionPosIndex ) {
-            val exprToken = expressionBuilder.getExpression().expressionTokens[i]
+            val exprToken = expressionBuilder.getExpression().tokens[i]
             stringPosIndex += symbolsWithStrings[exprToken.symbol]!!.length
             if (exprToken is DigitExprToken && exprToken.hasGroupingPrefix && showGrouping) {
                 stringPosIndex++
