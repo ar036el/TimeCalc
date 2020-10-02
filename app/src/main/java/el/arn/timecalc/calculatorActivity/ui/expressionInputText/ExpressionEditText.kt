@@ -12,10 +12,10 @@ import el.arn.timecalc.helpers.native_.checkIfPercentIsLegal
 import el.arn.timecalc.helpers.native_.percentToValue
 import el.arn.timecalc.helpers.native_.valueToPercent
 import el.arn.timecalc.calculatorActivity.CalculatorActivity
-import el.arn.timecalc.calculatorActivity.ui.calculatorButtonsElasticLayout.EditTextFontAutosizeMaker
+import el.arn.timecalc.calculatorActivity.ui.expressionInputText.parts.EditTextAutosizeMaker
 import el.arn.timecalc.calculatorActivity.ui.expressionInputText.parts.HookedEditText
-import el.arn.timecalc.helpers.android.PixelConverter.pxToSp
 import el.arn.timecalc.helpers.native_.initOnce
+import kotlin.math.min
 
 
 interface ExpressionEditText {
@@ -33,54 +33,54 @@ class ExpressionEditTextImpl(
         set(value) {
             checkIfPercentIsLegal(value)
             field = value
-            applyAbilityPercentage()
+            _setAbilityPercentage(value)
         }
 
+    override var isEnabled: Boolean
+        get() = editText.isEnabled
+        set(value) { editText.isEnabled = value }
+
     private val expressionToStringConverter: ExpressionToStringConverter = ExpressionToStringConverterImpl(expressionBuilder, false, true)
-    private var autosizeMakerForEditText: EditTextFontAutosizeMaker by initOnce()
 
-    private val editTextView: HookedEditText = activity.findViewById(R.id.calculator_expressionEditText)
-    private val editTextContainer: ViewGroup = activity.findViewById(R.id.calculator_expressionEditTextContainer)
 
-    private val alphaFullyDisabled = floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled)
-    private val alphaFullyEnabled = floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled)
+    private val editText: HookedEditText = activity.findViewById(R.id.calculator_expressionEditText)
+    private val container: ViewGroup = activity.findViewById(R.id.calculator_expressionEditTextContainer)
+    private var editTextAutosizeMaker: EditTextAutosizeMaker by initOnce()
+
+
 
     private val minTextSize = dimenFromResAsPx(R.dimen.expressionEditText_minTextSize)
     private val maxTextSizeWhenFullyEnabled = dimenFromResAsPx(R.dimen.expressionEditText_maxTextSize_fullyEnabled)
     private val maxTextSizeWhenFullyDisabled = dimenFromResAsPx(R.dimen.expressionEditText_maxTextSize_fullyDisabled)
+    private val alphaFullyDisabled = floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled)
+    private val alphaFullyEnabled = floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled)
+    private var heightFullyEnabled: Float by initOnce()
+    private var heightFullyDisabled: Float by initOnce()
 
-    override var isEnabled: Boolean
-        get() = editTextView.isEnabled
-        set(value) { editTextView.isEnabled = value }
 
-    override fun getExpressionBuilderIndexByInputTextLocation(): Int {
-        return expressionToStringConverter.stringIndexToExpressionIndex(editTextView.selectionStart)
-    }
-
-    private fun applyAbilityPercentage() {
-        editTextView.textSize = pxToSp(editTextView.textSize-0.1f)
-        editTextView.setSelection(editTextView.text?.length ?: 0)
-        return
-
-        editTextView.doWhenDynamicVariablesAreReady {
-            editTextView.alpha = percentToValue(abilityPercentage, alphaFullyDisabled, alphaFullyEnabled)
-
-            val newHeight = percentToValue(abilityPercentage, editTextHeightFullyDisabled, editTextHeightFullyEnabled)
-            editTextContainer.heightByLayoutParams = newHeight.toInt()
-            autosizeMakerForEditText.textSizeAdditionalScale = valueToPercent(newHeight, 0f, editTextHeightFullyEnabled)
+    private fun _setAbilityPercentage(percent: Float) {
+        editText.doWhenDynamicVariablesAreReady {
+            editText.alpha = percentToValue(percent, alphaFullyDisabled, alphaFullyEnabled)
+            val newHeight = percentToValue(percent, heightFullyDisabled, heightFullyEnabled)
+            container.heightByLayoutParams = newHeight.toInt()
+            val scale = percentToValue(percent, min(maxTextSizeWhenFullyDisabled / editText.textSize, 1f), 1f)
+            editTextAutosizeMaker.textSizeAdditionalScale = scale
+            editText.setSelection(editText.text?.length ?: 0)
         }
     }
 
-    private var editTextHeightFullyEnabled: Float by initOnce()
-    private var editTextHeightFullyDisabled: Float by initOnce()
+    override fun getExpressionBuilderIndexByInputTextLocation(): Int {
+        return expressionToStringConverter.stringIndexToExpressionIndex(editText.selectionStart)
+    }
 
     private fun initEditText() {
-        autosizeMakerForEditText = EditTextFontAutosizeMaker(
-            editTextView,
+        editTextAutosizeMaker = EditTextAutosizeMaker(
+            editText,
             minTextSize,
             maxTextSizeWhenFullyEnabled
         )
-        editTextView.showSoftInputOnFocus = false
+        editText.setText("") //means textSize will be 'maxTextSizeWhenFullyEnabled'
+        editText.showSoftInputOnFocus = false
     }
 
 
@@ -108,37 +108,38 @@ class ExpressionEditTextImpl(
 
     private val expressionBuilderListener = object : ExpressionBuilder.Listener {
         override fun expressionWasCleared() {
-            editTextView.setText(expressionToStringConverter.expressionToString(),
+            editText.setText(expressionToStringConverter.expressionToString(),
                 TextView.BufferType.EDITABLE)
         }
         override fun exprTokenWasAddedAt(token: ExpressionToken, index: Int) {
-            editTextView.setText(expressionToStringConverter.expressionToString(),
+            editText.setText(expressionToStringConverter.expressionToString(),
                 TextView.BufferType.EDITABLE)
-            editTextView.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index + 1))
+            editText.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index + 1))
         }
         override fun exprTokenWasReplacedAt(
             token: ExpressionToken,
             replaced: ExpressionToken,
             index: Int,
         ) {
-            editTextView.setText(expressionToStringConverter.expressionToString(),
+            editText.setText(expressionToStringConverter.expressionToString(),
                 TextView.BufferType.EDITABLE)
-            editTextView.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index + 1))
+            editText.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index + 1))
         }
         override fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int) {
-            editTextView.setText(expressionToStringConverter.expressionToString(),
+            editText.setText(expressionToStringConverter.expressionToString(),
                 TextView.BufferType.EDITABLE)
-            editTextView.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index))
+            editText.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index))
         }
     }
 
     init {
         initEditText()
-        editTextView.listenersHolder.addListener(editTextViewListener)
+        editText.listenersHolder.addListener(editTextViewListener)
         expressionBuilder.addListener(expressionBuilderListener)
-        editTextView.doWhenDynamicVariablesAreReady {
-            editTextHeightFullyEnabled = editTextView.height.toFloat()
-            editTextHeightFullyDisabled = editTextView.height - maxTextSizeWhenFullyEnabled + maxTextSizeWhenFullyDisabled
+
+        editText.doWhenDynamicVariablesAreReady {
+            heightFullyEnabled = editText.height.toFloat()
+            heightFullyDisabled = editText.height - maxTextSizeWhenFullyEnabled + maxTextSizeWhenFullyDisabled
             abilityPercentage = 1f
         }
     }

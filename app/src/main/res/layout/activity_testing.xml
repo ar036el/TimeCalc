@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/artifact_time_result_layout"/>
+    <include layout="@layout/artifact_calculator_display_result"/>
 
     <Button
         android:onClick="changeTimeResult"

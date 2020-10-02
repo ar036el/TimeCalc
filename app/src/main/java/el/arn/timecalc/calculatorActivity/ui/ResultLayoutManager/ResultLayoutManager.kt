@@ -50,8 +50,8 @@ class ResultLayoutManager(
 
 
     private val scrollViewContainer: HorizontalScrollView by lazy { resultLayout.findViewById(R.id.scrollViewContainer) }
-    private val containerResizable: ViewGroup by lazy { resultLayout.findViewById(R.id.timeResultLayout_containerResizable) }
-    private val containerSource: ViewGroup by lazy { resultLayout.findViewById(R.id.timeResultLayout_containerSource) }
+    private val containerResizable: ViewGroup by lazy { resultLayout.findViewById(R.id.containerResize) }
+    private val containerSource: ViewGroup by lazy { resultLayout.findViewById(R.id.containerSource) }
     private var layoutSizeScale = 1f
     private var prevUnscaledWidth: Float? = null
     private var prevUnscaledHeight: Float? = null

@@ -33,11 +33,13 @@ class CalculatorCoordinatorImpl(
     private val activity: CalculatorActivity,
 ) : CalculatorCoordinator { //todo weird name
 
-    private val BUBBLE_REVEAL_EXPAND_DURATION = 500L
-    private val BUBBLE_REVEAL_FADE_DURATION = 500L
+    private val BUBBLE_REVEAL_EXPAND_DURATION = 400L
+    private val BUBBLE_REVEAL_FADE_DURATION = 350L
+    private val BUBBLE_REVEAL_DELAY_BEFORE_FADE = 50L
+
     private val RECT_REVEAL_EXPAND_DURATION = 300L
     private val RECT_REVEAL_FADE_DURATION = 500L
-    private val RESULT_REVEAL_DURATION = 7500L
+    private val RESULT_REVEAL_DURATION = 500L
 
     private val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
     private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter,
@@ -195,6 +197,7 @@ class CalculatorCoordinatorImpl(
             PxPoint(drawingSurface.width.toFloat(), drawingSurface.height.toFloat()),
             PxPoint(0f, 0f),
             BUBBLE_REVEAL_EXPAND_DURATION,
+            BUBBLE_REVEAL_DELAY_BEFORE_FADE,
             BUBBLE_REVEAL_FADE_DURATION,
             revealStyle
         )

@@ -26,6 +26,7 @@ interface RevealManager : HoldsListeners<RevealManager.Listener> {
         fromRelative: PxPoint,
         toRelative: PxPoint,
         expandDuration: Long,
+        delayBeforeFadeDuration: Long,
         fadeDuration: Long,
         style: RevealStyles
     )
@@ -38,6 +39,7 @@ interface RevealManager : HoldsListeners<RevealManager.Listener> {
         fromY: Float,
         toY: Float,
         expandDuration: Long,
+        delayBeforeFadeDuration: Long,
         fadeDuration: Long,
         style: RevealStyles
     )
@@ -75,12 +77,13 @@ class RevealManagerImpl(
         fromRelative: PxPoint,
         toRelative: PxPoint,
         expandDuration: Long,
+        delayBeforeFadeDuration: Long,
         fadeDuration: Long,
         style: RevealManager.RevealStyles
     ) {
         val maxRadius = getDistance(fromRelative, toRelative)
         val reveal = Bubble(fromRelative, getRevealColor(style))
-        startReveal(reveal, maxRadius, expandDuration, fadeDuration)
+        startReveal(reveal, maxRadius, expandDuration, delayBeforeFadeDuration, fadeDuration)
     }
 
     override fun startVerticalRectReveal(
@@ -89,6 +92,7 @@ class RevealManagerImpl(
         fromY: Float,
         toY: Float,
         expandDuration: Long,
+        delayBeforeFadeDuration: Long,
         fadeDuration: Long,
         style: RevealManager.RevealStyles
     ) {
@@ -96,7 +100,7 @@ class RevealManagerImpl(
             throw InternalError("startX[$startX] > endX[$endX]")
         }
         val reveal = VerticalRect(startX, endX, fromY, (toY > fromY), getRevealColor(style))
-        startReveal(reveal, abs(fromY - toY), expandDuration, fadeDuration)
+        startReveal(reveal, abs(fromY - toY), expandDuration, delayBeforeFadeDuration, fadeDuration)
     }
 
     @ColorInt private fun getRevealColor(style: RevealManager.RevealStyles): Int {
@@ -110,6 +114,7 @@ class RevealManagerImpl(
         reveal: Reveal,
         maxLength: Float,
         expandDuration: Long,
+        delayBeforeFadeDuration: Long,
         fadeDuration: Long,
     ) {
         if (currentState != Inactive) {
@@ -119,25 +124,27 @@ class RevealManagerImpl(
             throw InternalError()
         }
 
+        val fadeAnimation = PercentAnimation(
+            fadeDuration, null,
+            { setRevealFadePercentage(it) },
+            { removeReveal(); currentState = Inactive }
+        )
+
+        val delayAnimation = PercentAnimation(
+            delayBeforeFadeDuration, null,
+            {},
+            { fadeAnimation.start() }
+        )
+
+        val expandAnimation =  PercentAnimation(
+            expandDuration, null,
+            { setRevealLength(maxLength, it) },
+            { currentState = IsFading; delayAnimation.start() }
+        )
+
         currentReveal = reveal
         currentState = IsExpanding
-        PercentAnimation(
-            expandDuration,
-            null,
-            { setRevealLength(maxLength, it) },
-            {
-                currentState = IsFading
-                PercentAnimation(
-                    fadeDuration,
-                    null,
-                    { setRevealFadePercentage(it) },
-                    {
-                        removeReveal()
-                        currentState = Inactive
-                    }
-                ).start()
-            }
-        ).start()
+        expandAnimation.start()
     }
 
     private fun setRevealLength(length: Float, expansionPercent: Float) {

@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/timeResultLayout_containerResizable"
+                android:id="@+id/containerResize"
                 android:layout_width="1000dp"
                 android:layout_height="100dp"
                 android:gravity="center"
@@ -34,10 +34,11 @@
                     android:gravity="center">
 
                     <LinearLayout
-                        android:id="@+id/timeResultLayout_containerSource"
+                        android:id="@+id/containerSource"
                         android:paddingBottom="8dp"
                         android:layout_width="wrap_content"
                         android:layoutDirection="rtl"
+                        android:orientation="horizontal"
                         android:textDirection="ltr"
                         android:layout_height="wrap_content">
 

@@ -1,14 +1,16 @@
-package el.arn.timecalc.calculatorActivity.ui.calculatorButtonsElasticLayout
+package el.arn.timecalc.calculatorActivity.ui.expressionInputText.parts
 
+import android.util.TypedValue
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import el.arn.timecalc.helpers.android.PixelConverter.pxToSp
 import el.arn.timecalc.helpers.android.doWhenDynamicVariablesAreReady
 import el.arn.timecalc.helpers.android.measureTextWidth
 import el.arn.timecalc.helpers.native_.boundByMinAndMax
+import kotlin.properties.Delegates
 
 
-class EditTextFontAutosizeMaker(
+class EditTextAutosizeMaker(
     val editText: EditText,
     minTextSizeInPx: Float,
     maxTextSizeInPx: Float,
@@ -37,7 +39,7 @@ class EditTextFontAutosizeMaker(
         set(value) {
             if (value < 0) { throw InternalError() }
             field = value
-            updateEditTextTextSize()
+            _setTextSizeAdditionalScale(value)
         }
 
     private var wasEffectStopped = false
@@ -45,14 +47,22 @@ class EditTextFontAutosizeMaker(
         wasEffectStopped = true
     }
 
+    var theoreticalCurrentTextSize = editText.textSize * textSizeAdditionalScale
+
     private fun updateEditTextTextSize() {
         val currentTextWidth = editText.measureTextWidth()
         if (currentTextWidth != 0f) {
             val unboundedResizeFactor = textWidthThresholdInPx / currentTextWidth
             var newTextSizeInPx = editText.textSize * unboundedResizeFactor
-            newTextSizeInPx = boundByMinAndMax(newTextSizeInPx, minTextSizeInPx, maxTextSizeInPx)
-            editText.textSize = pxToSp(newTextSizeInPx) * textSizeAdditionalScale
+            newTextSizeInPx = boundByMinAndMax(newTextSizeInPx, minTextSizeInPx, maxTextSizeInPx) * textSizeAdditionalScale
+            theoreticalCurrentTextSize = newTextSizeInPx
+            editText.setTextSize(TypedValue.COMPLEX_UNIT_PX , newTextSizeInPx)
         }
+    }
+
+    private fun _setTextSizeAdditionalScale(scale: Float) {
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX , theoreticalCurrentTextSize * scale)
+        println("aaaa" + scale)
     }
 
     private fun checkIfMinAndMaxIsLegal() {
