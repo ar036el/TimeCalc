@@ -23,10 +23,10 @@ interface ExpressionBuilder : HoldsListeners<ExpressionBuilder.Listener> {
 
     interface Listener {
         fun expressionWasChanged(subject: ExpressionBuilder) {}
-        fun expressionWasCleared()
-        fun exprTokenWasAddedAt(token: ExpressionToken, index: Int)
-        fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int)
-        fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int)
+        fun expressionWasCleared() {}
+        fun exprTokenWasAddedAt(token: ExpressionToken, index: Int) {}
+        fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int) {}
+        fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int) {}
 
     }
 

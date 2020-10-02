@@ -11,7 +11,7 @@ import el.arn.timecalc.calculation_engine.TimeExpressionFactory
 import el.arn.timecalc.calculation_engine.atoms.TimeVariable
 import el.arn.timecalc.calculation_engine.atoms.toNum
 import el.arn.timecalc.calculation_engine.result.TimeResult
-import el.arn.timecalc.mainActivity.ui.ResultLayoutManager
+import el.arn.timecalc.calculatorActivity.ui.ResultLayoutManager.ResultLayoutManager
 import el.arn.timecalc.organize_later.testSetInterval
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,6 +33,7 @@ class TestingActivity : AppCompatActivity() {
 
         resultLayoutManager = ResultLayoutManager(
             findViewById(R.id.resultLayout),
+            findViewById(R.id.resultLayoutContainer),
             timeResult,
             rootUtils.configManager.getConfigForTimeResultLayoutManager(),
             1000f,

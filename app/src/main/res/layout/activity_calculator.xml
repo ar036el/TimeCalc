@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calculatorActivity.CalculatorActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/calculatorTopPart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/calculator_drawerLayoutButtons"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:contentDescription="Clear history"
+            android:paddingStart="6dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="6dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/clearHistoryButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:contentDescription="Clear history"
+            android:paddingStart="6dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="6dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_history_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="end"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/RevealManagerDrawingSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:id="@+id/calculator_expressionEditTextContainer"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:background="@color/colorPrimary"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/resultLayoutContainer" >
+                <HorizontalScrollView
+                    android:id="@+id/scrollViewContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:background="@android:color/transparent"
+                    android:requiresFadingEdge="horizontal"
+                    android:fadeScrollbars="true">
+                <el.arn.timecalc.calculatorActivity.ui.expressionInputText.parts.HookedEditText
+                    android:id="@+id/calculator_expressionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="end"
+                    android:inputType="text"
+                    android:requiresFadingEdge="horizontal"
+                    android:textColor="@drawable/edittext_custom_color_scheme"
+                    android:textSize="@dimen/expressionEditText_maxTextSize_fullyEnabled" />
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/resultLayoutContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <include
+                    android:id="@+id/resultLayout"
+                    layout="@layout/artifact_time_result_layout" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/RevealManagerDrawingSurface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/calculator_drawerLayoutButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include layout="@layout/artifact_calculator_buttons_drawerlike_layout" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

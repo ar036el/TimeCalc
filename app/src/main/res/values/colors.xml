@@ -8,6 +8,9 @@
     <color name="black">#000000</color>
 
 
+    <color name="normalText">#000000</color>
+
+
     <color name="timeResultBlock_timeUnit">#E6FFFFFF</color>
 
     <color name="timeResultBackground_millisecond">#008949</color>
@@ -27,7 +30,8 @@
 
 
 
-    <color name="revealColor">#666666</color>
+    <color name="revealColor_normal">#666666</color>
+    <color name="revealColor_error">#E53935</color>
 
 
 </resources>

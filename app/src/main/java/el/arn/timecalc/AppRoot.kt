@@ -1,8 +1,9 @@
 package el.arn.timecalc
 
-import android.content.Intent
 import el.arn.timecalc.calculation_engine.*
-import el.arn.timecalc.organize_later.SettingsActivity
+import el.arn.timecalc.helpers.native_.initOnce
+import el.arn.timecalc.utils.RootUtils
+import el.arn.timecalc.utils.RootUtilsImpl
 
 lateinit var appRoot: AppRoot
 lateinit var rootUtils: RootUtils
@@ -12,27 +13,17 @@ lateinit var rootUtils: RootUtils
 //)
 class AppRoot : android.app.Application() {
 
-    lateinit var calculatorCoordinator: CalculatorCoordinator
-
-
+    var calculatorCoordinator: CalculatorCoordinator by initOnce()
 
     override fun onCreate() {
         super.onCreate()
         appRoot = this
         rootUtils = RootUtilsImpl(this)
-
-
-        calculatorCoordinator = CalculatorCoordinatorImpl()
-
-        initAllVars()
     }
 //
 //    override fun attachBaseContext(base: Context?) {
 //        super.attachBaseContext(base)
 //        ACRA.init(this)
 //    }
-
-    private fun initAllVars() {
-    }
 
 }

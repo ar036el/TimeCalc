@@ -63,7 +63,7 @@ class ResultBuilderTest {
     fun testForNumberResult(expressionAsString: String, number: Number) = testForNumberResult(expressionAsString, toNum(number))
 
     fun testForNumberResult(expressionAsString: String, number: Num) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is NumberResult) {
             fail("expected NumberResult but was ${result.javaClass.simpleName}")
         }
@@ -74,7 +74,7 @@ class ResultBuilderTest {
     //    fun testForTimeResult(expressionAsString: String, millis: Number = 0, seconds: Number = 0, minutes: Number = 0, hours: Number = 0, days: Number = 0, weeks: Number = 0, months: Number = 0, years: Number = 0) {
 
     fun testForTimeResult(expressionAsString: String, totalMillis: Num) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is TimeResult) {
             fail("expected TimeResult but was ${result.javaClass.simpleName}")
         }
@@ -132,7 +132,7 @@ class ResultBuilderTest {
     }
 
     fun testForMixedResult(expressionAsString: String, number: Num, totalMillis: Num) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is MixedResult) {
             fail("expected MixedResult but was ${result.javaClass.simpleName}")
         }
@@ -142,19 +142,19 @@ class ResultBuilderTest {
     }
 
     fun testForBadFormulaErrorResult(expressionAsString: String) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is BadFormulaErrorResult || result is CantMultiplyTimeQuantitiesErrorResult || result is CantDivideByZeroErrorResult) {
             fail("expected MixedResult but was ${result.javaClass.simpleName}")
         }
     }
     fun testForCantMultiplyTimeUnitsResult(expressionAsString: String) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is CantMultiplyTimeQuantitiesErrorResult) {
             fail("expected MixedResult but was ${result.javaClass.simpleName}")
         }
     }
     fun testForCantDivideByZeroResult(expressionAsString: String) {
-        val result = tester!!.getOfficialResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
+        val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
         if (result !is CantDivideByZeroErrorResult) {
             fail("expected MixedResult but was ${result.javaClass.simpleName}")
         }
@@ -225,7 +225,7 @@ class ResultBuilderTest {
         fun test(minSymbols: Int, maxSymbols: Int) {
             val expressionBuilder = ExpressionBuilderImpl()
             ExpressionTestUtils.buildRandomExpression(expressionBuilder ,minSymbols, maxSymbols)
-            val result = ResultBuilderImpl(TimeConverterImpl(), timeExpressionFactory).getOfficialResult(expressionBuilder.getExpression())
+            val result = ResultBuilderImpl(TimeConverterImpl(), timeExpressionFactory).getResult(expressionBuilder.getExpression())
         }
         repeat(1000) { test(0, 10) }
         repeat(1000) { test(0, 100) }

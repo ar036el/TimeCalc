@@ -14,7 +14,8 @@ import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 interface ResultBuilder {
-    fun getOfficialResult(expression: Expression): Result
+    fun getResult(expression: Expression): Result
+    fun getOfficialResult(expression: Expression): Result?
     fun getTempResult(expression: Expression): Result?
 }
 
@@ -34,18 +35,29 @@ class ResultBuilderImpl(
         if (tokens.all { it is NumberExpressionToken }) {
             return null
         }
-        val result = getOfficialResult(tokens)
+        val result = getResult(tokens)
         if (result is ErrorResult) {
             return null
         }
         return result
     }
 
-    override fun getOfficialResult(expression: Expression): Result {
-        return getOfficialResult(expression.tokens)
+    override fun getOfficialResult(expression: Expression): Result? {
+        val tokens = expression.tokens
+        if (tokens.isEmpty()) {
+            return null
+        }
+        if (tokens.all { it is NumberExpressionToken }) {
+            return null
+        }
+        return getResult(tokens)
     }
 
-    private fun getOfficialResult(tokens: List<ExpressionToken>): Result {
+    override fun getResult(expression: Expression): Result {
+        return getResult(expression.tokens)
+    }
+
+    private fun getResult(tokens: List<ExpressionToken>): Result {
         try {
             val formulaBuilder = FormulaBuilder()
             tokens

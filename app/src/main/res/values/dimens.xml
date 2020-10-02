@@ -6,8 +6,9 @@
 
     <!--    todo special case: do it dp or sp???-->
     <!--    TODO how is that possible that this is 20sp and number is 18' and it's so small?????-->
-    <dimen name="expressionEditText_maxTextSize">70sp</dimen>
     <dimen name="expressionEditText_minTextSize">35sp</dimen>
+    <dimen name="expressionEditText_maxTextSize_fullyEnabled">70sp</dimen>
+    <dimen name="expressionEditText_maxTextSize_fullyDisabled">40sp</dimen>
 
     <dimen name="timeResult_number">32sp</dimen>
     <dimen name="timeResult_timeUnit">18sp</dimen>
@@ -18,6 +19,15 @@
 
 
     <dimen name="settings_item_padding">8dp</dimen>
+
+    <dimen name="resultLayout_minHeight">25dp</dimen>
+    <dimen name="resultLayout_maxHeight_fullyDisabled">60dp</dimen>
+    <dimen name="resultLayout_maxHeight_fullyEnabled">100dp</dimen>
+
+
+    <item name="calculatorDisplayComponentAlpha_enabled" format="float" type="dimen">1</item>
+    <item name="calculatorDisplayComponentAlpha_disabled" format="float" type="dimen">0.5</item>
+
 
 
 

@@ -1,295 +1,274 @@
 package el.arn.timecalc.calculation_engine
 
-import android.animation.Animator
-import android.animation.ValueAnimator
-import android.app.Activity
-import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Button
-import android.widget.TextView
 import el.arn.timecalc.R
-import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerBottomPart
-import el.arn.timecalc.mainActivity.ui.calculatorButtonsLayouts.ButtonsContainerTopPart
 import el.arn.timecalc.calculation_engine.expression.*
+import el.arn.timecalc.calculation_engine.result.ErrorResult
+import el.arn.timecalc.calculation_engine.result.Result
 import el.arn.timecalc.calculation_engine.result.ResultBuilder
 import el.arn.timecalc.calculation_engine.result.ResultBuilderImpl
 import el.arn.timecalc.calculation_engine.symbol.Symbol
-import el.arn.timecalc.mainActivity.custom_views.CustomEditText
+import el.arn.timecalc.helpers.android.dimenFromResAsPx
+import el.arn.timecalc.helpers.android.floatFromRes
 import el.arn.timecalc.helpers.native_.PxPoint
-import el.arn.timecalc.mainActivity.ui.ResultLayoutManager
-import el.arn.timecalc.mainActivity.ui.swipeGestureHandler.SwipeGestureHandler
-import el.arn.timecalc.organize_later.reveal_maker.RevealMakerImpl
+import el.arn.timecalc.helpers.native_.percentToValue
+import el.arn.timecalc.calculatorActivity.CalculatorActivity
+import el.arn.timecalc.calculatorActivity.ui.expressionInputText.ExpressionEditTextImpl
+import el.arn.timecalc.calculatorActivity.ui.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout
+import el.arn.timecalc.calculatorActivity.ui.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayoutImpl
+import el.arn.timecalc.calculatorActivity.ui.ResultLayoutManager.ResultLayoutManager
+import el.arn.timecalc.utils.RevealManager
+import el.arn.timecalc.utils.RevealManagerImpl
 import el.arn.timecalc.rootUtils
-
+import el.arn.timecalc.utils.PercentAnimation
+import kotlin.math.min
 
 interface CalculatorCoordinator {
-    fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, resultLayoutManager: ResultLayoutManager)
-    fun symbolButtonPressed(buttonView: Button)
+    //???
 }
 
-class CalculatorCoordinatorImpl: CalculatorCoordinator { //todo weird name
+class CalculatorCoordinatorImpl(
+    private val activity: CalculatorActivity,
+) : CalculatorCoordinator { //todo weird name
+
+    private val BUBBLE_REVEAL_EXPAND_DURATION = 500L
+    private val BUBBLE_REVEAL_FADE_DURATION = 500L
+    private val RECT_REVEAL_EXPAND_DURATION = 300L
+    private val RECT_REVEAL_FADE_DURATION = 500L
+    private val RESULT_REVEAL_DURATION = 7500L
 
     private val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
-    private val expressionToStringConverter: ExpressionToStringConverter = ExpressionToStringConverterImpl(expressionBuilder, false, true)
-    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, TimeExpressionFactory(rootUtils.configManager.getTimeExpressionConfig()))
+    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter,
+        TimeExpressionFactory(rootUtils.configManager.getTimeExpressionConfig()))
+
+    private var calculatorButtonsElasticLayout: CalculatorButtonsElasticLayout =
+        CalculatorButtonsElasticLayoutImpl(activity)
+    private val expressionInputText = ExpressionEditTextImpl(activity, expressionBuilder)
+    private val revealManager: RevealManager =
+        RevealManagerImpl(activity.findViewById(R.id.RevealManagerDrawingSurface))
+    private val resultLayoutManager: ResultLayoutManager = createResultLayoutManager()
 
 
-    override fun symbolButtonPressed(buttonView: Button) {
-        insertSymbol(buttonView.getTagAsChar())
-    }
+    private enum class States { Input, Animation, Result }
 
-    private fun setActionButtonsClickListeners(activity: Activity) {
-        val backspaceButton: Button = activity.findViewById(R.id.calculator_actionButton_backspace)
-        backspaceButton.apply {
-            backspaceButton.setOnClickListener { backspace() }
-            setOnLongClickListener { clear(); true }
+    private lateinit var state: States
+
+
+    fun symbolButtonPressed(symbol: Symbol) {
+        if (state == States.Animation) {
+            return
         }
-        val equalsButton: Button = activity.findViewById(R.id.calculator_actionButton_equals)
-        equalsButton.setOnClickListener {
-            crapMakeBubbleReveal(activity)
-            setOfficialResult(); true }
+        if (state == States.Result) {
+            setStateToInputFromResult()
+        }
+        insertSymbol(symbol)
     }
 
-    private fun crapMakeBubbleReveal(activity: Activity) {
-        RevealMakerImpl(activity.findViewById(R.id.RevealMakerDrawingSurface),
-            500,
-            500).startBubbleReveal(
-            PxPoint(
-                activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).width.toFloat(),
-                activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).height.toFloat()
-            ),
-            PxPoint(0f,0f)
-        )
+    private fun clearWasPressed() {
+        when (state) {
+            States.Animation -> return
+            States.Result -> setStateToInputFromResult()
+            States.Input -> clearExpressionAndResult()
+        }
     }
 
-    private fun crapMakeVerticalRectReveal(activity: Activity) {
-        RevealMakerImpl(activity.findViewById(R.id.RevealMakerDrawingSurface),
-            250,
-            500).startVerticalRectReveal(
-            0f,
-            activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).width.toFloat(),
-            activity.findViewById<ViewGroup>(R.id.RevealMakerDrawingSurface).height.toFloat(),
-            0f
-        )
-    }
-    
-    private fun insertSymbol(symbolAsChar: Char) {
-        val selectedSymbol = Symbol.charOf(symbolAsChar)
-        val currentLocation = gerExpressionCurrentLocationByExpressionEditText()
-        expressionBuilder.insertSymbolAt(selectedSymbol, currentLocation)
+    private fun backspaceWasPressed() {
+        when (state) {
+            States.Animation -> return
+            States.Result -> setStateToInputFromResult()
+            States.Input -> {
+                val currentLocation = expressionInputText.getExpressionBuilderIndexByInputTextLocation()
+                expressionBuilder.backspaceSymbolFrom(currentLocation)
+            }
+        }
     }
 
-    private fun clear() {
+    private fun equalsWasPressed() {
+        if (state == States.Input) {
+            val officialResult = resultBuilder.getOfficialResult(expressionBuilder.getExpression()) ?: return
+            if (officialResult is ErrorResult) {
+                startErrorResultRevealAnimation(officialResult) {
+                    resultLayoutManager.areGesturedEnabled = true
+                }
+            } else {
+                expandOfficialResult(officialResult, true) {
+                    state = States.Result
+                    resultLayoutManager.areGesturedEnabled = true
+                }
+            }
+        }
+    }
+
+    private fun clearExpressionAndResult() {
         expressionBuilder.clearAll()
-        resultLayoutManager?.updateResult(null)
+        resultLayoutManager.updateResult(null)
     }
-    
-    private fun backspace() {
-        val currentLocation = gerExpressionCurrentLocationByExpressionEditText()
-        expressionBuilder.backspaceSymbolFrom(currentLocation)
+
+    private fun insertSymbol(symbol: Symbol) {
+        val currentLocation = expressionInputText.getExpressionBuilderIndexByInputTextLocation()
+        expressionBuilder.insertSymbolAt(symbol, currentLocation)
     }
 
     private fun setTempResult() {
         val officialResult = resultBuilder.getTempResult(expressionBuilder.getExpression())
-        resultLayoutManager?.updateResult(officialResult)
-    }
-
-    private fun setOfficialResult() {
-        val officialResult = resultBuilder.getOfficialResult(expressionBuilder.getExpression())
-        resultLayoutManager?.updateResult(officialResult)
+        resultLayoutManager.updateResult(officialResult)
     }
 
 
-    private fun gerExpressionCurrentLocationByExpressionEditText() = expressionToStringConverter.stringIndexToExpressionIndex(expressionEditText!!.selectionStart)
-
-    
-    private fun View.getTagAsChar(): Char {
-        val asString = tag.toString()
-        if (asString.length != 1) {
-            throw InternalError()
-        }
-        return asString[0]
-    }
-
-    private var activity: Activity? = null
-    private var expressionEditText: CustomEditText? = null
-    private var buttonsContainerTopPart: ButtonsContainerTopPart? = null
-    private var buttonsContainerBottomPart: ButtonsContainerBottomPart? = null
-    private var swipeGestureHandler: SwipeGestureHandler? = null
-    private var resultLayoutManager: ResultLayoutManager? = null
-
-
-    override fun setActivityComponents(activity: Activity, customEditText: CustomEditText, buttonsContainerTopPart: ButtonsContainerTopPart, buttonsContainerBottomPart: ButtonsContainerBottomPart, swipeGestureHandler: SwipeGestureHandler, resultLayoutManager: ResultLayoutManager) {
-        this.activity = activity
-
-        this.expressionEditText?.listenersHolder?.removeListener(expressionEditTextListener)
-        this.expressionEditText = customEditText
-        customEditText.listenersHolder.addListener(expressionEditTextListener)
-
-        this.buttonsContainerTopPart = buttonsContainerTopPart
-        this.buttonsContainerBottomPart = buttonsContainerBottomPart
-        //todo setPercent to both of them
-
-        this.swipeGestureHandler?.removeListener(swipeGestureHandlerListener)
-        this.swipeGestureHandler?.additionalGestureListenerForTouchSubject = null
-        this.swipeGestureHandler = swipeGestureHandler
-        swipeGestureHandler.addListener(swipeGestureHandlerListener)
-        swipeGestureHandler.additionalGestureListenerForTouchSubject = swipeGestureHandlerAdditionalGestureListener
-        
-        this.resultLayoutManager = resultLayoutManager
-
-
-        setActionButtonsClickListeners(activity)
-    }
-
-    private val expressionEditTextListener = object: CustomEditText.Listener {
-        override fun onSelectionChanged(subject: CustomEditText, selectionStart: Int, selectionEnd: Int) {
-            val fixedSelectionStart = fixSelectionPositionByConvertingToExpressionAndBackToString(selectionStart)
-            val fixedSelectionEnd = fixSelectionPositionByConvertingToExpressionAndBackToString(selectionEnd)
-
-            if (fixedSelectionStart != selectionStart || fixedSelectionEnd != selectionEnd) {
-                subject.setSelection(fixedSelectionStart, fixedSelectionEnd)
-            }
-        }
-    }
-
-    private val swipeGestureHandlerListener = object : SwipeGestureHandler.Listener {
-        override fun pointHasChanged(
-            subject: SwipeGestureHandler,
-            lastPoint: PxPoint,
-            newPoint: PxPoint
-        ) {
-            val pct = subject.toYPercent(newPoint.y)
-
-            buttonsContainerTopPart?.setScrollPercent(pct)
-            buttonsContainerBottomPart?.setScrollPercent(pct)
-        }
-
-        override fun swipeStateHasChanged(
-            subject: SwipeGestureHandler,
-            state: SwipeGestureHandler.SwipeState,
-            lastState: SwipeGestureHandler.SwipeState
-        ) {
-            val swipeGestureHandler = swipeGestureHandler ?: return
-            if (state == SwipeGestureHandler.SwipeState.Static) {
-                if (swipeGestureHandler.currentYPercent > 0f && swipeGestureHandler.currentYPercent <= 0.5f) {
-                    closeTimeUnitsDrawer()
-                } else if (swipeGestureHandler.currentYPercent > 0.5f && swipeGestureHandler.currentYPercent < 1f) {
-                    openTimeUnitsDrawer()
-                }
-            }
-        }
-    }
-
-    private val swipeGestureHandlerAdditionalGestureListener = object: GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            //todo probably remove all this. hint is lame and collides with buttons click events
-//            val swipeGestureHandler = swipeGestureHandler ?: return true
-//            if (swipeGestureHandler.toYPercent(swipeGestureHandler.currentPoint.y) == 0f) {
-//                animateSwipeGestureHint()
-//            }
-            return true
-        }
-    }
-
-
-    private val expressionBuilderListener = object: ExpressionBuilder.Listener {
+    private val expressionBuilderListener = object : ExpressionBuilder.Listener {
         override fun expressionWasChanged(subject: ExpressionBuilder) {
             setTempResult()
         }
-
-        override fun expressionWasCleared() {
-            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-        }
-
-        override fun exprTokenWasAddedAt(token: ExpressionToken, index: Int) {
-            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
-        }
-
-        override fun exprTokenWasReplacedAt(token: ExpressionToken, replaced: ExpressionToken, index: Int) {
-            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index+1))
-        }
-
-        override fun exprTokenWasRemovedAt(token: ExpressionToken, index: Int) {
-            expressionEditText?.setText(expressionToStringConverter.expressionToString(), TextView.BufferType.EDITABLE)
-            expressionEditText?.setSelection(expressionToStringConverter.expressionIndexToStringIndex(index))
-        }
     }
 
-    private fun openTimeUnitsDrawer() {
-        setTimeUnitsDrawerTo(1f)
-    }
-    private fun closeTimeUnitsDrawer() {
-        setTimeUnitsDrawerTo(0f)
-    }
 
-    private fun setTimeUnitsDrawerTo(value: Float) {
-        val SWIPE_DURATION = 150L //in millis
-
-        val swipeGestureHandler = swipeGestureHandler ?: return
-
-        val currentDrawerScrollPercent = swipeGestureHandler.toYPercent(swipeGestureHandler.currentPoint.y)
-        val valueAnimator = ValueAnimator.ofFloat(currentDrawerScrollPercent, value)
-        valueAnimator.apply {
-            addUpdateListener {animation ->
-                swipeGestureHandler.updatePointFromPercent(null, animation.animatedValue as Float)
-            }
-            duration = SWIPE_DURATION/2
-            interpolator = AccelerateDecelerateInterpolator()
-            start()
-        }
-    }
-
-    private fun animateSwipeGestureHint() {
-        val MIN_VALUE = 0f
-        val MAX_VALUE = 0.35f
-        val SWIPE_DURATION = 300L //in millis
-
-        val swipeGestureHandler = swipeGestureHandler ?: return
-
-        swipeGestureHandler.updatePoint(swipeGestureHandler.minXPos, swipeGestureHandler.minYPos)
-        val valueAnimator = ValueAnimator.ofFloat(MIN_VALUE, MAX_VALUE)
-        valueAnimator.apply {
-            addUpdateListener {animation ->
-                swipeGestureHandler.updatePointFromPercent(null, animation.animatedValue as Float)
-            }
-            duration = SWIPE_DURATION/2
-            interpolator = AccelerateDecelerateInterpolator()
-            start()
-        }
-
-        val animateSwipeGestureHintListener = object : Animator.AnimatorListener {
-            override fun onAnimationEnd(animation: Animator?) {
-                val valueAnimator = ValueAnimator.ofFloat(MAX_VALUE, MIN_VALUE)
-                valueAnimator.apply {
-                    addUpdateListener { animation ->
-                        swipeGestureHandler.updatePointFromPercent(null, animation.animatedValue as Float)
-                    }
-                    duration = SWIPE_DURATION/2
-                    interpolator = AccelerateDecelerateInterpolator()
-                    start()
+    private val calculatorButtonsElasticLayoutListener =
+        object : CalculatorButtonsElasticLayout.Listener {
+            override fun actionButtonWasPressed(action: CalculatorButtonsElasticLayout.Actions) {
+                when (action) {
+                    CalculatorButtonsElasticLayout.Actions.Equals -> equalsWasPressed()
+                    CalculatorButtonsElasticLayout.Actions.Backspace -> backspaceWasPressed()
+                    CalculatorButtonsElasticLayout.Actions.Clear -> clearWasPressed()
                 }
             }
-            override fun onAnimationStart(animation: Animator?) {}; override fun onAnimationCancel(animation: Animator?) {}; override fun onAnimationRepeat(animation: Animator?) {}
+
+            override fun symbolButtonWasPressed(symbol: Symbol) {
+                symbolButtonPressed(symbol)
+            }
+
         }
-        valueAnimator.addListener(animateSwipeGestureHintListener)
-        valueAnimator.start()
+
+
+    private fun addListeners() {
+        expressionBuilder.addListener(expressionBuilderListener)
+        calculatorButtonsElasticLayout.addListener(calculatorButtonsElasticLayoutListener)
+    }
+
+    private var currentPercentAnimation: PercentAnimation? = null
+        set(value) {
+            if (field?.state == PercentAnimation.States.Running) {
+                throw InternalError()
+            }
+            field = value
+        }
+
+    private fun startErrorResultRevealAnimation(officialResult: ErrorResult, doOnFinish: () -> Unit) {
+        state = States.Animation
+        expressionInputText.isEnabled = false
+        startBubbleReveal(
+            RevealManager.RevealStyles.Error,
+            { expandOfficialResult(officialResult, false, null) },
+            {
+                state = States.Result
+                doOnFinish()
+            }
+        )
+    }
+
+    private fun startBubbleReveal(
+        revealStyle: RevealManager.RevealStyles,
+        doWhenFinishedExpanding: () -> Unit,
+        doWhenFinishedFading: () -> Unit,
+    ) {
+        val drawingSurface = activity.findViewById<ViewGroup>(R.id.RevealManagerDrawingSurface)
+        val listener = object : RevealManager.Listener {
+            override fun stateHasChanged(
+                subject: RevealManager,
+                oldState: RevealManager.States,
+                newState: RevealManager.States,
+            ) {
+                when (oldState) {
+                    RevealManager.States.Inactive -> Unit
+                    RevealManager.States.IsExpanding -> doWhenFinishedExpanding()
+                    RevealManager.States.IsFading -> {
+                        doWhenFinishedFading()
+                        revealManager.removeListener(this)
+                    }
+                }
+            }
+        }
+
+        revealManager.addListener(listener)
+        revealManager.startBubbleReveal(
+            PxPoint(drawingSurface.width.toFloat(), drawingSurface.height.toFloat()),
+            PxPoint(0f, 0f),
+            BUBBLE_REVEAL_EXPAND_DURATION,
+            BUBBLE_REVEAL_FADE_DURATION,
+            revealStyle
+        )
+    }
+
+    private fun expandOfficialResult(officialResult: Result, withAnimation: Boolean, doOnFinish: (() -> Unit)?) {
+
+
+        resultLayoutManager.updateResult(officialResult) {
+
+            if (withAnimation) {
+                state = States.Animation
+                expressionInputText.isEnabled = false
+
+                currentPercentAnimation = PercentAnimation(
+                    RESULT_REVEAL_DURATION,
+                    AccelerateDecelerateInterpolator(),
+                    { percent ->
+                        expressionInputText.abilityPercentage = 1f - percent
+                        resultLayoutManager.setAbilityPercentage(percent)
+                     },
+                    { doOnFinish?.invoke() }
+                )
+                currentPercentAnimation!!.start()
+            } else {
+                expressionInputText.abilityPercentage = 0f
+                resultLayoutManager.setAbilityPercentage(1f)
+                doOnFinish?.invoke()
+            }
+        }
+    }
+
+    private fun ResultLayoutManager.setAbilityPercentage(percent: Float) {
+        resultLayoutManager.maxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), resultLayoutManager.actualMaxHeightForCurrentResult))
+        resultLayoutManager.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
+        resultLayoutManager.containerHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
 
     }
 
-    private fun fixSelectionPositionByConvertingToExpressionAndBackToString(selectionPosition: Int): Int {
-        return expressionToStringConverter.expressionIndexToStringIndex(
-            expressionToStringConverter.stringIndexToExpressionIndex(selectionPosition))
+    //todo search all println and remove them all
+
+    private fun setStateToInputFromResult() {
+        if (state != States.Result) {
+            throw InternalError()
+        }
+        clearExpressionAndResult()
+        setStateToInput()
+    }
+
+    private fun setStateToInput() {
+        state = States.Input
+
+        expressionInputText.isEnabled = true
+        expressionInputText.abilityPercentage = 1f
+
+        resultLayoutManager.areGesturedEnabled = false
+        resultLayoutManager.setAbilityPercentage(0f)
+    }
+
+    private fun createResultLayoutManager(): ResultLayoutManager {
+        return ResultLayoutManager(
+            activity.findViewById(R.id.resultLayout),
+            activity.findViewById(R.id.resultLayoutContainer),
+            null,
+            rootUtils.configManager.getConfigForTimeResultLayoutManager(),
+            activity.findViewById<View>(R.id.resultLayout).width.toFloat(),
+            dimenFromResAsPx(R.dimen.resultLayout_minHeight),
+            dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled)
+        )
     }
 
     init {
-        expressionBuilder.addListener(expressionBuilderListener)
-
+        addListeners()
+        setStateToInput()
     }
 
 }
