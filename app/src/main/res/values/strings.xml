@@ -87,4 +87,13 @@
     <string name="premiumDesc">No more ads</string>
 
 
+    <string name="clearHistoryDialogMessage">Clear all history?</string>
+
+    <string name="expressionCopyMessage">Expression was copied to clipboard</string>
+    <string name="resultCopyMessage">Result was copied to clipboard</string>
+
+
+    <string name="copyToClipboard_result">Copy result</string>
+    <string name="copyToClipboard_expression">Copy expression</string>
+
 </resources>

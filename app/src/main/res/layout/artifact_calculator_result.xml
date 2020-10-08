@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:visibility="invisible"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <HorizontalScrollView
+        android:id="@+id/scrollViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:background="@android:color/transparent"
+        android:requiresFadingEdge="horizontal"
+        android:fadeScrollbars="false">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/containerResize"
+                android:layout_width="1000dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="5000dp"
+                    android:layout_height="5000dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:id="@+id/containerSource"
+                        android:paddingBottom="8dp"
+                        android:layout_width="wrap_content"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal"
+                        android:textDirection="ltr"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/resultLayout_textValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:lines="1"
+                            android:gravity="center"
+                            android:textSize="50sp"
+                            android:layout_marginEnd="6dp"
+                            android:text="+30"/>
+
+                        <include
+                            android:id="@+id/timeResultBlock_millisecond"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_second"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_minute"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_hour"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_day"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_week"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <include
+                            android:id="@+id/timeResultBlock_month"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+                        <include
+                            android:id="@+id/timeResultBlock_year"
+                            layout="@layout/artifact_time_block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

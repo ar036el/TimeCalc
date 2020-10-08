@@ -13,7 +13,8 @@
     <dimen name="timeResult_number">32sp</dimen>
     <dimen name="timeResult_timeUnit">18sp</dimen>
 
-    <dimen name="timeResultBlock_layoutPaddingStart">6dp</dimen>
+
+    <dimen name="timeResultBlock_layoutPaddingEnd">3dp</dimen>
     <dimen name="timeResultBlock_middleContainerMaxWidth">3000dp</dimen>
     <dimen name="timeResultBlock_backgroundStroke">1dp</dimen>
 
@@ -24,6 +25,10 @@
     <dimen name="resultLayout_maxHeight_fullyDisabled">60dp</dimen>
     <dimen name="resultLayout_maxHeight_fullyEnabled">100dp</dimen>
 
+    <dimen name="historyItem_minResultHeight">10dp</dimen>
+    <dimen name="historyItem_maxResultHeight">60dp</dimen>
+    <dimen name="historyItem_timeBlock_number">18sp</dimen>
+    <dimen name="historyItem_timeBlock_timeUnit">12sp</dimen>
 
     <item name="calculatorDisplayComponentAlpha_enabled" format="float" type="dimen">1</item>
     <item name="calculatorDisplayComponentAlpha_disabled" format="float" type="dimen">0.5</item>

@@ -17,20 +17,20 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:paddingEnd="@dimen/timeResultBlock_layoutPaddingStart"
                 android:id="@+id/timeResultBlock_fixedSizeContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/timeResultBlock_layoutPaddingEnd">
 
                 <ImageView
                     android:id="@+id/timeResultBlock_maximizeIcon"
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
                     android:layout_margin="1dp"
-                    android:src="@drawable/ic_dot_crap"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_dot_crap" />
 
                 <LinearLayout
                     android:id="@+id/timeResultBlock_background"
@@ -44,19 +44,18 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/timeResultBlock_timeUnit"
-                        >
+                        android:background="@color/timeResultBlock_timeUnit">
 
                         <TextView
                             android:id="@+id/timeResultBlock_numberTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="-7dp"
+                            android:layout_marginBottom="-4dp"
                             android:gravity="center"
                             android:maxLines="1"
                             android:paddingStart="3dp"
                             android:paddingEnd="3dp"
-                            android:layout_marginTop="-7dp"
-                            android:layout_marginBottom="-4dp"
                             android:text="101"
                             android:textSize="@dimen/timeResult_number" />
 
@@ -66,12 +65,12 @@
                         android:id="@+id/timeResultBlock_timeUnit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginBottom="-2dp"
                         android:gravity="center"
                         android:maxLines="1"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:layout_marginTop="-2dp"
-                        android:layout_marginBottom="-2dp"
                         android:text="stub!"
                         android:textSize="@dimen/timeResult_timeUnit" />
 

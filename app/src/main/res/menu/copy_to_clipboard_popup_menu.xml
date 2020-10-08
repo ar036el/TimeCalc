@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/copyToClipboard_result"
+        android:title="@string/copyToClipboard_result" />
+    <item
+        android:id="@+id/copyToClipboard_expression"
+        android:title="@string/copyToClipboard_expression" />
+
+</menu>

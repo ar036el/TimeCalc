@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="el.arn.timecalc">
+    package="com.arealapps.timecalc">
 
     <application
-        android:name="el.arn.timecalc.AppRoot"
+        android:name="com.arealapps.timecalc.AppRoot"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".calculatorActivity.CalculatorActivity">
+        <activity android:name="com.arealapps.timecalc.calculatorActivity.CalculatorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"/>
-        <activity android:name=".TestingActivity">
+        <activity android:name="com.arealapps.timecalc.SettingsActivity"/>
+        <activity android:name="com.arealapps.timecalc.TestingActivity">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
 
