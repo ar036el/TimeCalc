@@ -233,81 +233,49 @@ class ResultLayoutImpl(
 
     private fun initTimeBlocks() {
 
-        val zero = createZero()
-
-        timeBlocks = TimeVariable(
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Milli,
-                R.id.timeResultBlock_millisecond,
-                R.color.timeResultBackground_millisecond,
-                R.string.calculator_timeUnit_millisecond_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Second,
-                R.id.timeResultBlock_second,
-                R.color.timeResultBackground_second,
-                R.string.calculator_timeUnit_second_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Minute,
-                R.id.timeResultBlock_minute,
-                R.color.timeResultBackground_minute,
-                R.string.calculator_timeUnit_minute_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Hour,
-                R.id.timeResultBlock_hour,
-                R.color.timeResultBackground_hour,
-                R.string.calculator_timeUnit_hour_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Day,
-                R.id.timeResultBlock_day,
-                R.color.timeResultBackground_day,
-                R.string.calculator_timeUnit_day_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Week,
-                R.id.timeResultBlock_week,
-                R.color.timeResultBackground_week,
-                R.string.calculator_timeUnit_week_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Month,
-                R.id.timeResultBlock_month,
-                R.color.timeResultBackground_month,
-                R.string.calculator_timeUnit_month_full,
-                zero
-            )
-            ,
-            TimeBlockImpl(
-                layout,
-                TimeUnit.Year,
-                R.id.timeResultBlock_year,
-                R.color.timeResultBackground_year,
-                R.string.calculator_timeUnit_year_full,
-                zero
-            )
+        val blocklayouts = TimeVariable(
+            R.id.timeResultBlock_millisecond,
+            R.id.timeResultBlock_second,
+            R.id.timeResultBlock_minute,
+            R.id.timeResultBlock_hour,
+            R.id.timeResultBlock_day,
+            R.id.timeResultBlock_week,
+            R.id.timeResultBlock_month,
+            R.id.timeResultBlock_year,
         )
+
+        val colors = TimeVariable(
+            R.color.timeResultBackground_millisecond,
+            R.color.timeResultBackground_second,
+            R.color.timeResultBackground_minute,
+            R.color.timeResultBackground_hour,
+            R.color.timeResultBackground_day,
+            R.color.timeResultBackground_week,
+            R.color.timeResultBackground_month,
+            R.color.timeResultBackground_year,
+        )
+
+        val strings = TimeVariable(
+            R.string.calculator_timeUnit_millisecond_full,
+            R.string.calculator_timeUnit_second_full,
+            R.string.calculator_timeUnit_minute_full,
+            R.string.calculator_timeUnit_hour_full,
+            R.string.calculator_timeUnit_day_full,
+            R.string.calculator_timeUnit_week_full,
+            R.string.calculator_timeUnit_month_full,
+            R.string.calculator_timeUnit_year_full,
+        )
+
+        timeBlocks = TimeVariable { timeUnit ->
+            TimeBlockImpl(
+                layout,
+                timeUnit,
+                blocklayouts[timeUnit],
+                colors[timeUnit],
+                strings[timeUnit],
+                createZero()
+            )
+        }
 
         timeBlocksAsList = timeBlocks.toList()
         timeBlocksExtensionFields = TimeVariable { DynamicFieldsDispatcher(timeBlocks[it]) }
