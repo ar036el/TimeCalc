@@ -11,7 +11,8 @@ import com.arealapps.timecalc.calculation_engine.TimeExpressionFactory
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import com.arealapps.timecalc.calculation_engine.result.TimeResult
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutManager
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutImpl
 import com.arealapps.timecalc.organize_later.testSetInterval
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,7 +21,7 @@ class TestingActivity : AppCompatActivity() {
 
     private val timeConverter: TimeConverter = TimeConverterImpl()
 
-    private lateinit var resultLayoutManager: ResultLayoutManager
+    private lateinit var resultLayout: ResultLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,7 @@ class TestingActivity : AppCompatActivity() {
                 timeConverter.timeVariableToMillis(
                     TimeVariable(toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1), toNum(1)))))
 
-        resultLayoutManager = ResultLayoutManager(
+        resultLayout = ResultLayoutImpl(
             findViewById(R.id.resultLayout),
             findViewById(R.id.resultLayoutContainer),
             timeResult,
@@ -48,10 +49,6 @@ class TestingActivity : AppCompatActivity() {
 //        }
 
 //        timeResultUI.customHeight = 1000f
-
-        testSetInterval(this, 50) {
-            resultLayoutManager.maxHeight+=1
-        }
 
         niceDate()
     }
@@ -75,7 +72,7 @@ class TestingActivity : AppCompatActivity() {
             TimeExpressionFactory(TimeExpressionConfig(30f, 365f)).createTimeExpression(
                 timeConverter.timeVariableToMillis(timeVars[currentVar++])
             ))
-        resultLayoutManager.updateResult(timeResult)
+        resultLayout.updateResult(timeResult)
 
     }
 

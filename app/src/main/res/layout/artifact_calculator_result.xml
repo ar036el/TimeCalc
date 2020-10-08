@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/containerResize"
+                android:id="@+id/containerForResize"
                 android:layout_width="1000dp"
                 android:layout_height="100dp"
                 android:gravity="center"
@@ -35,7 +35,7 @@
                     android:gravity="center">
 
                     <LinearLayout
-                        android:id="@+id/containerSource"
+                        android:id="@+id/containerForScaleAndSourceSize"
                         android:paddingBottom="8dp"
                         android:layout_width="wrap_content"
                         android:layoutDirection="rtl"

@@ -18,7 +18,8 @@ import com.arealapps.timecalc.calculatorActivity.CalculatorActivity
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.ExpressionEditTextImpl
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayoutImpl
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutManager
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutImpl
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.organize_later.errorIf
@@ -57,7 +58,7 @@ class CalculatorCoordinatorImpl(
     private val expressionInputText = ExpressionEditTextImpl(activity, expressionBuilder)
     private val revealManager: RevealManager =
         RevealManagerImpl(activity.findViewById(R.id.RevealManagerDrawingSurface))
-    private val resultLayoutManager: ResultLayoutManager = createResultLayoutManager()
+    private val resultLayout: ResultLayout = createResultLayoutManager()
 
 
     private enum class States { Input, Animation, Result }
@@ -109,12 +110,12 @@ class CalculatorCoordinatorImpl(
             if (officialResult is ErrorResult) {
                 startErrorResultRevealAnimation(officialResult) {
                     state = States.Result
-                    resultLayoutManager.areGesturedEnabled = true
+                    resultLayout.areGesturesEnabled = true
                 }
             } else {
                 expandOfficialResult(officialResult, true) {
                     state = States.Result
-                    resultLayoutManager.areGesturedEnabled = true
+                    resultLayout.areGesturesEnabled = true
                     listenersMgr.notifyAll { it.calculationPerformed(expression, officialResult) }
                 }
             }
@@ -123,7 +124,7 @@ class CalculatorCoordinatorImpl(
 
     private fun clearExpressionAndResult() {
         expressionBuilder.clearAll()
-        resultLayoutManager.updateResult(null)
+        resultLayout.updateResult(null)
     }
 
     private fun insertSymbol(symbol: Symbol) {
@@ -133,7 +134,7 @@ class CalculatorCoordinatorImpl(
 
     private fun setTempResult() {
         val officialResult = resultBuilder.getTempResult(expressionBuilder.getExpression())
-        resultLayoutManager.updateResult(officialResult)
+        resultLayout.updateResult(officialResult)
     }
 
 
@@ -224,7 +225,7 @@ class CalculatorCoordinatorImpl(
     private fun expandOfficialResult(officialResult: Result, withAnimation: Boolean, doOnFinish: (() -> Unit)?) {
 
 
-        resultLayoutManager.updateResult(officialResult) {
+        resultLayout.updateResult(officialResult) {
 
             if (withAnimation) {
                 state = States.Animation
@@ -235,24 +236,17 @@ class CalculatorCoordinatorImpl(
                     AccelerateDecelerateInterpolator(),
                     { percent ->
                         expressionInputText.abilityPercentage = 1f - percent
-                        resultLayoutManager.setAbilityPercentage(percent)
+                        resultLayout.abilityPercentage = percent
                      },
                     { doOnFinish?.invoke() }
                 )
                 currentPercentAnimation!!.start()
             } else {
                 expressionInputText.abilityPercentage = 0f
-                resultLayoutManager.setAbilityPercentage(1f)
+                resultLayout.abilityPercentage = 1f
                 doOnFinish?.invoke()
             }
         }
-    }
-
-    private fun ResultLayoutManager.setAbilityPercentage(percent: Float) {
-        resultLayoutManager.maxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), resultLayoutManager.actualMaxHeightForCurrentResult))
-        resultLayoutManager.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
-        resultLayoutManager.containerHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
-
     }
 
     //todo search all println and remove them all
@@ -267,12 +261,12 @@ class CalculatorCoordinatorImpl(
 
         expressionInputText.isEnabled = true
         expressionInputText.abilityPercentage = 1f
-        resultLayoutManager.areGesturedEnabled = false
-        resultLayoutManager.setAbilityPercentage(0f)
+        resultLayout.areGesturesEnabled = false
+        resultLayout.abilityPercentage = 0f
     }
 
-    private fun createResultLayoutManager(): ResultLayoutManager {
-        return ResultLayoutManager(
+    private fun createResultLayoutManager(): ResultLayout {
+        return ResultLayoutImpl(
             activity.findViewById(R.id.resultLayout),
             activity.findViewById(R.id.resultLayoutContainer),
             null,

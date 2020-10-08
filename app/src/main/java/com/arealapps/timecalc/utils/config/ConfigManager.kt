@@ -2,17 +2,17 @@ package com.arealapps.timecalc.utils.config
 
 import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutManager
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
 
 interface ConfigManager {
-    fun getConfigForTimeResultLayoutManager(): ResultLayoutManager.Config
+    fun getConfigForTimeResultLayoutManager(): ResultLayout.Config
     fun getTimeExpressionConfig(): TimeExpressionConfig
 }
 
 
 class ConfigManagerImpl : ConfigManager {
-    override fun getConfigForTimeResultLayoutManager(): ResultLayoutManager.Config {
-        return ResultLayoutManager.Config(TimeVariable{ false }) //todo
+    override fun getConfigForTimeResultLayoutManager(): ResultLayout.Config {
+        return ResultLayout.Config(TimeVariable{ false }) //todo
     }
 
     override fun getTimeExpressionConfig(): TimeExpressionConfig {

@@ -18,52 +18,67 @@ import com.arealapps.timecalc.calculation_engine.basics.createZero
 import com.arealapps.timecalc.calculation_engine.result.*
 import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 import com.arealapps.timecalc.helpers.android.*
-import com.arealapps.timecalc.helpers.native_.DynamicFieldsDispatcher
-import com.arealapps.timecalc.helpers.native_.initOnce
-import com.arealapps.timecalc.helpers.native_.prev
+import com.arealapps.timecalc.helpers.native_.*
 import com.arealapps.timecalc.rootUtils
 import kotlin.math.max
 import kotlin.math.min
 
-class ResultLayoutManager(
+interface ResultLayout {
+    var abilityPercentage: Float
+    var areGesturesEnabled: Boolean
+    val result: Result?
+    fun updateResult(result: Result?, doWhenFinished: (() -> Unit)? = null)
+
+
+    class Config(
+        val autoCollapseTimeValues: TimeVariable<Boolean> //todo auto??
+    )
+}
+
+
+class ResultLayoutImpl(
     private val resultLayout: ViewGroup,
     private val resultLayoutContainer: ViewGroup,
     result: Result?,
-    private val config: Config,
+    private val config: ResultLayout.Config,
     private val desiredWidth: Float,
     private val minHeight: Float,
-    maxHeight: Float,
-    areGesturesEnabled: Boolean = true
-) {
+    private var maxHeight: Float,
+    override var areGesturesEnabled: Boolean = true
+): ResultLayout {
 
     private val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
     private val VISIBITITY_ANIMATION_DURATION = 200L
 
-    var alpha
-        get() = containerResizable.alpha
-        set(value) { containerResizable.alpha = value }
-    var maxHeight = maxHeight
+    override var abilityPercentage: Float = 1f
         set(value) {
-            field = value; updateLayoutSize() }
-    var containerHeight
-        get() = resultLayoutContainer.height
-        set(value) { resultLayoutContainer.heightByLayoutParams = value }
-    val actualMaxHeightForCurrentResult get() = measureActualMaxHeightForCurrentResult()
-    var areGesturedEnabled: Boolean = areGesturesEnabled
+            checkIfPercentIsLegal(value)
+            if (field != value) {
+                field = value
+                applyAbilityPercentage(value)
+            }
+        }
 
     private val collapsedTimeBlocks = mutableListOf<TimeBlock>()
     private val timeBlocksOriginalNumber = MutableTimeVariable { createZero() }
 
     private val scrollViewContainer: HorizontalScrollView by lazy { resultLayout.findViewById(R.id.scrollViewContainer) }
-    private val containerResizable: ViewGroup by lazy { resultLayout.findViewById(R.id.containerResize) }
-    private val containerSource: ViewGroup by lazy { resultLayout.findViewById(R.id.containerSource) }
+    private val containerResizable: ViewGroup by lazy { resultLayout.findViewById(R.id.containerForResize) }
+    private val containerSource: ViewGroup by lazy { resultLayout.findViewById(R.id.containerForScaleAndSourceSize) }
     private var layoutSizeScale = 1f
     private var prevUnscaledWidth: Float? = null
     private var prevUnscaledHeight: Float? = null
 
 
+    private fun applyAbilityPercentage(percent: Float) {
+        maxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), measureActualMaxHeightForCurrentResult()))
+        containerResizable.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
+        resultLayoutContainer.heightByLayoutParams = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
+        updateLayoutSize()
+    }
+
     private fun measureActualMaxHeightForCurrentResult(): Float {
-        var unscaledWidth = containerSource.width.toFloat()
+        val unscaledWidth = containerSource.width.toFloat()
         val unscaledHeight = containerSource.height.toFloat()
 
         if (unscaledWidth == 0f || unscaledHeight == 0f) {
@@ -112,10 +127,10 @@ class ResultLayoutManager(
     }
 
 
-    var result: Result? = result
+    override var result: Result? = result
         private set
 
-    fun updateResult(result: Result?, doWhenFinished: (() -> Unit)? = null) {
+    override fun updateResult(result: Result?, doWhenFinished: (() -> Unit)?) {
         this.result = result
         setLayoutComponentsForResult(result, doWhenFinished)
     }
@@ -355,12 +370,12 @@ class ResultLayoutManager(
 
     private val timeBlockListener = object: TimeBlock.Listener {
         override fun onBlockSingleClick(subject: TimeBlock) {
-            if (areGesturedEnabled) {
+            if (this@ResultLayoutImpl.areGesturesEnabled) {
                 collapseTimeBlockInAnimation(subject.timeUnit)
             }
         }
         override fun onBlockDoubleClick(subject: TimeBlock) {
-            if (areGesturedEnabled) {
+            if (this@ResultLayoutImpl.areGesturesEnabled) {
                 revealTimeBlockInAnimation(subject.timeUnit)
             }
         }
@@ -443,8 +458,4 @@ class ResultLayoutManager(
         resultLayout.visibility = View.VISIBLE
     }
 
-
-    class Config(
-        val autoCollapseTimeValues: TimeVariable<Boolean> //todo auto??
-    )
 }

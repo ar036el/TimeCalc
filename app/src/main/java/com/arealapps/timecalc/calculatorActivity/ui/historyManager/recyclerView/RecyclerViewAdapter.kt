@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arealapps.timecalc.R
-import com.arealapps.timecalc.calculatorActivity.ui.historyManager.database.HistoryEntry
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.calculatorActivity.ui.historyManager.database.HistoryDatabaseManager
@@ -15,7 +14,7 @@ class RecyclerViewAdapter(
 ) : RecyclerView.Adapter<Item>(), HoldsListeners<RecyclerViewAdapter.Listener> by listenersMgr {
 
     interface Listener {
-        fun triggeredAnAction(entry: HistoryEntry, action: ActionTypes)
+        fun triggeredAnAction(entry: HistoryDatabaseManager.Entry, action: ActionTypes)
         enum class ActionTypes { CopyExpression, CopyResult, ShowInDisplay }
     }
 

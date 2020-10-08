@@ -14,7 +14,7 @@ import com.arealapps.timecalc.calculation_engine.CalculatorCoordinator
 import com.arealapps.timecalc.calculation_engine.CalculatorCoordinatorImpl
 import com.arealapps.timecalc.calculation_engine.expression.Expression
 import com.arealapps.timecalc.calculation_engine.result.Result
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutManager
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
 import com.arealapps.timecalc.helpers.android.stringFromRes
 import com.arealapps.timecalc.helpers.native_.LimitedAccessFunction
@@ -27,7 +27,7 @@ import com.arealapps.timecalc.rootUtils
 class CalculatorActivity : AppCompatActivity() {
 
     private lateinit var expressionEditTextView: HookedEditText
-    private lateinit var resultLayoutManager: ResultLayoutManager
+    private lateinit var resultLayout: ResultLayout
 
 
     private var calculatorCoordinator: CalculatorCoordinator by initOnce()
