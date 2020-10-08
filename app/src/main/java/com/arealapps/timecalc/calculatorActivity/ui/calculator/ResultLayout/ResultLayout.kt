@@ -62,24 +62,25 @@ class ResultLayoutImpl(
     private val collapsedTimeBlocks = mutableListOf<TimeBlock>()
     private val timeBlocksOriginalNumber = MutableTimeVariable { createZero() }
 
-    private val scrollViewContainer: HorizontalScrollView by lazy { resultLayout.findViewById(R.id.scrollViewContainer) }
-    private val containerResizable: ViewGroup by lazy { resultLayout.findViewById(R.id.containerForResize) }
-    private val containerSource: ViewGroup by lazy { resultLayout.findViewById(R.id.containerForScaleAndSourceSize) }
+    private val scrollViewContainer: HorizontalScrollView by lazy { resultLayout.findViewById(R.id.resultLayout_scrollView) }
+    private val containerForResize: ViewGroup by lazy { resultLayout.findViewById(R.id.resultLayout_containerForResize) }
+    private val containerForScaleAndSourceSize: ViewGroup by lazy { resultLayout.findViewById(R.id.resultLayout_containerForScaleAndSourceSize) }
     private var layoutSizeScale = 1f
     private var prevUnscaledWidth: Float? = null
     private var prevUnscaledHeight: Float? = null
 
 
+
     private fun applyAbilityPercentage(percent: Float) {
         maxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), measureActualMaxHeightForCurrentResult()))
-        containerResizable.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
+        containerForResize.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
         resultLayoutContainer.heightByLayoutParams = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
         updateLayoutSize()
     }
 
     private fun measureActualMaxHeightForCurrentResult(): Float {
-        val unscaledWidth = containerSource.width.toFloat()
-        val unscaledHeight = containerSource.height.toFloat()
+        val unscaledWidth = containerForScaleAndSourceSize.width.toFloat()
+        val unscaledHeight = containerForScaleAndSourceSize.height.toFloat()
 
         if (unscaledWidth == 0f || unscaledHeight == 0f) {
             return 0f
@@ -89,12 +90,12 @@ class ResultLayoutImpl(
     }
 
     private fun updateLayoutSize(doWhenFinished: (() -> Unit)? = null) {
-        containerResizable.doWhenDynamicVariablesAreReady {
-            containerSource.doWhenDynamicVariablesAreReady {
+        containerForResize.doWhenDynamicVariablesAreReady {
+            containerForScaleAndSourceSize.doWhenDynamicVariablesAreReady {
 
                 //containerSource.width and containerSource.height are never affected by scaleX/scaleY changes. been tested! :#
-                var unscaledWidth = containerSource.width.toFloat().let { if (it == 0f) 1f else it } //making it 1f for no error in calculation (divide by 0)
-                val unscaledHeight = containerSource.height.toFloat().let { if (it == 0f) 1f else it }
+                var unscaledWidth = containerForScaleAndSourceSize.width.toFloat().let { if (it == 0f) 1f else it } //making it 1f for no error in calculation (divide by 0)
+                val unscaledHeight = containerForScaleAndSourceSize.height.toFloat().let { if (it == 0f) 1f else it }
 
                 val unboundedScale = desiredWidth / unscaledWidth
                 val unboundedHeight = unboundedScale * unscaledHeight
@@ -111,14 +112,14 @@ class ResultLayoutImpl(
 
                 layoutSizeScale = boundedScale
 
-                containerSource.scaleX = layoutSizeScale
-                containerSource.scaleY = layoutSizeScale
-                containerResizable.widthByLayoutParams = (unscaledWidth*layoutSizeScale).toInt() + containerResizable.paddingX
-                containerResizable.heightByLayoutParams = (unscaledHeight*layoutSizeScale).toInt() + containerResizable.paddingY
-                containerSource.invalidate()
-                containerSource.requestLayout()
-                    containerResizable.doWhenDynamicVariablesAreReady {
-                        containerSource.doWhenDynamicVariablesAreReady {
+                containerForScaleAndSourceSize.scaleX = layoutSizeScale
+                containerForScaleAndSourceSize.scaleY = layoutSizeScale
+                containerForResize.widthByLayoutParams = (unscaledWidth*layoutSizeScale).toInt() + containerForResize.paddingX
+                containerForResize.heightByLayoutParams = (unscaledHeight*layoutSizeScale).toInt() + containerForResize.paddingY
+                containerForScaleAndSourceSize.invalidate()
+                containerForScaleAndSourceSize.requestLayout()
+                    containerForResize.doWhenDynamicVariablesAreReady {
+                        containerForScaleAndSourceSize.doWhenDynamicVariablesAreReady {
                             doWhenFinished?.invoke()
                         }
                     }
