@@ -44,7 +44,6 @@ class CalculatorCoordinatorImpl(
     private val BUBBLE_REVEAL_EXPAND_DURATION = 400L
     private val BUBBLE_REVEAL_FADE_DURATION = 350L
     private val BUBBLE_REVEAL_DELAY_BEFORE_FADE = 50L
-
     private val RECT_REVEAL_EXPAND_DURATION = 300L
     private val RECT_REVEAL_FADE_DURATION = 500L
     private val RESULT_REVEAL_DURATION = 500L
@@ -271,9 +270,7 @@ class CalculatorCoordinatorImpl(
             activity.findViewById(R.id.resultLayoutContainer),
             null,
             rootUtils.configManager.getConfigForTimeResultLayoutManager(),
-            activity.findViewById<View>(R.id.resultLayout).width.toFloat(),
-            dimenFromResAsPx(R.dimen.resultLayout_minHeight),
-            dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled)
+            activity.findViewById<View>(R.id.resultLayout).width.toFloat()
         )
     }
 

@@ -37,9 +37,7 @@ class TestingActivity : AppCompatActivity() {
             findViewById(R.id.resultLayoutContainer),
             timeResult,
             rootUtils.configManager.getConfigForTimeResultLayoutManager(),
-            1000f,
-            60f,
-            80f
+            1000f
         )
 
 //        var counter = 100f

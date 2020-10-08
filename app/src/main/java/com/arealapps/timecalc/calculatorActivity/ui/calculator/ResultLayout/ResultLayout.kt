@@ -20,7 +20,6 @@ import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 import com.arealapps.timecalc.helpers.android.*
 import com.arealapps.timecalc.helpers.native_.*
 import com.arealapps.timecalc.rootUtils
-import kotlin.math.max
 import kotlin.math.min
 
 interface ResultLayout {
@@ -37,13 +36,11 @@ interface ResultLayout {
 
 
 class ResultLayoutImpl(
-    private val resultLayout: ViewGroup,
-    private val resultLayoutContainer: ViewGroup,
+    private val layout: ViewGroup,
+    private val layoutContainer: ViewGroup,
     result: Result?,
     private val config: ResultLayout.Config,
-    private val desiredWidth: Float,
-    private val minHeight: Float,
-    private var maxHeight: Float,
+    widthThresholdInPx: Float,
     override var areGesturesEnabled: Boolean = true
 ): ResultLayout {
 
@@ -62,69 +59,22 @@ class ResultLayoutImpl(
     private val collapsedTimeBlocks = mutableListOf<TimeBlock>()
     private val timeBlocksOriginalNumber = MutableTimeVariable { createZero() }
 
-    private val scrollViewContainer: HorizontalScrollView by lazy { resultLayout.findViewById(R.id.resultLayout_scrollView) }
-    private val containerForResize: ViewGroup by lazy { resultLayout.findViewById(R.id.resultLayout_containerForResize) }
-    private val containerForScaleAndSourceSize: ViewGroup by lazy { resultLayout.findViewById(R.id.resultLayout_containerForScaleAndSourceSize) }
-    private var layoutSizeScale = 1f
-    private var prevUnscaledWidth: Float? = null
-    private var prevUnscaledHeight: Float? = null
+    private val scrollViewContainer: HorizontalScrollView by lazy { layout.findViewById(R.id.resultLayout_scrollView) }
 
+    private val autosizeApplier: ResultLayoutAutosizeApplier = ResultLayoutAutosizeApplierImpl(
+        layout.findViewById(R.id.resultLayout_containerForResize),
+        layout.findViewById(R.id.resultLayout_containerForScaleAndSourceSize),
+        widthThresholdInPx,
+        dimenFromResAsPx(R.dimen.resultLayout_minHeight),
+        dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled)
+    )
 
 
     private fun applyAbilityPercentage(percent: Float) {
-        maxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), measureActualMaxHeightForCurrentResult()))
-        containerForResize.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
-        resultLayoutContainer.heightByLayoutParams = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
-        updateLayoutSize()
-    }
-
-    private fun measureActualMaxHeightForCurrentResult(): Float {
-        val unscaledWidth = containerForScaleAndSourceSize.width.toFloat()
-        val unscaledHeight = containerForScaleAndSourceSize.height.toFloat()
-
-        if (unscaledWidth == 0f || unscaledHeight == 0f) {
-            return 0f
-        }
-        val unboundedScale = desiredWidth / unscaledWidth
-        return max(unboundedScale * unscaledHeight, minHeight)
-    }
-
-    private fun updateLayoutSize(doWhenFinished: (() -> Unit)? = null) {
-        containerForResize.doWhenDynamicVariablesAreReady {
-            containerForScaleAndSourceSize.doWhenDynamicVariablesAreReady {
-
-                //containerSource.width and containerSource.height are never affected by scaleX/scaleY changes. been tested! :#
-                var unscaledWidth = containerForScaleAndSourceSize.width.toFloat().let { if (it == 0f) 1f else it } //making it 1f for no error in calculation (divide by 0)
-                val unscaledHeight = containerForScaleAndSourceSize.height.toFloat().let { if (it == 0f) 1f else it }
-
-                val unboundedScale = desiredWidth / unscaledWidth
-                val unboundedHeight = unboundedScale * unscaledHeight
-                val boundedHeight = min(max(unboundedScale * unscaledHeight, minHeight), maxHeight)
-                val boundedScale = unboundedScale * (boundedHeight / unboundedHeight)
-
-
-                if (layoutSizeScale == boundedScale && prevUnscaledWidth == unscaledWidth && prevUnscaledHeight == unscaledHeight) {
-                    doWhenFinished?.invoke()
-                    return@doWhenDynamicVariablesAreReady
-                }
-                prevUnscaledWidth = unscaledWidth
-                prevUnscaledHeight = unscaledHeight
-
-                layoutSizeScale = boundedScale
-
-                containerForScaleAndSourceSize.scaleX = layoutSizeScale
-                containerForScaleAndSourceSize.scaleY = layoutSizeScale
-                containerForResize.widthByLayoutParams = (unscaledWidth*layoutSizeScale).toInt() + containerForResize.paddingX
-                containerForResize.heightByLayoutParams = (unscaledHeight*layoutSizeScale).toInt() + containerForResize.paddingY
-                containerForScaleAndSourceSize.invalidate()
-                containerForScaleAndSourceSize.requestLayout()
-                    containerForResize.doWhenDynamicVariablesAreReady {
-                        containerForScaleAndSourceSize.doWhenDynamicVariablesAreReady {
-                            doWhenFinished?.invoke()
-                        }
-                    }
-            }
-        }
+        layout.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
+        layoutContainer.heightByLayoutParams = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
+        val newMaxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), autosizeApplier.getActualMaxHeightForCurrentResult()))
+        autosizeApplier.updateLayoutSize(newMaxHeight)
     }
 
 
@@ -141,9 +91,7 @@ class ResultLayoutImpl(
     var timeBlocksAsList: List<TimeBlock> by initOnce()
     var timeBlocksExtensionFields: TimeVariable<DynamicFieldsDispatcher<TimeBlock>> by initOnce()
 
-    private val textValueTextView: TextView by lazy { resultLayout.findViewById(R.id.resultLayout_textValue) }
-
-    private val TimeBlock.extensionField get() = timeBlocksExtensionFields[this.timeUnit]
+    private val numberTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
 
     private val TimeBlock.isHidden get() = visibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD
     private val TimeBlock.isAllegHidden get() = timeBlocksOriginalNumber[this.timeUnit].isZero()
@@ -183,7 +131,7 @@ class ResultLayoutImpl(
             updateTimeBlockMaximizationState(subject)
         }
 
-        updateLayoutSize()
+        autosizeApplier.updateLayoutSize()
     }
 
     private var valueAnimator: ValueAnimator? = null
@@ -289,7 +237,7 @@ class ResultLayoutImpl(
 
         timeBlocks = TimeVariable(
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Milli,
                 R.id.timeResultBlock_millisecond,
                 R.color.timeResultBackground_millisecond,
@@ -298,7 +246,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Second,
                 R.id.timeResultBlock_second,
                 R.color.timeResultBackground_second,
@@ -307,7 +255,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Minute,
                 R.id.timeResultBlock_minute,
                 R.color.timeResultBackground_minute,
@@ -316,7 +264,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Hour,
                 R.id.timeResultBlock_hour,
                 R.color.timeResultBackground_hour,
@@ -325,7 +273,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Day,
                 R.id.timeResultBlock_day,
                 R.color.timeResultBackground_day,
@@ -334,7 +282,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Week,
                 R.id.timeResultBlock_week,
                 R.color.timeResultBackground_week,
@@ -343,7 +291,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Month,
                 R.id.timeResultBlock_month,
                 R.color.timeResultBackground_month,
@@ -352,7 +300,7 @@ class ResultLayoutImpl(
             )
             ,
             TimeBlockImpl(
-                resultLayout,
+                layout,
                 TimeUnit.Year,
                 R.id.timeResultBlock_year,
                 R.color.timeResultBackground_year,
@@ -423,14 +371,14 @@ class ResultLayoutImpl(
 
         val textColor = if (result is ErrorResult) R.color.errorResultText else R.color.normalResultText
 
-        textValueTextView.text = textValue
-        textValueTextView.setTextColor(colorFromRes(textColor))
+        numberTextView.text = textValue
+        numberTextView.setTextColor(colorFromRes(textColor))
     }
 
     private fun setLayoutComponentsForResult(result: Result?, doWhenFinished: (() -> Unit)?) {
         setTimeBlocksState(result)
         textValue(result)
-        updateLayoutSize {
+        autosizeApplier.updateLayoutSize {
             setScrollViewToEnd()
             doWhenFinished?.invoke()
         }
@@ -444,19 +392,18 @@ class ResultLayoutImpl(
     }
 
     private fun initResultLayoutContainer() {
-        resultLayout.doWhenDynamicVariablesAreReady {
-            resultLayoutContainer.heightByLayoutParams = it.height
+        layout.doWhenDynamicVariablesAreReady {
+            layoutContainer.heightByLayoutParams = it.height
         }
     }
 
 
     init {
-        if (minHeight > maxHeight) { throw InternalError("minWidth[$minHeight] > maxWidth[$maxHeight]")}
 
         initTimeBlocks()
         setLayoutComponentsForResult(result, null)
         initResultLayoutContainer()
-        resultLayout.visibility = View.VISIBLE
+        layout.visibility = View.VISIBLE
     }
 
 }
