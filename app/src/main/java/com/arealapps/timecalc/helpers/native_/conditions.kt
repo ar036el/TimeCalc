@@ -25,6 +25,8 @@ infix fun <T> T.equals(list: ValueSet<T>): Boolean {
     error("Unsupported set type: ${list::class.simpleName}")
 }
 
+infix fun <T> T.notEquals(list: ValueSet<T>): Boolean = !this.equals(list)
+
 infix fun <T> T.or(second: T) = OrSet<T>().also { it.add(this, second) }
 infix fun <T> OrSet<T>.or(second: T) = OrSet<T>().also { it.add(this, second) }
 

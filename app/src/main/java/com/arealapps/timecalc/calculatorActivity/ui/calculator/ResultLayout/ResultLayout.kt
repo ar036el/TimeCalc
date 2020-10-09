@@ -2,15 +2,13 @@ package com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout
 
 import TimeBlock
 import TimeBlockImpl
-import android.animation.Animator
-import android.animation.ValueAnimator
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.HorizontalScrollView
 import android.widget.TextView
 import com.arealapps.timecalc.R
+import com.arealapps.timecalc.calculation_engine.TimeExpression
 import com.arealapps.timecalc.calculation_engine.basics.MutableTimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
@@ -20,6 +18,8 @@ import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 import com.arealapps.timecalc.helpers.android.*
 import com.arealapps.timecalc.helpers.native_.*
 import com.arealapps.timecalc.rootUtils
+import com.arealapps.timecalc.utils.PercentAnimation
+import com.arealapps.timecalc.utils.isRunning
 import kotlin.math.min
 
 interface ResultLayout {
@@ -44,9 +44,6 @@ class ResultLayoutImpl(
     override var areGesturesEnabled: Boolean = true
 ): ResultLayout {
 
-    private val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
-    private val VISIBITITY_ANIMATION_DURATION = 200L
-
     override var abilityPercentage: Float = 1f
         set(value) {
             checkIfPercentIsLegal(value)
@@ -56,19 +53,54 @@ class ResultLayoutImpl(
             }
         }
 
-    private val collapsedTimeBlocks = mutableListOf<TimeBlock>()
-    private val timeBlocksOriginalNumber = MutableTimeVariable { createZero() }
+    override var result: Result? = result
+        private set
+
+    private enum class TimeBlockStates { Collapsed, HiddenEmpty , Normal, Maximized }
+    private var timeBlocks: TimeVariable<TimeBlock> by initOnce()
+    private var timeBlocksAsList: List<TimeBlock> by initOnce()
+
+    private val _timeBlocks = object {
+        val blockStates = MutableTimeVariable{ TimeBlockStates.Normal }
+        val originalNumber = MutableTimeVariable{ createZero() }
+    }
+    private var TimeBlock.state
+        get() = _timeBlocks.blockStates[this.timeUnit]
+        set(value) {
+            _timeBlocks.blockStates[this.timeUnit] = value
+            this.isMaximizedSymbolVisible = (value == TimeBlockStates.Maximized)
+        }
+    private var TimeBlock.originalNumber
+        get() = _timeBlocks.originalNumber[this.timeUnit]
+        set(value) { _timeBlocks.originalNumber[this.timeUnit] = value }
+    private val TimeBlock.isOriginalNumberEmpty get() = originalNumber.isZero()
+
+
+    private val autosizeApplier: ResultLayoutAutosizeApplier = initAutosizeApplier(widthThresholdInPx)
 
     private val scrollViewContainer: HorizontalScrollView by lazy { layout.findViewById(R.id.resultLayout_scrollView) }
+    private val textValueTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
 
-    private val autosizeApplier: ResultLayoutAutosizeApplier = ResultLayoutAutosizeApplierImpl(
-        layout.findViewById(R.id.resultLayout_containerForResize),
-        layout.findViewById(R.id.resultLayout_containerForScaleAndSourceSize),
-        widthThresholdInPx,
-        dimenFromResAsPx(R.dimen.resultLayout_minHeight),
-        dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled)
-    )
+    private val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
+    private val VISIBITITY_ANIMATION_DURATION = 200L
+    private var percentAnimation: PercentAnimation? = null
 
+
+
+
+    override fun updateResult(result: Result?, doWhenFinished: (() -> Unit)?) {
+        this.result = result
+        initLayoutComponentsForNewResult(result, doWhenFinished)
+    }
+
+
+    private fun getResultAsTimeExpression(): TimeExpression? {
+        return when (result) {
+            is TimeResult -> (result as TimeResult).time
+            is MixedResult -> (result as MixedResult).time
+            else -> null
+        }
+    }
 
     private fun applyAbilityPercentage(percent: Float) {
         layout.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
@@ -77,163 +109,210 @@ class ResultLayoutImpl(
         autosizeApplier.updateLayoutSize(newMaxHeight)
     }
 
+    private fun setCollapseStep(toCollapse: TimeBlock, maximizedSource: TimeBlock, visibilityPercentage: Float, treatSourceAsHidden: Boolean) {
 
-    override var result: Result? = result
-        private set
+        val lastVisibilityPercentage = toCollapse.visibilityPercentage
 
-    override fun updateResult(result: Result?, doWhenFinished: (() -> Unit)?) {
-        this.result = result
-        setLayoutComponentsForResult(result, doWhenFinished)
-    }
-
-
-    var timeBlocks: TimeVariable<TimeBlock> by initOnce()
-    var timeBlocksAsList: List<TimeBlock> by initOnce()
-    var timeBlocksExtensionFields: TimeVariable<DynamicFieldsDispatcher<TimeBlock>> by initOnce()
-
-    private val numberTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
-
-    private val TimeBlock.isHidden get() = visibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD
-    private val TimeBlock.isAllegHidden get() = timeBlocksOriginalNumber[this.timeUnit].isZero()
-    private val TimeBlock.isCollapsed get() = collapsedTimeBlocks.contains(this)
-    private val TimeBlock.originalNumber get() = timeBlocksOriginalNumber[this.timeUnit]
-
-    private fun List<TimeBlock>.getAllCollapsedIn(timeBlock: TimeBlock): List<TimeBlock>? {
-        var firstVisibleBlockAfterThis = indexOfFirst {
-            indexOf(it) > indexOf(timeBlock)
-                    && !it.isHidden }
-        val untilIndex = if (firstVisibleBlockAfterThis == -1) lastIndex+1 else firstVisibleBlockAfterThis
-
-        return filter {
-            indexOf(it) > indexOf(timeBlock)
-                    && indexOf(it) < untilIndex
-                    && it.isCollapsed }.ifEmpty { null }
-
-    }
-
-    private fun setTimeBlocksVisibilityPercentage(subject: TimeBlock, source: TimeBlock, visibilityPercentage: Float, treatSourceAsHidden: Boolean) {
-
-        val lastVisibilityPercentage = subject.visibilityPercentage
-        subject.visibilityPercentage = visibilityPercentage
-
+        toCollapse.visibilityPercentage = visibilityPercentage
         if (treatSourceAsHidden) {
-             source.visibilityPercentage = 1f - visibilityPercentage
+            maximizedSource.visibilityPercentage = 1f - visibilityPercentage
         }
 
         if (visibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD && lastVisibilityPercentage >= TIMEBLOCK_VISIBILITY_THRESHOLD) {
-            updateTimeBlockMaximizationState(source)
-            Log.v("TimeResultUI", "${subject.timeUnit} was collapsed into ${source.timeUnit}")
-        } else if (visibilityPercentage >= TIMEBLOCK_VISIBILITY_THRESHOLD && lastVisibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD){
-            updateTimeBlockMaximizationState(source)
-            Log.v("TimeResultUI", "${subject.timeUnit} was revealed from ${source.timeUnit}")
+            setAsCollapsed(toCollapse, maximizedSource)
         }
+
         if (visibilityPercentage == 0f) {
-            updateTimeBlockMaximizationState(subject)
+            toCollapse.number = toCollapse.originalNumber
         }
 
         autosizeApplier.updateLayoutSize()
     }
 
-    private var valueAnimator: ValueAnimator? = null
-
-    private fun getSourceForCollapsedBlockIfAny(toCollapse: TimeBlock): TimeBlock? {
-        var buffer: TimeBlock? = toCollapse
-        while (true) {
-            buffer = timeBlocksAsList.prev(buffer)
-            if (buffer == null || !buffer.isCollapsed) {
-                val buf = buffer?.timeUnit
-                return buffer
-            }
-        }
+    private fun setAsCollapsed(toCollapse: TimeBlock, maximizedSource: TimeBlock) {
+        fun TimeBlock.getUpdatedNumber() = getResultAsTimeExpression()!!.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
+        toCollapse.state = TimeBlockStates.Collapsed
+        maximizedSource.state = TimeBlockStates.Maximized
+        maximizedSource.number = maximizedSource.getUpdatedNumber()
     }
 
-    private fun tryToCollapseTimeBlock(toCollapse: TimeBlock, animate: Boolean): Boolean {
-        val source = getSourceForCollapsedBlockIfAny(toCollapse)
-        if (toCollapse.isHidden || toCollapse.isCollapsed || source == null || valueAnimator?.isRunning == true) { return false }
-        val treatSourceAsHidden = (source.isAllegHidden && (timeBlocksAsList.getAllCollapsedIn(source).isNullOrEmpty()))
+    private fun setRevealStep(toReveal: TimeBlock, maximizedSource: TimeBlock, visibilityPercentage: Float, treatSourceAsHidden: Boolean) {
 
-        collapsedTimeBlocks.add(toCollapse)
+        val lastVisibilityPercentage = toReveal.visibilityPercentage
+
+        toReveal.visibilityPercentage = visibilityPercentage
+        if (treatSourceAsHidden) {
+            maximizedSource.visibilityPercentage = 1f - visibilityPercentage
+        }
+
+        if (visibilityPercentage >= TIMEBLOCK_VISIBILITY_THRESHOLD && lastVisibilityPercentage < TIMEBLOCK_VISIBILITY_THRESHOLD){
+            setAsRevealed(toReveal, maximizedSource)
+        }
+
+        if (visibilityPercentage == 0f) {
+            toReveal.number = toReveal.originalNumber
+        }
+
+        autosizeApplier.updateLayoutSize()
+    }
+
+    private fun setAsRevealed(toReveal: TimeBlock, maximizedSource: TimeBlock) {
+        val allCollapsedBlocksInMaximizedBlockReversed = getAllCollapsedBlocksForMaximizedBlock(maximizedSource).asReversed()
+        if (allCollapsedBlocksInMaximizedBlockReversed.first() != toReveal) { throw InternalError() } //just checking
+        if (timeBlocksAsList.next(toReveal)?.state == TimeBlockStates.Collapsed) { throw InternalError() } //just checking
+        if (toReveal.isOriginalNumberEmpty) { throw InternalError() } //todo can it be conflicted with the auto collapse in init?
+
+        toReveal.state = TimeBlockStates.Normal
+        toReveal.number = toReveal.originalNumber //todo is this neccesary also here?
+
+        //uncollapse all items next to the revealed one that are empty
+        allCollapsedBlocksInMaximizedBlockReversed.apply {
+            forEachIndexed { index, timeBlock ->
+                if (index == 0) { return@forEachIndexed }
+                if (!timeBlock.isOriginalNumberEmpty) { return@apply }
+                timeBlock.state = TimeBlockStates.HiddenEmpty
+            }
+        }
+        if (getAllCollapsedBlocksForMaximizedBlockNotStrict(maximizedSource).isEmpty()) {
+            maximizedSource.state = if (maximizedSource.isOriginalNumberEmpty) TimeBlockStates.HiddenEmpty else TimeBlockStates.Normal
+        }
+        maximizedSource.number = maximizedSource.getUpdatedNumberConsideringCollapsedItems()
+    }
+
+    private fun TimeBlock.getUpdatedNumberConsideringCollapsedItems(): Num {
+        return getResultAsTimeExpression()!!.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
+    }
+
+    private fun collapseTimeBlock(toCollapse: TimeBlock, animate: Boolean) {
+        if (toCollapse.state notEquals (TimeBlockStates.Normal or TimeBlockStates.Maximized)) { throw InternalError() }
+
+        val maximizedSource = getMaximizedBlockForToBeCollapsedBlock(toCollapse)
+
+        val allCurrentlyCollapsedBlocksInsideMaximized = getAllCollapsedBlocksForMaximizedBlockNotStrict(maximizedSource)
+        val treatSourceAsHidden = (maximizedSource.isOriginalNumberEmpty && (allCurrentlyCollapsedBlocksInsideMaximized.isEmpty()))
 
         if (animate) {
-            startTimeBlockVisibilityAnimation(1f, 0f) { setTimeBlocksVisibilityPercentage(toCollapse, source, it, treatSourceAsHidden) }
+            startCollapseAnimation {
+                setCollapseStep(toCollapse, maximizedSource, it, treatSourceAsHidden)
+            }
         } else {
-            setTimeBlocksVisibilityPercentage(toCollapse, source, 0f, treatSourceAsHidden)
+            setCollapseStep(toCollapse, maximizedSource, 0f, treatSourceAsHidden)
         }
-        return true
-
     }
 
+    private fun revealTimeBlock(maximizedSource: TimeBlock, animate: Boolean) {
+        if (maximizedSource.state != TimeBlockStates.Maximized) { throw InternalError() }
 
-    private fun tryToRevealTimeBlock(source: TimeBlock, animate: Boolean): Boolean {
-        val toReveal = timeBlocksAsList.getAllCollapsedIn(source)?.last()
-        if (source.isHidden || toReveal == null || !toReveal.isCollapsed || valueAnimator?.isRunning == true) { return false }
-        val treatSourceAsHidden = (source.isAllegHidden && (timeBlocksAsList.getAllCollapsedIn(source).orEmpty() - toReveal).isEmpty())
+        val toReveal = getLastCollapsedBlocksForMaximizedBlock(maximizedSource)
 
-        collapsedTimeBlocks.remove(toReveal)
+        fun getAllCollapsedBlockInsideMaximizedAfterReveal(): List<TimeBlock> {
+            val emptyBlocksNextToTheRevealedOne = (getAllCollapsedBlocksForMaximizedBlockNotStrict(maximizedSource) - toReveal).asReversed().takeWhile { it.isOriginalNumberEmpty }
+            return getAllCollapsedBlocksForMaximizedBlockNotStrict(maximizedSource) - toReveal - emptyBlocksNextToTheRevealedOne
+        }
+
+        val treatSourceAsHidden = (maximizedSource.isOriginalNumberEmpty && (getAllCollapsedBlockInsideMaximizedAfterReveal().isEmpty()))
 
         if (animate) {
-            startTimeBlockVisibilityAnimation(0f, 1f) { setTimeBlocksVisibilityPercentage(toReveal, source, it, treatSourceAsHidden) }
+            startRevealAnimation {
+                setRevealStep(toReveal, maximizedSource, it, treatSourceAsHidden)
+            }
         } else {
-            setTimeBlocksVisibilityPercentage(toReveal, source, 1f, treatSourceAsHidden)
-        }
-        return true
-    }
-
-    private fun startTimeBlockVisibilityAnimation(minValue: Float, maxValue: Float, setBlockVisibilityFun: (Float) -> Unit) {
-        valueAnimator = ValueAnimator.ofFloat(minValue, maxValue)
-        valueAnimator!!.apply {
-            addUpdateListener { animation ->
-                setBlockVisibilityFun(animatedValue as Float)
-            }
-            addListener(object: AnimatorListener {
-                override fun onAnimationEnd(animation: Animator?) {
-//                    updateContainerSize()
-                }
-            })
-            duration = VISIBITITY_ANIMATION_DURATION
-            interpolator = AccelerateDecelerateInterpolator()
-            start()
-
+            setRevealStep(toReveal, maximizedSource, 1f, treatSourceAsHidden)
         }
     }
 
-    private fun updateTimeBlockMaximizationState(timeBlock: TimeBlock) {
-        timeBlocksAsList.forEach {
-            if (timeBlocksAsList.getAllCollapsedIn(timeBlock).isNullOrEmpty()) {
-                //set as normal
-                timeBlock.number = timeBlock.originalNumber
-                timeBlock.isMaximizedSymbolVisible = false
-            } else {
-                //set as maximized
-                val allCollapsedInBlock = timeBlocksAsList.getAllCollapsedIn(timeBlock)
-                var number: Num = timeBlock.originalNumber
-                allCollapsedInBlock?.forEach {
-                    number += rootUtils.timeConverter.convertTimeUnit(timeBlock.originalNumber, it.timeUnit, timeBlock.timeUnit)
-                }
-                timeBlock.number = number
-                timeBlock.isMaximizedSymbolVisible = true
-            }
-        }
+    private fun startCollapseAnimation(setBlockVisibilityFun: (Float) -> Unit) {
+        percentAnimation = PercentAnimation(
+            VISIBITITY_ANIMATION_DURATION,
+            AccelerateDecelerateInterpolator(),
+            { setBlockVisibilityFun(it) },
+            null,
+            true,
+            PercentAnimation.Directions.OneToZero
+        )
     }
 
+    private fun startRevealAnimation(setBlockVisibilityFun: (Float) -> Unit) {
+        percentAnimation = PercentAnimation(
+            VISIBITITY_ANIMATION_DURATION,
+            AccelerateDecelerateInterpolator(),
+            { setBlockVisibilityFun(it) },
+            null,
+            true,
+            PercentAnimation.Directions.ZeroToOne
+        )
+    }
 
-    private fun collapseTimeBlockInAnimation(block: TimeUnit) { //todo remove later
-        val successful = tryToCollapseTimeBlock(timeBlocks[block], true)
-        if (!successful) {
+    private fun tryToCollapseTimeBlockWithAnimation(target: TimeBlock) {
+        if (percentAnimation?.isRunning == true) { return }
+        if (target.state equals (TimeBlockStates.Normal or TimeBlockStates.Maximized)
+            && target.timeUnit != TimeUnit.Milli) {
+            collapseTimeBlock(target, true)
+        } else {
             rootUtils.toastManager.showShort("collapse not successful")
         }
     }
 
-    private fun revealTimeBlockInAnimation(fromBlock: TimeUnit) { //todo remove later
-        val successful = tryToRevealTimeBlock(timeBlocks[fromBlock], true)
-        if (!successful) {
+    private fun tryToRevealTimeBlockWithAnimation(target: TimeBlock) {
+        if (percentAnimation?.isRunning == true) { return }
+        if (target.state == TimeBlockStates.Maximized) {
+            if (target.timeUnit == TimeUnit.Year) { throw InternalError() }
+            revealTimeBlock(target, true)
+        } else {
             rootUtils.toastManager.showShort("reveal not successful")
         }
     }
 
-    private fun initTimeBlocks() {
 
-        val blocklayouts = TimeVariable(
+    private fun getAllCollapsedBlocksForMaximizedBlock(maximizedBlock: TimeBlock): List<TimeBlock> {
+        if (maximizedBlock.state != TimeBlockStates.Maximized) { throw InternalError() }
+        val allNextTimeBlocks = timeBlocksAsList.allNext(maximizedBlock)
+        if (allNextTimeBlocks.isEmpty()) { throw InternalError() }
+
+        return allNextTimeBlocks
+            .takeWhile { it.state == TimeBlockStates.Collapsed }
+            .ifEmpty { throw InternalError() }
+    }
+
+    private fun getAllCollapsedBlocksForMaximizedBlockNotStrict(maximizedBlock: TimeBlock): List<TimeBlock> {
+        val allNextTimeBlocks = timeBlocksAsList.allNext(maximizedBlock)
+        if (allNextTimeBlocks.isEmpty()) { throw InternalError() }
+
+        return allNextTimeBlocks.takeWhile { it.state == TimeBlockStates.Collapsed }
+    }
+
+    private fun getLastCollapsedBlocksForMaximizedBlock(maximizedBlock: TimeBlock): TimeBlock {
+        return getAllCollapsedBlocksForMaximizedBlock(maximizedBlock).last()
+    }
+
+    private fun getMaximizedBlockForToBeCollapsedBlock(toBeCollapsed: TimeBlock): TimeBlock {
+        if (toBeCollapsed.state notEquals (TimeBlockStates.Normal or TimeBlockStates.Maximized)) { throw InternalError() }
+        val allPrevTimeBlocks = timeBlocksAsList.allPrev(toBeCollapsed)
+        if (allPrevTimeBlocks.isEmpty()) { throw InternalError() }
+
+        allPrevTimeBlocks.asReversed().forEach {
+            val a = it.timeUnit
+            val b = it.state
+            if (it.state equals (TimeBlockStates.Normal or TimeBlockStates.Maximized or TimeBlockStates.HiddenEmpty)) {
+                return it
+            }
+        }
+        throw InternalError() //if reached to end of list and no maximized block found
+    }
+
+
+    private fun initAutosizeApplier(widthThresholdInPx: Float): ResultLayoutAutosizeApplier {
+        return ResultLayoutAutosizeApplierImpl(
+            layout.findViewById(R.id.resultLayout_containerForResize),
+            layout.findViewById(R.id.resultLayout_containerForScaleAndSourceSize),
+            widthThresholdInPx,
+            dimenFromResAsPx(R.dimen.resultLayout_minHeight),
+            dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled)
+        )
+    }
+
+    private fun createTimeBlocks() {
+        val blockLayouts = TimeVariable(
             R.id.timeResultBlock_millisecond,
             R.id.timeResultBlock_second,
             R.id.timeResultBlock_minute,
@@ -270,37 +349,38 @@ class ResultLayoutImpl(
             TimeBlockImpl(
                 layout,
                 timeUnit,
-                blocklayouts[timeUnit],
+                blockLayouts[timeUnit],
                 colors[timeUnit],
                 strings[timeUnit],
                 createZero()
             )
-        }
-
-        timeBlocksAsList = timeBlocks.toList()
-        timeBlocksExtensionFields = TimeVariable { DynamicFieldsDispatcher(timeBlocks[it]) }
-
-        timeBlocksAsList.forEach{
-            it.addListener(timeBlockListener)
         }
     }
 
     private val timeBlockListener = object: TimeBlock.Listener {
         override fun onBlockSingleClick(subject: TimeBlock) {
             if (this@ResultLayoutImpl.areGesturesEnabled) {
-                collapseTimeBlockInAnimation(subject.timeUnit)
+                tryToCollapseTimeBlockWithAnimation(subject)
             }
         }
         override fun onBlockDoubleClick(subject: TimeBlock) {
             if (this@ResultLayoutImpl.areGesturesEnabled) {
-                revealTimeBlockInAnimation(subject.timeUnit)
+                tryToRevealTimeBlockWithAnimation(subject)
             }
         }
-        override fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int) {
+        override fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int) {}
+    }
+
+    private fun initLayoutComponentsForNewResult(result: Result?, doWhenFinished: (() -> Unit)?) {
+        initTimeBlocksForNewResult(result)
+        initTextValueForNewResult(result)
+        autosizeApplier.updateLayoutSize {
+            setScrollViewToEnd()
+            doWhenFinished?.invoke()
         }
     }
 
-    private fun setTimeBlocksState(result: Result?) {
+    private fun initTimeBlocksForNewResult(result: Result?) {
         val timeValues = when (result) {
             is TimeResult -> result.time.timeUnits
             is MixedResult -> result.time.timeUnits
@@ -309,24 +389,28 @@ class ResultLayoutImpl(
 
         for (block in timeBlocksAsList) {
             block.number = timeValues[block.timeUnit]
-            block.isMaximizedSymbolVisible = false
-            timeBlocksOriginalNumber[block.timeUnit] = block.number
+            block.originalNumber = timeValues[block.timeUnit]
 
-            if (block.isAllegHidden) {
+            if (block.isOriginalNumberEmpty) {
                 block.visibilityPercentage = 0f
+                block.state = TimeBlockStates.HiddenEmpty
             } else {
                 block.visibilityPercentage = 1f
-                if (config.autoCollapseTimeValues[block.timeUnit]) {
-                    val successful = tryToCollapseTimeBlock(block, false)
-                    if (!successful) {
-                        Log.w("TimeResultUI", "cannot auto collapse ${block.timeUnit}")
-                    }
-                }
+                block.state = TimeBlockStates.Normal
+            }
+        }
+
+        timeBlocksAsList.forEach {block ->
+            if (config.autoCollapseTimeValues[block.timeUnit] && block.state equals (TimeBlockStates.Normal or TimeBlockStates.Maximized)) {
+                if (block.timeUnit == TimeUnit.Milli) { throw InternalError("cannot collapse milli") }
+                block.state = TimeBlockStates.Collapsed
+                collapseTimeBlock(block, false)
+                    //todo why won't it succeed to collapse?
             }
         }
     }
 
-    private fun textValue(result: Result?) {
+    private fun initTextValueForNewResult(result: Result?) {
         var textValue = when (result) {
             is NumberResult -> result.number.toStringFormatted(true, true, false)
             is MixedResult -> result.number.toStringFormatted(true, true, true)
@@ -339,20 +423,9 @@ class ResultLayoutImpl(
 
         val textColor = if (result is ErrorResult) R.color.errorResultText else R.color.normalResultText
 
-        numberTextView.text = textValue
-        numberTextView.setTextColor(colorFromRes(textColor))
+        textValueTextView.text = textValue
+        textValueTextView.setTextColor(colorFromRes(textColor))
     }
-
-    private fun setLayoutComponentsForResult(result: Result?, doWhenFinished: (() -> Unit)?) {
-        setTimeBlocksState(result)
-        textValue(result)
-        autosizeApplier.updateLayoutSize {
-            setScrollViewToEnd()
-            doWhenFinished?.invoke()
-        }
-
-    }
-
 
     private fun setScrollViewToEnd() {
         //bad code but whatever
@@ -367,9 +440,11 @@ class ResultLayoutImpl(
 
 
     init {
+        createTimeBlocks()
+        timeBlocksAsList = timeBlocks.toList()
+        timeBlocksAsList.forEach{ it.addListener(timeBlockListener) }
 
-        initTimeBlocks()
-        setLayoutComponentsForResult(result, null)
+        initLayoutComponentsForNewResult(result, null)
         initResultLayoutContainer()
         layout.visibility = View.VISIBLE
     }
