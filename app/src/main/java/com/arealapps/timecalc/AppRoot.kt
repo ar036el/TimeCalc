@@ -1,7 +1,5 @@
 package com.arealapps.timecalc
 
-import com.arealapps.timecalc.calculation_engine.*
-import com.arealapps.timecalc.helpers.native_.initOnce
 import com.arealapps.timecalc.utils.RootUtils
 import com.arealapps.timecalc.utils.RootUtilsImpl
 
@@ -12,8 +10,6 @@ lateinit var rootUtils: RootUtils
 //    reportSenderFactoryClasses = [CustomReportSenderFactory::class]
 //)
 class AppRoot : android.app.Application() {
-
-    var calculatorCoordinator: CalculatorCoordinator by initOnce()
 
     override fun onCreate() {
         super.onCreate()

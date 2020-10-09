@@ -10,8 +10,8 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.arealapps.timecalc.R
 import com.arealapps.timecalc.SettingsActivity
-import com.arealapps.timecalc.calculation_engine.CalculatorCoordinator
-import com.arealapps.timecalc.calculation_engine.CalculatorCoordinatorImpl
+import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinator
+import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinatorImpl
 import com.arealapps.timecalc.calculation_engine.expression.Expression
 import com.arealapps.timecalc.calculation_engine.result.Result
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
@@ -77,7 +77,7 @@ class CalculatorActivity : AppCompatActivity() {
     })
 
     private val calculatorCoordinatorListener = object: CalculatorCoordinator.Listener {
-        override fun calculationPerformed(expression: Expression, result: Result) {
+        override fun officialCalculationPerformed(expression: Expression, result: Result) {
             historyDrawerLayout.saveItem(expression, result)
         }
     }

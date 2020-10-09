@@ -17,16 +17,16 @@ import com.arealapps.timecalc.rootUtils
 import kotlin.math.min
 
 
-interface ExpressionEditText {
+interface ExpressionLayout {
     var abilityPercentage: Float
-    var isEnabled: Boolean
+    var isTextEditEnabled: Boolean
     fun getExpressionBuilderIndexByInputTextLocation(): Int
 }
 
-class ExpressionEditTextImpl(
+class ExpressionLayoutImpl(
     private val activity: CalculatorActivity,
     private val expressionBuilder: ExpressionBuilder,
-) : ExpressionEditText {
+) : ExpressionLayout {
 
     override var abilityPercentage: Float = 0f //lateinit
         set(value) {
@@ -35,9 +35,13 @@ class ExpressionEditTextImpl(
             _setAbilityPercentage(value)
         }
 
-    override var isEnabled: Boolean
+    override var isTextEditEnabled: Boolean
         get() = editText.isEnabled
-        set(value) { editText.isEnabled = value }
+        set(value) {
+            if (editText.isEnabled != value) {
+                editText.isEnabled = value
+            }
+        }
 
     private val expressionToStringConverter: ExpressionToStringConverter = rootUtils.expressionToStringConverter
 

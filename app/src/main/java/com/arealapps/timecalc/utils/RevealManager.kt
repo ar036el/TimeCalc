@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
+import androidx.core.view.contains
 import com.arealapps.timecalc.R
 import com.arealapps.timecalc.helpers.android.AnimatorListener
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
@@ -44,6 +45,8 @@ interface RevealManager : HoldsListeners<RevealManager.Listener> {
         style: RevealStyles
     )
 
+    fun clearRevealIfRunning()
+
     val currentState: States
 
     enum class States { Inactive, IsExpanding, IsFading }
@@ -72,6 +75,10 @@ class RevealManagerImpl(
         }
 
     private var currentReveal: Reveal? = null
+
+    private var expandAnimation: PercentAnimation? = null
+    private var delayAnimation: PercentAnimation? = null
+    private var fadeAnimation: PercentAnimation? = null
 
     override fun startBubbleReveal(
         fromRelative: PxPoint,
@@ -103,6 +110,15 @@ class RevealManagerImpl(
         startReveal(reveal, abs(fromY - toY), expandDuration, delayBeforeFadeDuration, fadeDuration)
     }
 
+    override fun clearRevealIfRunning() {
+        expandAnimation?.cancel()
+        delayAnimation?.cancel()
+        fadeAnimation?.cancel()
+        currentState = Inactive
+        removeReveal()
+    }
+
+
     @ColorInt private fun getRevealColor(style: RevealManager.RevealStyles): Int {
         return when (style) {
             RevealManager.RevealStyles.Normal -> ContextCompat.getColor(drawingSurface.context, R.color.revealColor_normal)
@@ -124,27 +140,27 @@ class RevealManagerImpl(
             throw InternalError()
         }
 
-        val fadeAnimation = PercentAnimation(
+        fadeAnimation = PercentAnimation(
             fadeDuration, null,
             { setRevealFadePercentage(it) },
             { removeReveal(); currentState = Inactive }
         )
 
-        val delayAnimation = PercentAnimation(
+        delayAnimation = PercentAnimation(
             delayBeforeFadeDuration, null,
             {},
-            { fadeAnimation.start() }
+            { fadeAnimation!!.start() }
         )
 
-        val expandAnimation =  PercentAnimation(
+        expandAnimation =  PercentAnimation(
             expandDuration, null,
             { setRevealLength(maxLength, it) },
-            { currentState = IsFading; delayAnimation.start() }
+            { currentState = IsFading; delayAnimation!!.start() }
         )
 
         currentReveal = reveal
         currentState = IsExpanding
-        expandAnimation.start()
+        expandAnimation!!.start()
     }
 
     private fun setRevealLength(length: Float, expansionPercent: Float) {
@@ -210,7 +226,9 @@ class RevealManagerImpl(
             }
 
         override fun delete() {
-            drawingSurface.removeView(imageView)
+            if (drawingSurface.contains(imageView)) {
+                drawingSurface.removeView(imageView)
+            }
         }
 
         init {
