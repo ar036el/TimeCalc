@@ -2,7 +2,7 @@ package com.arealapps.timecalc.utils.config
 
 import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 
 interface ConfigManager {
     fun getConfigForTimeResultLayoutManager(): ResultLayout.Config

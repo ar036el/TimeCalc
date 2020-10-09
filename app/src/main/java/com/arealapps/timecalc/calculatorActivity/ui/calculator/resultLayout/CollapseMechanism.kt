@@ -1,4 +1,4 @@
-package com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout
+package com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout
 
 import TimeBlock
 import android.view.animation.AccelerateDecelerateInterpolator

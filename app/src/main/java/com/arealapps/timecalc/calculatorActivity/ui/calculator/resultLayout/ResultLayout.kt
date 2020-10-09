@@ -1,4 +1,4 @@
-package com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout
+package com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout
 
 import TimeBlock
 import TimeBlockImpl
@@ -49,14 +49,11 @@ class ResultLayoutImpl(
         private set
 
     private var timeBlocks: TimeVariable<TimeBlock> by initOnce()
-
-
     private val autosizeApplier: AutosizeApplier = initAutosizeApplier(widthThresholdInPx)
+    private var collapseMechanism: CollapseMechanism by initOnce()
 
     private val scrollViewContainer: HorizontalScrollView by lazy { layout.findViewById(R.id.resultLayout_scrollView) }
     private val textValueTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
-
-    private var collapseMechanism: CollapseMechanism by initOnce()
 
 
     override fun updateResult(result: Result?, doWhenFinished: (() -> Unit)?) {
@@ -64,24 +61,12 @@ class ResultLayoutImpl(
         initLayoutComponentsForNewResult(result, doWhenFinished)
     }
 
-
     private fun applyAbilityPercentage(percent: Float) {
         layout.alpha = percentToValue(percent, floatFromRes(R.dimen.calculatorDisplayComponentAlpha_disabled), floatFromRes(R.dimen.calculatorDisplayComponentAlpha_enabled))
         layoutContainer.heightByLayoutParams = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled)).toInt()
         val newMaxHeight = percentToValue(percent, dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyDisabled), min(dimenFromResAsPx(R.dimen.resultLayout_maxHeight_fullyEnabled), autosizeApplier.getActualMaxHeightForCurrentResult()))
         autosizeApplier.updateLayoutSize(newMaxHeight)
     }
-
-
-
-
-
-
-
-
-
-
-
 
     private fun initAutosizeApplier(widthThresholdInPx: Float): AutosizeApplier {
         return AutosizeApplierImpl(
@@ -102,8 +87,7 @@ class ResultLayoutImpl(
             R.id.timeResultBlock_day,
             R.id.timeResultBlock_week,
             R.id.timeResultBlock_month,
-            R.id.timeResultBlock_year,
-        )
+            R.id.timeResultBlock_year)
 
         val colors = TimeVariable(
             R.color.timeResultBackground_millisecond,
@@ -113,8 +97,7 @@ class ResultLayoutImpl(
             R.color.timeResultBackground_day,
             R.color.timeResultBackground_week,
             R.color.timeResultBackground_month,
-            R.color.timeResultBackground_year,
-        )
+            R.color.timeResultBackground_year)
 
         val strings = TimeVariable(
             R.string.calculator_timeUnit_millisecond_full,
@@ -124,8 +107,7 @@ class ResultLayoutImpl(
             R.string.calculator_timeUnit_day_full,
             R.string.calculator_timeUnit_week_full,
             R.string.calculator_timeUnit_month_full,
-            R.string.calculator_timeUnit_year_full,
-        )
+            R.string.calculator_timeUnit_year_full)
 
         timeBlocks = TimeVariable { timeUnit ->
             TimeBlockImpl(
@@ -189,7 +171,6 @@ class ResultLayoutImpl(
             layoutContainer.heightByLayoutParams = it.height
         }
     }
-
 
     init {
         createTimeBlocks()

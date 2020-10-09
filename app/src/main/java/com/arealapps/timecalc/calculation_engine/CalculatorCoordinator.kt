@@ -10,16 +10,13 @@ import com.arealapps.timecalc.calculation_engine.result.Result
 import com.arealapps.timecalc.calculation_engine.result.ResultBuilder
 import com.arealapps.timecalc.calculation_engine.result.ResultBuilderImpl
 import com.arealapps.timecalc.calculation_engine.symbol.Symbol
-import com.arealapps.timecalc.helpers.android.dimenFromResAsPx
-import com.arealapps.timecalc.helpers.android.floatFromRes
 import com.arealapps.timecalc.helpers.native_.PxPoint
-import com.arealapps.timecalc.helpers.native_.percentToValue
 import com.arealapps.timecalc.calculatorActivity.CalculatorActivity
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.ExpressionEditTextImpl
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayoutImpl
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutImpl
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayoutImpl
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.organize_later.errorIf
@@ -27,10 +24,10 @@ import com.arealapps.timecalc.utils.RevealManager
 import com.arealapps.timecalc.utils.RevealManagerImpl
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.PercentAnimation
-import kotlin.math.min
 
 interface CalculatorCoordinator: HoldsListeners<CalculatorCoordinator.Listener> {
     fun loadExpression(expressionAsString: String)
+    fun reset()
     interface Listener {
         fun calculationPerformed(expression: Expression, result: Result)
     }
@@ -49,8 +46,7 @@ class CalculatorCoordinatorImpl(
     private val RESULT_REVEAL_DURATION = 500L
 
     private val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
-    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter,
-        TimeExpressionFactory(rootUtils.configManager.getTimeExpressionConfig()))
+    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, rootUtils.timeExpressionFactory)
 
     private var calculatorButtonsElasticLayout: CalculatorButtonsElasticLayout =
         CalculatorButtonsElasticLayoutImpl(activity)
@@ -61,16 +57,23 @@ class CalculatorCoordinatorImpl(
 
 
     private enum class States { Input, Animation, Result }
+    private enum class AnimationSubStates { OnNormalResultReveal, OnErrorResultReveal, OnClear }
 
     private var state: States = States.Input
+    private var animationSubState: AnimationSubStates? = null
 
     override fun loadExpression(expressionAsString: String) {
         when (state) {
-            States.Result -> applyStateToInput()
+            States.Result -> setStateToInput()
             States.Animation -> return //todo cancel all animation set state
+            States.Input -> clearExpressionAndResult()
         }
-        clearExpressionAndResult()
+
         rootUtils.expressionToStringConverter.buildExpressionFromString(expressionBuilder, expressionAsString)
+    }
+
+    override fun reset() {
+
     }
 
     private fun symbolButtonPressed(symbol: Symbol) {
@@ -78,7 +81,7 @@ class CalculatorCoordinatorImpl(
             return
         }
         if (state == States.Result) {
-            applyStateToInput()
+            setStateToInput()
         }
         insertSymbol(symbol)
     }
@@ -86,7 +89,7 @@ class CalculatorCoordinatorImpl(
     private fun clearWasPressed() {
         when (state) {
             States.Animation -> return
-            States.Result -> applyStateToInput()
+            States.Result -> setStateToInput()
             States.Input -> clearExpressionAndResult()
         }
     }
@@ -94,7 +97,7 @@ class CalculatorCoordinatorImpl(
     private fun backspaceWasPressed() {
         when (state) {
             States.Animation -> return
-            States.Result -> applyStateToInput()
+            States.Result -> setStateToInput()
             States.Input -> {
                 val currentLocation = expressionInputText.getExpressionBuilderIndexByInputTextLocation()
                 expressionBuilder.backspaceSymbolFrom(currentLocation)
@@ -157,7 +160,6 @@ class CalculatorCoordinatorImpl(
             override fun symbolButtonWasPressed(symbol: Symbol) {
                 symbolButtonPressed(symbol)
             }
-
         }
 
 
@@ -176,6 +178,8 @@ class CalculatorCoordinatorImpl(
 
     private fun startErrorResultRevealAnimation(officialResult: ErrorResult, doOnFinish: () -> Unit) {
         state = States.Animation
+        animationSubState = AnimationSubStates.OnErrorResultReveal
+
         expressionInputText.isEnabled = false
         startBubbleReveal(
             RevealManager.RevealStyles.Error,
@@ -210,6 +214,7 @@ class CalculatorCoordinatorImpl(
             }
         }
 
+
         revealManager.addListener(listener)
         revealManager.startBubbleReveal(
             PxPoint(drawingSurface.width.toFloat(), drawingSurface.height.toFloat()),
@@ -222,12 +227,12 @@ class CalculatorCoordinatorImpl(
     }
 
     private fun expandOfficialResult(officialResult: Result, withAnimation: Boolean, doOnFinish: (() -> Unit)?) {
-
-
         resultLayout.updateResult(officialResult) {
 
             if (withAnimation) {
                 state = States.Animation
+                animationSubState = AnimationSubStates.OnNormalResultReveal
+
                 expressionInputText.isEnabled = false
 
                 currentPercentAnimation = PercentAnimation(
@@ -237,9 +242,9 @@ class CalculatorCoordinatorImpl(
                         expressionInputText.abilityPercentage = 1f - percent
                         resultLayout.abilityPercentage = percent
                      },
-                    { doOnFinish?.invoke() }
+                    { doOnFinish?.invoke() },
+                    true
                 )
-                currentPercentAnimation!!.start()
             } else {
                 expressionInputText.abilityPercentage = 0f
                 resultLayout.abilityPercentage = 1f
@@ -250,7 +255,7 @@ class CalculatorCoordinatorImpl(
 
     //todo search all println and remove them all
 
-    private fun applyStateToInput() {
+    private fun setStateToInput() {
         if (state == States.Result) {
             clearExpressionAndResult()
         }
@@ -276,7 +281,7 @@ class CalculatorCoordinatorImpl(
 
     init {
         addListeners()
-        applyStateToInput()
+        setStateToInput()
     }
 
 }

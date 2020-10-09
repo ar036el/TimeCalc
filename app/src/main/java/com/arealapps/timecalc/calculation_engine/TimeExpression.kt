@@ -13,6 +13,9 @@ interface TimeExpression {
     fun getAsCollapsed(collapsedUnits: TimeVariable<Boolean>): TimeVariable<Num>
 }
 
+class TimeExpressionFactory(var timeExpressionConfig: TimeExpressionConfig) {
+    fun createTimeExpression(totalMillis: Num): TimeExpression = TimeExpressionImpl(timeExpressionConfig, totalMillis)
+}
 
 class TimeExpressionImpl(
     private val config: TimeExpressionConfig,
@@ -96,10 +99,6 @@ class TimeExpressionImpl(
 
 }
 
-
-class TimeExpressionFactory(private val timeExpressionConfig: TimeExpressionConfig) {
-    fun createTimeExpression(totalMillis: Num): TimeExpression = TimeExpressionImpl(timeExpressionConfig, totalMillis)
-}
 
 class TimeExpressionConfig(
     daysInAMonth: Float,

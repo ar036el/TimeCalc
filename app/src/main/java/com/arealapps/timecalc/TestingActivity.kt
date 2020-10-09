@@ -11,9 +11,8 @@ import com.arealapps.timecalc.calculation_engine.TimeExpressionFactory
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import com.arealapps.timecalc.calculation_engine.result.TimeResult
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayoutImpl
-import com.arealapps.timecalc.organize_later.testSetInterval
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayoutImpl
 import java.text.SimpleDateFormat
 import java.util.*
 

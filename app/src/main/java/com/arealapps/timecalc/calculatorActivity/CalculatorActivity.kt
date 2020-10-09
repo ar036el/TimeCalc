@@ -14,7 +14,7 @@ import com.arealapps.timecalc.calculation_engine.CalculatorCoordinator
 import com.arealapps.timecalc.calculation_engine.CalculatorCoordinatorImpl
 import com.arealapps.timecalc.calculation_engine.expression.Expression
 import com.arealapps.timecalc.calculation_engine.result.Result
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.ResultLayout.ResultLayout
+import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
 import com.arealapps.timecalc.helpers.android.stringFromRes
 import com.arealapps.timecalc.helpers.native_.LimitedAccessFunction

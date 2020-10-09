@@ -16,7 +16,6 @@ interface RootUtils {
     val expressionToStringConverter: ExpressionToStringConverter
     val resultToDatabaseStringConverter: ResultToDatabaseStringConverter
     val resultToReadableStringConverter: ResultToReadableStringConverter
-
 }
 
 class RootUtilsImpl(app: Application) : RootUtils {
