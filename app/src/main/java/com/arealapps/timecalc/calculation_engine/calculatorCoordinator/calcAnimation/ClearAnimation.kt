@@ -1,26 +1,23 @@
 package com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation
 
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.DisplayCoordinator
-import com.arealapps.timecalc.calculation_engine.result.ErrorResult
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
-import com.arealapps.timecalc.helpers.native_.PxPoint
 import com.arealapps.timecalc.utils.RevealManager
 
 
-class ErrorResultRevealAnimation(
+class ClearAnimation(
     private val revealManager: RevealManager,
     private val RevealManagerDrawingSurface: ViewGroup,
+    private val clearDisplayFunc: () -> Unit,
     private val displayCoordinator: DisplayCoordinator,
-    private val errorResultToDisplay: ErrorResult,
-    private val resultLayout: ResultLayout,
     private val doWhenFinished: () -> Unit
 ): CalculatorAnimation {
     override var isRunning = true
 
-    private val BUBBLE_REVEAL_EXPAND_DURATION = 400L
-    private val BUBBLE_REVEAL_FADE_DURATION = 350L
-    private val BUBBLE_REVEAL_DELAY_BEFORE_FADE = 50L
+    private val RECT_REVEAL_EXPAND_DURATION = 300L
+    private val RECT_REVEAL_FADE_DURATION = 250L
+    private val RECT_REVEAL_DELAY_BEFORE_FADE = 50L
 
     override fun finish() {
         if (!isRunning) { return }
@@ -28,8 +25,9 @@ class ErrorResultRevealAnimation(
 
         revealManager.removeListener(revealListener)
         revealManager.clearRevealIfRunning()
-        displayCoordinator.setResultRevealPercentage(1f)
-        resultLayout.updateResult(errorResultToDisplay)
+
+        clearDisplayFunc.invoke()
+        displayCoordinator.setResultRevealPercentage(0f)
         displayCoordinator.areResultGesturesEnabled = true
         doWhenFinished()
     }
@@ -37,18 +35,21 @@ class ErrorResultRevealAnimation(
     private fun start() {
         displayCoordinator.isExpressionTextEditEnabled = false
         displayCoordinator.areResultGesturesEnabled = false
-        startErrorBubbleReveal()
+        startClearRectReveal()
     }
 
-    private fun startErrorBubbleReveal() {
+    private fun startClearRectReveal() {
         revealManager.addListener(revealListener)
-        revealManager.startBubbleReveal(
-            PxPoint(RevealManagerDrawingSurface.width.toFloat(), RevealManagerDrawingSurface.height.toFloat()),
-            PxPoint(0f, 0f),
-            BUBBLE_REVEAL_EXPAND_DURATION,
-            BUBBLE_REVEAL_DELAY_BEFORE_FADE,
-            BUBBLE_REVEAL_FADE_DURATION,
-            RevealManager.RevealStyles.Error
+        revealManager.startVerticalRectReveal(
+            0f,
+            RevealManagerDrawingSurface.width.toFloat(),
+            RevealManagerDrawingSurface.height.toFloat(),
+            0f,
+            RECT_REVEAL_EXPAND_DURATION,
+            RECT_REVEAL_DELAY_BEFORE_FADE,
+            RECT_REVEAL_FADE_DURATION,
+            RevealManager.RevealStyles.Normal,
+            AccelerateDecelerateInterpolator()
         )
     }
 
@@ -61,8 +62,8 @@ class ErrorResultRevealAnimation(
             when (oldState) {
                 RevealManager.States.Inactive -> Unit
                 RevealManager.States.IsExpanding -> {
-                    displayCoordinator.setResultRevealPercentage(1f)
-                    resultLayout.updateResult(errorResultToDisplay)
+                    clearDisplayFunc.invoke()
+                    displayCoordinator.setResultRevealPercentage(0f)
                 }
                 RevealManager.States.IsFading -> {
                     revealManager.removeListener(this)

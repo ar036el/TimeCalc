@@ -1,15 +1,13 @@
 package com.arealapps.timecalc.utils
 
-import android.animation.Animator
-import android.animation.ValueAnimator
 import android.view.ViewGroup
+import android.view.animation.Interpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.contains
 import com.arealapps.timecalc.R
-import com.arealapps.timecalc.helpers.android.AnimatorListener
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.helpers.native_.PxPoint
@@ -42,7 +40,8 @@ interface RevealManager : HoldsListeners<RevealManager.Listener> {
         expandDuration: Long,
         delayBeforeFadeDuration: Long,
         fadeDuration: Long,
-        style: RevealStyles
+        style: RevealStyles,
+        expandInterpolator: Interpolator? = null
     )
 
     fun clearRevealIfRunning()
@@ -101,13 +100,14 @@ class RevealManagerImpl(
         expandDuration: Long,
         delayBeforeFadeDuration: Long,
         fadeDuration: Long,
-        style: RevealManager.RevealStyles
+        style: RevealManager.RevealStyles,
+        expandInterpolator: Interpolator?
     ) {
         if (startX > endX) {
             throw InternalError("startX[$startX] > endX[$endX]")
         }
         val reveal = VerticalRect(startX, endX, fromY, (toY > fromY), getRevealColor(style))
-        startReveal(reveal, abs(fromY - toY), expandDuration, delayBeforeFadeDuration, fadeDuration)
+        startReveal(reveal, abs(fromY - toY), expandDuration, delayBeforeFadeDuration, fadeDuration, expandInterpolator)
     }
 
     override fun clearRevealIfRunning() {
@@ -132,6 +132,7 @@ class RevealManagerImpl(
         expandDuration: Long,
         delayBeforeFadeDuration: Long,
         fadeDuration: Long,
+        expandInterpolator: Interpolator? = null
     ) {
         if (currentState != Inactive) {
             throw IllegalStateException()
@@ -153,7 +154,7 @@ class RevealManagerImpl(
         )
 
         expandAnimation =  PercentAnimation(
-            expandDuration, null,
+            expandDuration, expandInterpolator,
             { setRevealLength(maxLength, it) },
             { currentState = IsFading; delayAnimation!!.start() }
         )
@@ -174,28 +175,6 @@ class RevealManagerImpl(
     private fun removeReveal() {
         currentReveal!!.delete()
         currentReveal = null
-    }
-
-    //TODO can be made to class no? just add interpolator param
-    private fun startPercentValueAnimation(
-        duration: Long,
-        doOnUpdate: (percent: Float) -> Unit,
-        doOnFinish: (() -> Unit)? = null,
-    ) {
-        val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
-        valueAnimator.apply {
-            addUpdateListener { animation ->
-                doOnUpdate(animation.animatedValue as Float)
-            }
-            addListener(object : AnimatorListener {
-                override fun onAnimationEnd(animation: Animator?) {
-                    doOnFinish?.invoke()
-                }
-            })
-            this.duration = duration
-            interpolator = null
-            start()
-        }
     }
 
     private interface Reveal {

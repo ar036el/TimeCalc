@@ -8,7 +8,7 @@ import com.arealapps.timecalc.utils.PercentAnimation
 class NormalResultRevealAnimation(
     private val displayCoordinator: DisplayCoordinator,
     private val doWhenFinished: () -> Unit
-): CalcAnimation {
+): CalculatorAnimation {
 
     override var isRunning = true
 

@@ -11,7 +11,7 @@ class PercentAnimation(
     private val doOnUpdate: (percent: Float) -> Unit,
     private val doOnFinish: (() -> Unit)? = null,
     startOnInit: Boolean = false,
-    private val direction: Directions = Directions.ZeroToOne
+    private val direction: Directions = Directions.ZeroToOne,
 ) {
     enum class States { Ready, Running, Finished, Cancelled }
     enum class Directions { ZeroToOne, OneToZero }

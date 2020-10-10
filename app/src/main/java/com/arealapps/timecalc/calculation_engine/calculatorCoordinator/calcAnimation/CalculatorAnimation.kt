@@ -1,6 +1,6 @@
 package com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation
 
-interface CalcAnimation {
+interface CalculatorAnimation {
     fun finish()
     val isRunning: Boolean
 }

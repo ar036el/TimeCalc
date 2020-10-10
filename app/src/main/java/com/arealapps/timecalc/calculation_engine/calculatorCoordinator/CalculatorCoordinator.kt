@@ -2,7 +2,8 @@ package com.arealapps.timecalc.calculation_engine.calculatorCoordinator
 
 import android.view.View
 import com.arealapps.timecalc.R
-import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation.CalcAnimation
+import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation.CalculatorAnimation
+import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation.ClearAnimation
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation.ErrorResultRevealAnimation
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnimation.NormalResultRevealAnimation
 import com.arealapps.timecalc.calculation_engine.expression.Expression
@@ -57,7 +58,7 @@ class CalculatorCoordinatorImpl (
     private enum class States { Input, Animation, Result }
     private var state: States = States.Input
 
-    private var currentCalcAnimation: CalcAnimation? = null
+    private var currentCalculatorAnimation: CalculatorAnimation? = null
 
     override fun reset() {
         if (state == States.Animation) {
@@ -116,8 +117,8 @@ class CalculatorCoordinatorImpl (
 
     private fun clear() {
         if (state notEquals (States.Input or States.Result)) { throw InternalError() }
-        //todo put animation
-        quickResetDisplayAndSetStateToInput()
+        state = States.Animation
+        startClearAnimation()
     }
 
     private fun backspace() {
@@ -146,7 +147,7 @@ class CalculatorCoordinatorImpl (
     }
 
     private fun finishCurrentAnimation() {
-        currentCalcAnimation?.finish()
+        currentCalculatorAnimation?.finish()
     }
 
     private fun quickResetDisplayAndSetStateToInput() {
@@ -163,8 +164,8 @@ class CalculatorCoordinatorImpl (
     //------
 
     private fun startErrorResultAnimation(errorResult: ErrorResult) {
-        if (currentCalcAnimation?.isRunning == true) { throw InternalError() }
-        currentCalcAnimation = ErrorResultRevealAnimation(
+        if (currentCalculatorAnimation?.isRunning == true) { throw InternalError() }
+        currentCalculatorAnimation = ErrorResultRevealAnimation(
             revealManager,
             activity.findViewById(R.id.RevealManagerDrawingSurface),
             displayCoordinator,
@@ -174,11 +175,21 @@ class CalculatorCoordinatorImpl (
     }
 
     private fun startNormalResultAnimation(expression: Expression, normalOfficialResult: Result) {
-        if (currentCalcAnimation?.isRunning == true) { throw InternalError() }
-        currentCalcAnimation = NormalResultRevealAnimation(displayCoordinator) {
+        if (currentCalculatorAnimation?.isRunning == true) { throw InternalError() }
+        currentCalculatorAnimation = NormalResultRevealAnimation(displayCoordinator) {
             state = States.Result
             listenersMgr.notifyAll { it.officialCalculationPerformed(expression, normalOfficialResult) }
         }
+    }
+
+    private fun startClearAnimation() {
+        if (currentCalculatorAnimation?.isRunning == true) { throw InternalError() }
+        currentCalculatorAnimation = ClearAnimation(
+            revealManager,
+            activity.findViewById(R.id.RevealManagerDrawingSurface),
+            ::clearDisplay,
+            displayCoordinator
+        ) { state = States.Result}
     }
 
     private fun clearDisplay() {
