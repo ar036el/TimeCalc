@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/calcActivity_drawerLayout"
-    tools:context=".calculatorActivity.CalculatorActivity">
+    tools:context=".activities.calculatorActivity.CalculatorActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                         android:layout_height="5000dp"
                         android:gravity="center">
 
-                        <com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
+                        <com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
                             android:id="@+id/calculator_expressionEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

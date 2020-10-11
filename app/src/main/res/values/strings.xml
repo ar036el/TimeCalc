@@ -66,6 +66,7 @@
 
 
     <string-array name="options_daysInAMonth">
+        <!--Don't change this order, or this will misbehave!-->
         <item>28 Days</item>
         <item>29 Days</item>
         <item>30 Days</item>
@@ -74,17 +75,22 @@
     </string-array>
 
     <string-array name="options_daysInAYear">
+        <!--Don't change this order, or this will misbehave!-->
         <item>365 Days</item>
         <item>366 Days</item>
         <item>average (365.8888009crap)</item>
     </string-array>
 
 
-    <string name="days_in_a_year">Days in a year</string>
-    <string name="days_in_a_month">Days in a month</string>
-    <string name="vibrate_on_button_press">Vibrate on button press</string>
-    <string name="getPremiumButton">Get Premium</string>
-    <string name="premiumDesc">No more ads</string>
+    <string name="settings_daysInAYear">Days in a year</string>
+    <string name="settings_daysInAMonth">Days in a month</string>
+    <string name="settings_vibrateKeys">Vibrate on button press</string>
+    <string name="settings_getPremium_Button">Get Premium</string>
+    <string name="settings_getPremium_desc_line1">No more ads</string>
+
+    <string name="settings_autoCollapseTimeUnits">Auto-collapse time units</string>
+    <string name="settings_autoCollapseTimeUnits_dialogHeader">Select which time units to auto-collapse:</string>
+
 
 
     <string name="clearHistoryDialogMessage">Clear all history?</string>

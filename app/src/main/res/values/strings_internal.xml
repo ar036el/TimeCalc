@@ -1,19 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="internal_daysInAMonth_values">
-        <item>28</item>
-        <item>29</item>
-        <item>30</item>
-        <item>31</item>
-        <item>average</item>
+    <string name="internal_prefs_main">calcMain</string>
+    
+    <string name="internal_prefs_main_daysInAMonth">daysInAMonth</string>
+    <string name="internal_prefs_main_daysInAYear">daysInAYear</string>
+    <string name="internal_prefs_main_vibrateKeys">vibrateKeys</string>
+    <string name="internal_prefs_main_autoCollapse_millis">autoCollapseMillis</string>
+    <string name="internal_prefs_main_autoCollapse_seconds">autoCollapseSeconds</string>
+    <string name="internal_prefs_main_autoCollapse_minutes">autoCollapseMinutes</string>
+    <string name="internal_prefs_main_autoCollapse_hours">autoCollapseHours</string>
+    <string name="internal_prefs_main_autoCollapse_days">autoCollapseDays</string>
+    <string name="internal_prefs_main_autoCollapse_weeks">autoCollapseWeeks</string>
+    <string name="internal_prefs_main_autoCollapse_months">autoCollapseMonths</string>
+    <string name="internal_prefs_main_autoCollapse_years">autoCollapseYears</string>
+
+
+<!--    TODO not necessary right now .-.-->
+    <string-array name="internal_prefs_main_daysInAMonth_entryValues">
+        <!--Don't change this order, or this will misbehave-->
+        <item>@string/internal_daysInAMonth_28</item>
+        <item>@string/internal_daysInAMonth_29</item>
+        <item>@string/internal_daysInAMonth_30</item>
+        <item>@string/internal_daysInAMonth_31</item>
+        <item>@string/internal_daysInAMonth_average</item>
     </string-array>
 
-    <string-array name="internal_daysInAYear_values">
-        <item>365</item>
-        <item>366</item>
-        <item>average</item>
+    <!--    TODO not necessary right now .-.-->
+    <string-array name="internal_prefs_main_daysInAYear_entryValues">
+        <!--Don't change this order, or this will misbehave-->
+        <item>@string/internal_daysInAYear_365</item>
+        <item>@string/internal_daysInAYear_366</item>
+        <item>@string/internal_daysInAYear_average</item>
     </string-array>
+
+
+    <string name="internal_daysInAMonth_28">28</string>
+    <string name="internal_daysInAMonth_29">29</string>
+    <string name="internal_daysInAMonth_30">30</string>
+    <string name="internal_daysInAMonth_31">31</string>
+    <string name="internal_daysInAMonth_average">average</string>
+
+    <string name="internal_daysInAYear_365">365</string>
+    <string name="internal_daysInAYear_366">366</string>
+    <string name="internal_daysInAYear_average">average</string>
 
 
 </resources>

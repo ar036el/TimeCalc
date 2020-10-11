@@ -1,7 +1,7 @@
 package com.arealapps.timecalc.calculation_engine.calculatorCoordinator
 
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 import com.arealapps.timecalc.helpers.native_.checkIfPercentIsLegal
 
 interface DisplayCoordinator {

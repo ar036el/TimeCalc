@@ -1,6 +1,6 @@
 package com.arealapps.timecalc.calculation_engine.result
 
-import com.arealapps.timecalc.calculation_engine.TimeExpression
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
 import com.arealapps.timecalc.calculation_engine.basics.Num
 
 interface Result

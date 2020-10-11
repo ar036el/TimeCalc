@@ -14,13 +14,13 @@ import com.arealapps.timecalc.calculation_engine.result.Result
 import com.arealapps.timecalc.calculation_engine.result.ResultBuilder
 import com.arealapps.timecalc.calculation_engine.result.ResultBuilderImpl
 import com.arealapps.timecalc.calculation_engine.symbol.Symbol
-import com.arealapps.timecalc.calculatorActivity.CalculatorActivity
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayoutImpl
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayoutImpl
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayoutImpl
+import com.arealapps.timecalc.activities.calculatorActivity.CalculatorActivity
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayoutImpl
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayoutImpl
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayoutImpl
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.helpers.native_.notEquals
@@ -32,10 +32,11 @@ import com.arealapps.timecalc.utils.RevealManagerImpl
 
 interface CalculatorCoordinator: HoldsListeners<CalculatorCoordinator.Listener> {
     fun loadExpression(expressionAsString: String)
+    fun reset()
+
     interface Listener {
         fun officialCalculationPerformed(expression: Expression, result: Result)
     }
-    fun reset()
 }
 
 class CalculatorCoordinatorImpl (
@@ -44,7 +45,7 @@ class CalculatorCoordinatorImpl (
 ) : CalculatorCoordinator, HoldsListeners<CalculatorCoordinator.Listener> by listenersMgr {
 
     private val expressionBuilder: ExpressionBuilder = ExpressionBuilderImpl()
-    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeConverter, rootUtils.timeExpressionFactory)
+    private val resultBuilder: ResultBuilder = ResultBuilderImpl(rootUtils.timeExpressionUtils)
 
 
     private val expressionLayout: ExpressionLayout = ExpressionLayoutImpl(activity, expressionBuilder)

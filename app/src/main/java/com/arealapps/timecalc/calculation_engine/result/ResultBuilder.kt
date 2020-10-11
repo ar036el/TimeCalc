@@ -1,7 +1,6 @@
 package com.arealapps.timecalc.calculation_engine.result
 
-import com.arealapps.timecalc.calculation_engine.TimeConverter
-import com.arealapps.timecalc.calculation_engine.TimeExpressionFactory
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.createZero
 import com.arealapps.timecalc.calculation_engine.basics.toNum
@@ -20,8 +19,7 @@ interface ResultBuilder {
 }
 
 class ResultBuilderImpl(
-    private val timeConverter: TimeConverter,
-    private val timeExpressionFactory: TimeExpressionFactory
+    private val timeExpressionUtils: TimeExpressionUtils
 ) : ResultBuilder {
 
     override fun getTempResult(expression: Expression): Result? {
@@ -70,7 +68,7 @@ class ResultBuilderImpl(
             return createResult(preResultNumeral)
 
         } catch (e: BadExpressionException) {
-            e.printStackTrace()
+//            e.printStackTrace()
             return when (e) {
                 is CantMultiplyTimeQuantitiesException -> CantMultiplyTimeQuantitiesErrorResult()
                 is CantDivideByZeroException -> CantDivideByZeroErrorResult()
@@ -83,8 +81,8 @@ class ResultBuilderImpl(
     private fun createResult(preResultNumeral: PreResultNumeral): Result {
         return when (preResultNumeral) {
             is PreResultNumeral_SimpleNumber -> NumberResult(preResultNumeral.number)
-            is PreResultNumeral_TimeAsMillis -> TimeResult(timeExpressionFactory.createTimeExpression(preResultNumeral.milliseconds))
-            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, timeExpressionFactory.createTimeExpression(preResultNumeral.milliseconds)) //todo change all this to timeExpression when ready
+            is PreResultNumeral_TimeAsMillis -> TimeResult(timeExpressionUtils.createTimeExpression(preResultNumeral.milliseconds))
+            is PreResultNumeral_Mixed -> MixedResult(preResultNumeral.number, timeExpressionUtils.createTimeExpression(preResultNumeral.milliseconds)) //todo change all this to timeExpression when ready
             else -> throw NotImplementedError()
         }
     }
@@ -140,13 +138,7 @@ class ResultBuilderImpl(
                     }
                     closeAndAddNumberIfInQueue()
                     segmentBuilder.addOperator(Operator.Multiplication)
-                    segmentBuilder.addMilliseconds(
-                        timeConverter.convertTimeUnit(
-                            toNum(1),
-                            exprToken.timeUnit,
-                            TimeUnit.Milli
-                        )
-                    )
+                    segmentBuilder.addMilliseconds(timeExpressionUtils.convertTimeValues(toNum(1), exprToken.timeUnit, TimeUnit.Milli))
                     areTimeUnitBeingUsed = true
                 }
             }

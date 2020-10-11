@@ -1,8 +1,8 @@
 package com.arealapps.timecalc.utils.config
 
-import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 
 interface ConfigManager {
     fun getConfigForTimeResultLayoutManager(): ResultLayout.Config
@@ -16,7 +16,7 @@ class ConfigManagerImpl : ConfigManager {
     }
 
     override fun getTimeExpressionConfig(): TimeExpressionConfig {
-        return TimeExpressionConfig(30f, 365f)
+        return TimeExpressionConfig(31, 365)
     }
 
 

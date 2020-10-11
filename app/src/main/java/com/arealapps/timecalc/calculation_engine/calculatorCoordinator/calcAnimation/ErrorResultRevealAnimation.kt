@@ -3,7 +3,7 @@ package com.arealapps.timecalc.calculation_engine.calculatorCoordinator.calcAnim
 import android.view.ViewGroup
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.DisplayCoordinator
 import com.arealapps.timecalc.calculation_engine.result.ErrorResult
-import com.arealapps.timecalc.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 import com.arealapps.timecalc.helpers.native_.PxPoint
 import com.arealapps.timecalc.utils.RevealManager
 

@@ -1,7 +1,7 @@
 package com.arealapps.timecalc
 
-import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
-import com.arealapps.timecalc.calculation_engine.TimeExpressionFactory
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.calculation_engine.basics.MutableTimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import java.math.BigDecimal
@@ -68,21 +68,4 @@ fun String.totalDigits(): Int {
 
 fun String.totalIntegers(): Int {
     return toNum(this).floor().toStringUnformatted().totalDigits()
-}
-
-
-
-fun mainTimeExpression() { //todo do it afterwards
-
-    val timeExpression = TimeExpressionFactory(TimeExpressionConfig(28.1f, 365f)).createTimeExpression(
-        toNum(
-            215002340999
-        )
-    )
-
-    val collapsed = MutableTimeVariable { false }
-
-
-    println(timeExpression.timeUnits)
-
 }

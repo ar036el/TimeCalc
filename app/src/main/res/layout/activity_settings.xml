@@ -52,13 +52,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:gravity="center"
-                    android:text="@string/premiumDesc"
+                    android:text="@string/settings_getPremium_desc_line1"
                     app:drawableStartCompat="@drawable/ic_baseline_check_24" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/getPremiumButton" />
+                    android:text="@string/settings_getPremium_Button" />
 
             </LinearLayout>
 
@@ -83,17 +83,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/days_in_a_month"
+                android:text="@string/settings_daysInAMonth"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/daysInAMonthSpinner"
+                android:id="@+id/settingsActivity_daysInAMonthSpinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:entries="@array/options_daysInAMonth"
-                android:entryValues="@array/internal_daysInAMonth_values"
+                android:entryValues="@array/internal_prefs_main_daysInAYear_entryValues"
                 android:textAlignment="textEnd"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -119,17 +119,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/days_in_a_year"
+                android:text="@string/settings_daysInAYear"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/daysInAYearSpinner"
+                android:id="@+id/settingsActivity_daysInAYearSpinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:entries="@array/options_daysInAYear"
-                android:entryValues="@array/internal_daysInAYear_values"
+                android:entryValues="@array/internal_prefs_main_daysInAYear_entryValues"
                 android:textAlignment="textEnd"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,19 +151,50 @@
             android:padding="@dimen/settings_item_padding">
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/vibrate_on_button_press"
+                android:text="@string/settings_vibrateKeys"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/vibrateKeysSwitch"
+                android:id="@+id/settingsActivity_vibrateKeysSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/setting_autoCollapseTimeUnitsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@color/options_item"
+            android:orientation="horizontal"
+            android:padding="@dimen/settings_item_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/settings_autoCollapseTimeUnits"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_open_in_new_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

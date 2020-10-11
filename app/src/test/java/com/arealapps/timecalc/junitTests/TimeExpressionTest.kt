@@ -1,8 +1,8 @@
 package com.arealapps.timecalc.junitTests
 
-import com.arealapps.timecalc.calculation_engine.TimeExpression
-import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
-import com.arealapps.timecalc.calculation_engine.TimeExpressionImpl
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionImpl
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import org.junit.After
@@ -12,7 +12,7 @@ class TimeExpressionTest {
     var tester: TimeExpression? = null
 
     private fun createTimeExpression(totalMillis: Double): TimeExpressionImpl {
-        val config = TimeExpressionConfig(30.11f, 365f)
+        val config = TimeExpressionConfig(30, 365)
         return TimeExpressionImpl(config, toNum(totalMillis))
     }
 

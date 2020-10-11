@@ -1,15 +1,16 @@
 package com.arealapps.timecalc.junitTests
 
-import com.arealapps.timecalc.calculation_engine.TimeConverter
-import com.arealapps.timecalc.calculation_engine.TimeConverterImpl
-import com.arealapps.timecalc.calculation_engine.TimeExpressionConfig
-import com.arealapps.timecalc.calculation_engine.TimeExpressionFactory
+import com.arealapps.timecalc.calculation_engine.*
 import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
+import com.arealapps.timecalc.calculation_engine.basics.createZero
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import com.arealapps.timecalc.calculation_engine.expression.*
 import com.arealapps.timecalc.calculation_engine.result.*
 import com.arealapps.timecalc.calculation_engine.symbol.*
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtilsImpl
 import com.arealapps.timecalc.helpers.native_.random
 import junit.framework.Assert.*
 import org.junit.After
@@ -20,12 +21,14 @@ import org.junit.Test
 class ResultBuilderTest {
 
     private var tester: ResultBuilder? = null
-    private val timeConverter: TimeConverter = TimeConverterImpl()
-    private val timeExpressionFactory = TimeExpressionFactory(TimeExpressionConfig(30f, 365f))
+    private val timeExpressionUtils: TimeExpressionUtils = TimeExpressionUtilsImpl(
+        TimeExpressionConfig(30, 365))
+    private val timeConverter: TimeConverter = TimeConverterCompat(timeExpressionUtils)
+
 
     @Before
     fun setUp() {
-        tester = ResultBuilderImpl(timeConverter, timeExpressionFactory)
+        tester = ResultBuilderImpl(timeExpressionUtils)
     }
 
     @After
@@ -70,8 +73,6 @@ class ResultBuilderTest {
         result as NumberResult
         assertEquals(number.toStringUnformatted(), result.number.toStringUnformatted())
     }
-
-    //    fun testForTimeResult(expressionAsString: String, millis: Number = 0, seconds: Number = 0, minutes: Number = 0, hours: Number = 0, days: Number = 0, weeks: Number = 0, months: Number = 0, years: Number = 0) {
 
     fun testForTimeResult(expressionAsString: String, totalMillis: Num) {
         val result = tester!!.getResult(Expression(ExpressionTestUtils.stringToExpressionTokens(expressionAsString)))
@@ -225,12 +226,13 @@ class ResultBuilderTest {
         fun test(minSymbols: Int, maxSymbols: Int) {
             val expressionBuilder = ExpressionBuilderImpl()
             ExpressionTestUtils.buildRandomExpression(expressionBuilder ,minSymbols, maxSymbols)
-            val result = ResultBuilderImpl(TimeConverterImpl(), timeExpressionFactory).getResult(expressionBuilder.getExpression())
+            val result = ResultBuilderImpl(timeExpressionUtils).getResult(expressionBuilder.getExpression())
         }
         repeat(1000) { test(0, 10) }
         repeat(1000) { test(0, 100) }
         repeat(1000) { test(0, 500) }
     }
+
 
 }
 
@@ -320,3 +322,33 @@ object ExpressionTestUtils {
 }
 
 
+class TimeConverterCompat(private val timeExpressionUtils: TimeExpressionUtils) : TimeConverter {
+    override fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num> {
+        return timeExpressionUtils.createTimeExpression(totalMillis).timeUnits
+    }
+
+    override fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num {
+        var totalMillis = createZero()
+        timeVariable.toListPaired().forEach {
+            totalMillis += timeExpressionUtils.convertTimeValues(it.second, it.first, TimeUnit.Milli)
+        }
+        return totalMillis
+    }
+
+    override fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num {
+        return timeExpressionUtils.convertTimeValues(quantity, from, to)
+    }
+
+}
+
+
+interface TimeConverter {
+    fun millisToTimeVariable(totalMillis: Num): TimeVariable<Num>
+    fun timeVariableToMillis(timeVariable: TimeVariable<Num>): Num
+    fun convertTimeUnit(quantity: Num, from: TimeUnit, to: TimeUnit): Num
+
+
+    companion object {
+        const val DECIMAL_PLACES_TO_ROUND_FOR_MILLIS = 2
+    }
+}
