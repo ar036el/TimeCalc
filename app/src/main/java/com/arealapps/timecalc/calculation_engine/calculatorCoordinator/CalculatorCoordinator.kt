@@ -65,6 +65,7 @@ class CalculatorCoordinatorImpl (
         if (state == States.Animation) {
             finishCurrentAnimation()
         }
+        resultLayout.config = rootUtils.configManager.getConfigForResultLayoutManager()
         quickResetDisplayAndSetStateToInput()
     }
 
@@ -203,7 +204,7 @@ class CalculatorCoordinatorImpl (
             activity.findViewById(R.id.resultLayout),
             activity.findViewById(R.id.resultLayoutContainer),
             null,
-            rootUtils.configManager.getConfigForTimeResultLayoutManager(),
+            rootUtils.configManager.getConfigForResultLayoutManager(),
             activity.findViewById<View>(R.id.resultLayout).width.toFloat()
         )
     }

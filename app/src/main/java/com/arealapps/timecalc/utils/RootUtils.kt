@@ -9,21 +9,22 @@ import com.arealapps.timecalc.utils.config.ConfigManagerImpl
 import com.arealapps.timecalc.utils.preferences_managers.CalculatorPreferencesManager
 
 interface RootUtils {
+    val timeExpressionUtils: TimeExpressionUtils
+
+    val expressionToStringConverter: ExpressionToStringConverter
     val toastManager: ToastManager
     val configManager: ConfigManager
-    val timeExpressionUtils: TimeExpressionUtils
-    val expressionToStringConverter: ExpressionToStringConverter
     val resultToDatabaseStringConverter: ResultToDatabaseStringConverter
     val resultToReadableStringConverter: ResultToReadableStringConverter
     val calculatorPreferencesManager: CalculatorPreferencesManager
 }
 
 class RootUtilsImpl(app: Application) : RootUtils {
-    override val toastManager: ToastManager = ToastManagerImpl(app.applicationContext)
-    override val configManager: ConfigManager = ConfigManagerImpl()
+    override val calculatorPreferencesManager = CalculatorPreferencesManager()
+    override val configManager: ConfigManager = ConfigManagerImpl(calculatorPreferencesManager)
     override val timeExpressionUtils: TimeExpressionUtils = TimeExpressionUtilsImpl(configManager.getTimeExpressionConfig())
     override val expressionToStringConverter = ExpressionToStringConverterImpl(false, true)
-    override val resultToDatabaseStringConverter = ResultToDatabaseStringConverterImpl()
+    override val toastManager: ToastManager = ToastManagerImpl(app.applicationContext)
+    override val resultToDatabaseStringConverter = ResultToDatabaseStringConverterImpl(timeExpressionUtils)
     override val resultToReadableStringConverter = ResultToReadableStringConverterImpl()
-    override val calculatorPreferencesManager = CalculatorPreferencesManager()
 }

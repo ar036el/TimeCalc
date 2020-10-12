@@ -18,8 +18,8 @@ interface ResultLayout {
     var abilityPercentage: Float
     var areGesturesEnabled: Boolean
     val result: Result?
+    var config: Config
     fun updateResult(result: Result?, doWhenFinished: (() -> Unit)? = null)
-
 
     class Config(
         val autoCollapseTimeValues: TimeVariable<Boolean> //todo auto??
@@ -31,10 +31,18 @@ class ResultLayoutImpl(
     private val layout: ViewGroup,
     private val layoutContainer: ViewGroup,
     result: Result?,
-    private val config: ResultLayout.Config,
+    config: ResultLayout.Config,
     widthThresholdInPx: Float,
     override var areGesturesEnabled: Boolean = true
 ): ResultLayout {
+
+    override var config: ResultLayout.Config = config
+        set(value) {
+            if (field != value) {
+                field = value
+                resetLayout()
+            }
+        }
 
     override var abilityPercentage: Float = 1f
         set(value) {
@@ -133,6 +141,10 @@ class ResultLayoutImpl(
             }
         }
         override fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int) {}
+    }
+
+    private fun resetLayout() {
+        initLayoutComponentsForNewResult(result, null)
     }
 
     private fun initLayoutComponentsForNewResult(result: Result?, doWhenFinished: (() -> Unit)?) {

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.arealapps.timecalc.R
 import com.arealapps.timecalc.activities.settingsActivity.ui.SelectAutoCollapseUnitsDialog
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.externalIntentInvoker.GooglePlayStoreAppPageInvoker
 import com.arealapps.timecalc.utils.preferences_managers.CalculatorPreferencesManager
@@ -53,11 +54,11 @@ class SettingsActivity : AppCompatActivity() {
         val pref = calcPrefsManager.daysInAMonth
 
         val spinnerItemsIndicesWithPrefValues = mapOf(
-            0 to CalculatorPreferencesManager.DaysInAMonthOptions._28,
-            1 to CalculatorPreferencesManager.DaysInAMonthOptions._29,
-            2 to CalculatorPreferencesManager.DaysInAMonthOptions._30,
-            3 to CalculatorPreferencesManager.DaysInAMonthOptions._31,
-            4 to CalculatorPreferencesManager.DaysInAMonthOptions.Average
+            0 to TimeExpressionConfig.DaysInAMonthOptions._28,
+            1 to TimeExpressionConfig.DaysInAMonthOptions._29,
+            2 to TimeExpressionConfig.DaysInAMonthOptions._30,
+            3 to TimeExpressionConfig.DaysInAMonthOptions._31,
+            4 to TimeExpressionConfig.DaysInAMonthOptions.Average
         )
 
         spinner.setSelection(spinnerItemsIndicesWithPrefValues.filterValues { it == pref.value }.keys.first())
@@ -74,9 +75,9 @@ class SettingsActivity : AppCompatActivity() {
         val pref = calcPrefsManager.daysInAYear
 
         val spinnerItemsIndicesWithPrefValues = mapOf(
-            0 to CalculatorPreferencesManager.DaysInAYearOptions._365,
-            1 to CalculatorPreferencesManager.DaysInAYearOptions._366,
-            2 to CalculatorPreferencesManager.DaysInAYearOptions.Average
+            0 to TimeExpressionConfig.DaysInAYearOptions._365,
+            1 to TimeExpressionConfig.DaysInAYearOptions._366,
+            2 to TimeExpressionConfig.DaysInAYearOptions.Average
         )
 
         spinner.setSelection(spinnerItemsIndicesWithPrefValues.filterValues { it == pref.value }.keys.first())

@@ -13,13 +13,14 @@ import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 interface ResultBuilder {
+    var timeExpressionUtils: TimeExpressionUtils
     fun getResult(expression: Expression): Result
     fun getOfficialResult(expression: Expression): Result?
     fun getTempResult(expression: Expression): Result?
 }
 
 class ResultBuilderImpl(
-    private val timeExpressionUtils: TimeExpressionUtils
+    override var timeExpressionUtils: TimeExpressionUtils
 ) : ResultBuilder {
 
     override fun getTempResult(expression: Expression): Result? {

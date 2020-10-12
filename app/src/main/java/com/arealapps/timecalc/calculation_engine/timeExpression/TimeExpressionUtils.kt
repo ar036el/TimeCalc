@@ -4,12 +4,13 @@ import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 
 interface TimeExpressionUtils {
+    var config: TimeExpressionConfig
     fun createTimeExpression(totalMillis: Num): TimeExpression
     fun convertTimeValues(fromValue: Num, from: TimeUnit, to: TimeUnit): Num
 }
 
 class TimeExpressionUtilsImpl(
-    var config: TimeExpressionConfig
+    override var config: TimeExpressionConfig
 ): TimeExpressionUtils {
     override fun createTimeExpression(totalMillis: Num): TimeExpression {
         return TimeExpressionImpl(config, totalMillis)

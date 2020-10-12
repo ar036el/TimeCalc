@@ -11,23 +11,19 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.arealapps.timecalc.R
 import com.arealapps.timecalc.appRoot
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
 import com.arealapps.timecalc.helpers.android.stringFromRes
-import com.arealapps.timecalc.helpers.native_.EnumWithId
-import com.arealapps.timecalc.utils.preferences_managers.parts.PreferencesManagerGenericImpl
+import com.arealapps.timecalc.utils.preferences_managers.parts.PreferencesManagerImpl
 
-class CalculatorPreferencesManager : PreferencesManagerGenericImpl(getSharedPreferencesInstance()) {
+class CalculatorPreferencesManager : PreferencesManagerImpl(getSharedPreferencesInstance()) {
     companion object {
         private fun getSharedPreferencesInstance(): SharedPreferences{
             return appRoot.getSharedPreferences(stringFromRes(R.string.internal_prefs_main), Context.MODE_PRIVATE)
         }
     }
 
-    enum class DaysInAMonthOptions(override val id: String): EnumWithId { _28("28"), _29("29"), _30("30"), _31("31"), Average("average") }
-    enum class DaysInAYearOptions(override val id: String): EnumWithId { _365("365"), _366("366"), Average("average") }
-
-
-    val daysInAMonth = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAMonth), DaysInAMonthOptions.values() , DaysInAMonthOptions._30)
-    val daysInAYear = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAYear), DaysInAYearOptions.values() , DaysInAYearOptions._365)
+    val daysInAMonth = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAMonth), TimeExpressionConfig.DaysInAMonthOptions.values() , TimeExpressionConfig.DaysInAMonthOptions._30)
+    val daysInAYear = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAYear), TimeExpressionConfig.DaysInAYearOptions.values() , TimeExpressionConfig.DaysInAYearOptions._365)
 
     val vibrateKeys = createBooleanPref(stringFromRes(R.string.internal_prefs_main_vibrateKeys), false)
 

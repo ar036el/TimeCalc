@@ -1,16 +1,21 @@
 package com.arealapps.timecalc.calculation_engine.converters
 
+import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.toNum
 import com.arealapps.timecalc.calculation_engine.result.*
 import com.arealapps.timecalc.calculation_engine.symbol.*
-import com.arealapps.timecalc.organize_later.toTimeExpression
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 
 interface ResultToDatabaseStringConverter {
+    var timeExpressionUtils: TimeExpressionUtils
     fun resultToString(result: Result): String
     fun stringToResult(string: String): Result
 }
 
-class ResultToDatabaseStringConverterImpl : ResultToDatabaseStringConverter {
+class ResultToDatabaseStringConverterImpl(
+    override var timeExpressionUtils: TimeExpressionUtils
+) : ResultToDatabaseStringConverter {
 
     object Prefixes {
         val numberResult = 'N'
@@ -72,5 +77,9 @@ class ResultToDatabaseStringConverterImpl : ResultToDatabaseStringConverter {
             }
             else -> throw NotImplementedError()
         }
+    }
+
+    private fun Num.toTimeExpression(): TimeExpression {
+        return timeExpressionUtils.createTimeExpression(this)
     }
 }

@@ -22,6 +22,8 @@ import com.arealapps.timecalc.helpers.native_.initOnce
 import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayout
 import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayoutImpl
 import com.arealapps.timecalc.rootUtils
+import com.arealapps.timecalc.utils.preferences_managers.parts.Preference
+import com.arealapps.timecalc.utils.preferences_managers.parts.PreferencesManager
 
 
 class CalculatorActivity : AppCompatActivity() {
@@ -40,6 +42,8 @@ class CalculatorActivity : AppCompatActivity() {
         initHistoryDrawerLayout()
         initCalculatorCoordinator.grantOneAccess()
 
+        addListeners()
+
         findViewById<ImageButton>(R.id.settingsButton).setOnClickListener {
             openSettingsActivity()
         }
@@ -48,8 +52,27 @@ class CalculatorActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        removeListeners()
+    }
+
     override fun onBackPressed() {
         moveTaskToBack(true)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        initCalculatorCoordinator.invokeIfHasAccess()
+    }
+
+    //--------
+
+    private fun addListeners() {
+        rootUtils.calculatorPreferencesManager.addListener(calculatorPreferencesManagerListener)
+    }
+
+    private fun removeListeners() {
+        rootUtils.calculatorPreferencesManager.removeListener(calculatorPreferencesManagerListener)
     }
 
     private fun initHistoryDrawerLayout() {
@@ -67,14 +90,16 @@ class CalculatorActivity : AppCompatActivity() {
         doOnCalculatorSymbolButtonClick?.invoke(view as Button)
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        initCalculatorCoordinator.invokeIfHasAccess()
-    }
-
     private val initCalculatorCoordinator = LimitedAccessFunction({
         calculatorCoordinator = CalculatorCoordinatorImpl(this)
         calculatorCoordinator.addListener(calculatorCoordinatorListener)
     })
+
+    private val calculatorPreferencesManagerListener = object : PreferencesManager.Listener {
+        override fun prefsHaveChanged(changedPreference: Preference<*>) {
+            resetCalculatorForPreferencesChange()
+        }
+    }
 
     private val calculatorCoordinatorListener = object: CalculatorCoordinator.Listener {
         override fun officialCalculationPerformed(expression: Expression, result: Result) {
@@ -104,5 +129,10 @@ class CalculatorActivity : AppCompatActivity() {
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
         clipboard.setPrimaryClip(clip)
+    }
+
+    private fun resetCalculatorForPreferencesChange() {
+        rootUtils.timeExpressionUtils.config = rootUtils.configManager.getTimeExpressionConfig() //TODO VERY RISKY!!! it's very main
+        calculatorCoordinator.reset()
     }
 }

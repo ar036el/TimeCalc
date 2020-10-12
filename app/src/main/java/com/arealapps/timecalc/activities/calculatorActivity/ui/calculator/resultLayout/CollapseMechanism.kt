@@ -73,7 +73,6 @@ class CollapseMechanismImpl(
         timeBlocksAsList.forEach {block ->
             if (blocksToAutoCollapseOnInit[block.timeUnit] && block.state equals (TimeBlockStates.Normal or TimeBlockStates.Maximized)) {
                 if (block.timeUnit == TimeUnit.Milli) { throw InternalError("cannot collapse milli") }
-                block.state = TimeBlockStates.Collapsed
                 collapseTimeBlock(block, false)
             }
         }

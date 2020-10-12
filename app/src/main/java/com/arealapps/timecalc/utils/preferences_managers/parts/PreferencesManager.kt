@@ -6,7 +6,7 @@ import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.helpers.native_.EnumWithId
 import kotlin.reflect.KClass
 
-interface PreferencesManagerGeneric : HoldsListeners<PreferencesManagerGeneric.Listener> {
+interface PreferencesManager : HoldsListeners<PreferencesManager.Listener> {
     fun createIntPref(key: String, possibleValues: Iterable<Int>?, defaultValue: Int): Preference<Int>
     fun createStringPref(key: String, possibleValues: Iterable<String>?, defaultValue: String): Preference<String>
     fun createBooleanPref(key: String, defaultValue: Boolean): Preference<Boolean>
@@ -23,10 +23,10 @@ interface PreferencesManagerGeneric : HoldsListeners<PreferencesManagerGeneric.L
 
 }
 
-open class PreferencesManagerGenericImpl(
+open class PreferencesManagerImpl(
     private val sharedPreferences: SharedPreferences,
-    private val listenersMgr: ListenersManager<PreferencesManagerGeneric.Listener> = ListenersManager()
-): PreferencesManagerGeneric, HoldsListeners<PreferencesManagerGeneric.Listener> by listenersMgr {
+    private val listenersMgr: ListenersManager<PreferencesManager.Listener> = ListenersManager()
+): PreferencesManager, HoldsListeners<PreferencesManager.Listener> by listenersMgr {
 
     private val keysWithPrefs = mutableMapOf<String, Preference<*>>()
 
@@ -70,7 +70,7 @@ open class PreferencesManagerGenericImpl(
         }
         keysWithPrefs[preference.key] = preference
 
-        listenersMgr.addListener(object : PreferencesManagerGeneric.Listener {
+        listenersMgr.addListener(object : PreferencesManager.Listener {
             override fun prefsHaveChanged(changedPreference: Preference<*>) {
                 if (changedPreference == preference) {
                     (preference as PreferenceImpl).notifyListenersPrefHasChanged()
