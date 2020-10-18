@@ -25,7 +25,7 @@ class CalculatorPreferencesManager : PreferencesManagerImpl(getSharedPreferences
     val daysInAMonth = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAMonth), TimeExpressionConfig.DaysInAMonthOptions.values() , TimeExpressionConfig.DaysInAMonthOptions._30)
     val daysInAYear = createEnumPref(stringFromRes(R.string.internal_prefs_main_daysInAYear), TimeExpressionConfig.DaysInAYearOptions.values() , TimeExpressionConfig.DaysInAYearOptions._365)
 
-    val vibrateKeys = createBooleanPref(stringFromRes(R.string.internal_prefs_main_vibrateKeys), false)
+    val vibrateKeys = createBooleanPref(stringFromRes(R.string.internal_prefs_main_vibrateKeys), true)
 
     val autoCollapseMillis = createBooleanPref(stringFromRes(R.string.internal_prefs_main_autoCollapse_millis), false)
     val autoCollapseSeconds = createBooleanPref(stringFromRes(R.string.internal_prefs_main_autoCollapse_seconds), false)
@@ -35,6 +35,8 @@ class CalculatorPreferencesManager : PreferencesManagerImpl(getSharedPreferences
     val autoCollapseWeeks = createBooleanPref(stringFromRes(R.string.internal_prefs_main_autoCollapse_weeks), false)
     val autoCollapseMonths = createBooleanPref(stringFromRes(R.string.internal_prefs_main_autoCollapse_months), false)
     val autoCollapseYears = createBooleanPref(stringFromRes(R.string.internal_prefs_main_autoCollapse_years), false)
+
+    val calculatorTheme = createIntPref(stringFromRes(R.string.internal_prefs_main_calculatorTheme), 0..2, 0)
 
 
 }

@@ -10,6 +10,8 @@ import com.arealapps.timecalc.R
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.createZero
 import com.arealapps.timecalc.calculation_engine.result.*
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
+import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.helpers.android.*
 import com.arealapps.timecalc.helpers.native_.*
 import kotlin.math.min
@@ -33,6 +35,7 @@ class ResultLayoutImpl(
     result: Result?,
     config: ResultLayout.Config,
     widthThresholdInPx: Float,
+    private val timeExpressionUtils: TimeExpressionUtils,
     override var areGesturesEnabled: Boolean = true
 ): ResultLayout {
 
@@ -56,17 +59,26 @@ class ResultLayoutImpl(
     override var result: Result? = result
         private set
 
+    private val resultAsTimeExpression: TimeExpression get() {
+        return when (result) {
+            is TimeResult -> (result as TimeResult).time
+            is MixedResult -> (result as MixedResult).time
+            else -> timeExpressionUtils.createTimeExpression(createZero())
+        }
+    }
+
     private var timeBlocks: TimeVariable<TimeBlock> by initOnce()
     private val autosizeApplier: AutosizeApplier = initAutosizeApplier(widthThresholdInPx)
     private var collapseMechanism: CollapseMechanism by initOnce()
 
     private val scrollViewContainer: HorizontalScrollView by lazy { layout.findViewById(R.id.resultLayout_scrollView) }
     private val textValueTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
+    private val textValueTextViewInitialTextColor: Int by lazy { textValueTextView.currentTextColor }
 
 
     override fun updateResult(result: Result?, doWhenFinished: (() -> Unit)?) {
         this.result = result
-        initLayoutComponentsForNewResult(result, doWhenFinished)
+        initLayoutComponentsForNewResult(doWhenFinished)
     }
 
     private fun applyAbilityPercentage(percent: Float) {
@@ -144,11 +156,11 @@ class ResultLayoutImpl(
     }
 
     private fun resetLayout() {
-        initLayoutComponentsForNewResult(result, null)
+        initLayoutComponentsForNewResult()
     }
 
-    private fun initLayoutComponentsForNewResult(result: Result?, doWhenFinished: (() -> Unit)?) {
-        collapseMechanism.initTimeBlocksForNewResult(result, config.autoCollapseTimeValues)
+    private fun initLayoutComponentsForNewResult(doWhenFinished: (() -> Unit)? = null) {
+        collapseMechanism.initTimeBlocksForNewResult(resultAsTimeExpression, config.autoCollapseTimeValues)
         initTextValueForNewResult(result)
         autosizeApplier.updateLayoutSize {
             setScrollViewToEnd()
@@ -167,10 +179,10 @@ class ResultLayoutImpl(
             else -> ""
         }
 
-        val textColor = if (result is ErrorResult) R.color.errorResultText else R.color.normalResultText
+        val textColor = if (result is ErrorResult) colorFromRes(R.color.errorResultText) else textValueTextViewInitialTextColor
 
         textValueTextView.text = textValue
-        textValueTextView.setTextColor(colorFromRes(textColor))
+        textValueTextView.setTextColor(textColor)
     }
 
     private fun setScrollViewToEnd() {
@@ -188,11 +200,11 @@ class ResultLayoutImpl(
         createTimeBlocks()
         timeBlocks.toList().forEach{ it.addListener(timeBlockListener) }
 
-        collapseMechanism = CollapseMechanismImpl(timeBlocks, result) {
+        collapseMechanism = CollapseMechanismImpl(timeBlocks, resultAsTimeExpression) {
             autosizeApplier.updateLayoutSize()
         }
 
-        initLayoutComponentsForNewResult(result, null)
+        initLayoutComponentsForNewResult()
         initResultLayoutContainer()
         layout.visibility = View.VISIBLE
     }

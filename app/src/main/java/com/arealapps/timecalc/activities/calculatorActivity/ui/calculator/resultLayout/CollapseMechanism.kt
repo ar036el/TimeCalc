@@ -17,14 +17,14 @@ import com.arealapps.timecalc.utils.PercentAnimation
 import com.arealapps.timecalc.utils.isRunning
 
 interface CollapseMechanism {
-    fun initTimeBlocksForNewResult(result: Result?, blocksToAutoCollapseOnInit: TimeVariable<Boolean>)
+    fun initTimeBlocksForNewResult(currentResultAsTimeExpression: TimeExpression, blocksToAutoCollapseOnInit: TimeVariable<Boolean>)
     fun tryToCollapseTimeBlockWithAnimation(target: TimeBlock)
     fun tryToRevealTimeBlockWithAnimation(target: TimeBlock)
 }
 
 class CollapseMechanismImpl(
     private val timeBlocks: TimeVariable<TimeBlock>,
-    private var currentResult: Result?,
+    private var currentResultAsTimeExpression: TimeExpression,
     private val doWhenChanged: () -> Unit
 ) : CollapseMechanism {
 
@@ -52,14 +52,12 @@ class CollapseMechanismImpl(
     private val TimeBlock.isOriginalNumberEmpty get() = originalNumber.isZero()
 
 
-    override fun initTimeBlocksForNewResult(result: Result?, blocksToAutoCollapseOnInit: TimeVariable<Boolean>) {
-        currentResult = result
-
-        val timeValuesOfCurrentResult =  getCurrentResultAsTimeExpression()?.timeUnits ?: TimeVariable{ createZero() }
+    override fun initTimeBlocksForNewResult(currentResultAsTimeExpression: TimeExpression, blocksToAutoCollapseOnInit: TimeVariable<Boolean>) {
+        this.currentResultAsTimeExpression = currentResultAsTimeExpression
 
         for (block in timeBlocksAsList) {
-            block.number = timeValuesOfCurrentResult[block.timeUnit]
-            block.originalNumber = timeValuesOfCurrentResult[block.timeUnit]
+            block.number = currentResultAsTimeExpression.timeUnits[block.timeUnit]
+            block.originalNumber = currentResultAsTimeExpression.timeUnits[block.timeUnit]
 
             if (block.isOriginalNumberEmpty) {
                 block.visibilityPercentage = 0f
@@ -182,7 +180,7 @@ class CollapseMechanismImpl(
 
 
     private fun setAsCollapsed(toCollapse: TimeBlock, maximizedSource: TimeBlock) {
-        fun TimeBlock.getUpdatedNumber() = getCurrentResultAsTimeExpression()!!.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
+        fun TimeBlock.getUpdatedNumber() = currentResultAsTimeExpression.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
         toCollapse.state = TimeBlockStates.Collapsed
         maximizedSource.state = TimeBlockStates.Maximized
         maximizedSource.number = maximizedSource.getUpdatedNumber()
@@ -212,7 +210,7 @@ class CollapseMechanismImpl(
     }
 
     private fun TimeBlock.getUpdatedNumberConsideringCollapsedItems(): Num {
-        return getCurrentResultAsTimeExpression()!!.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
+        return currentResultAsTimeExpression.getAsCollapsed(TimeVariable{ timeBlocks[it].state == TimeBlockStates.Collapsed })[this.timeUnit]
     }
 
 
@@ -275,14 +273,6 @@ class CollapseMechanismImpl(
             }
         }
         throw InternalError() //if reached to end of list and no maximized block found
-    }
-
-    private fun getCurrentResultAsTimeExpression(): TimeExpression? {
-        return when (currentResult) {
-            is TimeResult -> (currentResult as TimeResult).time
-            is MixedResult -> (currentResult as MixedResult).time
-            else -> null
-        }
     }
 
 

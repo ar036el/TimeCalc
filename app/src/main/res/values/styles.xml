@@ -1,11 +1,296 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+    <style name="themedStyle_0_calculator_abstract_buttonBig">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">sans</item>
     </style>
+
+    <style name="themedStyle_0_calculator_buttonDigit" parent="themedStyle_0_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme0_textStrong</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_buttonDigit_background">
+        <item name="android:background">@color/theme0_background</item>
+    </style>
+
+
+    <style name="themedStyle_0_calculator_buttonAction" parent="themedStyle_0_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme0_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_buttonAction_textOnly" parent="themedStyle_0_calculator_abstract_buttonBig">
+        <item name="android:textColor">@color/theme0_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_buttonAction_iconTint">
+        <item name="android:tint">@color/theme0_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_buttonAction_background">
+        <item name="android:background">@color/theme0_background</item>
+    </style>
+
+
+    <style name="themedStyle_0_calculator_buttonTimeUnit">
+        <item name="android:backgroundTint">@color/theme0_timeUnitButton</item>
+        <item name="android:textColor">@color/theme0_textStrong</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_buttonTimeUnit_background">
+        <item name="android:background">@color/theme0_colorPrimaryDark</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_scrollSeparatorBackground">
+        <item name="android:background">@color/theme0_colorAccent</item>
+    </style>
+
+
+    <style name="themedStyle_0_calculator_displayBackground">
+        <item name="android:background">@color/theme0_background</item>
+    </style>
+
+
+    <style name="themedStyle_0_calculator_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme1_textStrong</item>
+    </style>
+
+    <style name="themedStyle_0_calculator_sideIcons">
+        <item name="android:tint">@color/theme0_iconTint</item>
+    </style>
+
+
+    <style name="themedStyle_0_historyDrawer_titleText">
+        <item name="android:textColor">@color/theme0_colorPrimary</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="themedStyle_0_historyDrawer_background">
+        <item name="android:background">@color/theme0_background</item>
+    </style>
+
+    <style name="themedStyle_0_historyDrawer_icons">
+        <item name="android:tint">@color/theme0_iconTint</item>
+    </style>
+
+    <style name="themedStyle_0_historyDrawer_divider">
+        <item name="android:background">@color/divider</item>
+    </style>
+
+    <style name="themedStyle_0_historyDrawer_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme0_textRegular</item>
+    </style>
+
+    <style name="themedStyle_0_historyDrawer_dateHeader">
+        <item name="android:textColor">@color/theme0_textRegular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+
+
+
+
+    <style name="themedStyle_1_calculator_abstract_buttonBig">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonDigit" parent="themedStyle_1_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme1_textStrong</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonDigit_background">
+        <item name="android:background">@color/theme1_background</item>
+    </style>
+
+
+    <style name="themedStyle_1_calculator_buttonAction" parent="themedStyle_1_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme1_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonAction_textOnly" parent="themedStyle_1_calculator_abstract_buttonBig">
+        <item name="android:textColor">@color/theme1_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonAction_iconTint">
+        <item name="android:tint">@color/theme1_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonAction_background">
+        <item name="android:background">@color/theme1_background</item>
+    </style>
+
+
+    <style name="themedStyle_1_calculator_buttonTimeUnit">
+        <item name="android:backgroundTint">@color/theme1_timeUnitButton</item>
+        <item name="android:textColor">@color/theme1_textStrong</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_buttonTimeUnit_background">
+        <item name="android:background">@color/theme1_colorPrimaryDark</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_scrollSeparatorBackground">
+        <item name="android:background">@color/theme1_colorAccent</item>
+    </style>
+
+
+    <style name="themedStyle_1_calculator_displayBackground">
+        <item name="android:background">@color/theme1_background</item>
+    </style>
+
+
+    <style name="themedStyle_1_calculator_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme1_textStrong</item>
+    </style>
+
+    <style name="themedStyle_1_calculator_sideIcons">
+        <item name="android:tint">@color/theme1_iconTint</item>
+    </style>
+
+
+    <style name="themedStyle_1_historyDrawer_titleText">
+        <item name="android:textColor">@color/theme1_colorPrimary</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="themedStyle_1_historyDrawer_background">
+        <item name="android:background">@color/theme1_background</item>
+    </style>
+
+    <style name="themedStyle_1_historyDrawer_icons">
+        <item name="android:tint">@color/theme1_iconTint</item>
+    </style>
+
+    <style name="themedStyle_1_historyDrawer_divider">
+        <item name="android:background">@color/divider</item>
+    </style>
+
+    <style name="themedStyle_1_historyDrawer_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme1_textRegular</item>
+    </style>
+
+    <style name="themedStyle_1_historyDrawer_dateHeader">
+        <item name="android:textColor">@color/theme1_textRegular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+
+
+
+
+
+    <style name="themedStyle_2_calculator_abstract_buttonBig">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonDigit" parent="themedStyle_2_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme2_textStrong</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonDigit_background">
+        <item name="android:background">@color/theme2_background</item>
+    </style>
+
+
+    <style name="themedStyle_2_calculator_buttonAction" parent="themedStyle_2_calculator_abstract_buttonBig">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/theme2_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonAction_textOnly" parent="themedStyle_2_calculator_abstract_buttonBig">
+        <item name="android:textColor">@color/theme2_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonAction_iconTint">
+        <item name="android:tint">@color/theme2_colorPrimaryLight</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonAction_background">
+        <item name="android:background">@color/theme2_background</item>
+    </style>
+
+
+    <style name="themedStyle_2_calculator_buttonTimeUnit">
+        <item name="android:backgroundTint">@color/theme2_timeUnitButton</item>
+        <item name="android:textColor">@color/theme2_textStrong</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_buttonTimeUnit_background">
+        <item name="android:background">@color/theme2_colorPrimaryDark</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_scrollSeparatorBackground">
+        <item name="android:background">@color/theme2_colorAccent</item>
+    </style>
+
+
+    <style name="themedStyle_2_calculator_displayBackground">
+        <item name="android:background">@color/theme2_background</item>
+    </style>
+
+
+    <style name="themedStyle_2_calculator_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme2_textStrong</item>
+    </style>
+
+    <style name="themedStyle_2_calculator_sideIcons">
+        <item name="android:tint">@color/theme2_iconTint</item>
+    </style>
+
+
+    <style name="themedStyle_2_historyDrawer_titleText">
+        <item name="android:textColor">@color/theme2_colorPrimary</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="themedStyle_2_historyDrawer_background">
+        <item name="android:background">@color/theme2_background</item>
+    </style>
+
+    <style name="themedStyle_2_historyDrawer_icons">
+        <item name="android:tint">@color/theme2_iconTint</item>
+    </style>
+
+    <style name="themedStyle_2_historyDrawer_divider">
+        <item name="android:background">@color/divider</item>
+    </style>
+
+    <style name="themedStyle_2_historyDrawer_displayText">
+        <item name="android:fontFamily">@font/abeezee</item>
+        <item name="android:textColor">@color/theme2_textRegular</item>
+    </style>
+
+    <style name="themedStyle_2_historyDrawer_dateHeader">
+        <item name="android:textColor">@color/theme2_textRegular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+
+
+
 
 </resources>

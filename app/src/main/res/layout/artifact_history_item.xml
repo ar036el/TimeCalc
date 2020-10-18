@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="stub!"
+                style="?themedStyle_historyDrawer_dateHeader"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -77,6 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="stub!"
+                    style="?themedStyle_historyDrawer_displayText"
                     android:textSize="20sp"
                     android:layout_marginBottom="6dp"/>
 
@@ -86,6 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="stub!"
+                    style="?themedStyle_historyDrawer_displayText"
                     app:autoSizeTextType="uniform"
                     tools:targetApi="o"
                     android:breakStrategy="balanced"
@@ -109,6 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackgroundBorderless"
+                    style="?themedStyle_historyDrawer_icons"
                     android:contentDescription="Show in display"
                     android:onClick="scaleUp"
                     android:paddingStart="6dp"
@@ -128,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackgroundBorderless"
                     android:contentDescription="Copy to clipboard"
+                    style="?themedStyle_historyDrawer_icons"
                     android:paddingStart="6dp"
                     android:paddingTop="6dp"
                     android:paddingEnd="6dp"
@@ -145,7 +150,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/black"/>
+            android:layout_height="1dp"
+            style="?themedStyle_historyDrawer_divider"
+            />
     </LinearLayout>
 </FrameLayout>

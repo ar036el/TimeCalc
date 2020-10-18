@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/calculatorButtonsDrawerlikeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/holo_green_dark">
+    android:layout_height="wrap_content">
 
     <com.arealapps.timecalc.utils.swipeGestureHandler.TouchSurfaceLayout
         android:id="@+id/touchSurface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_dark">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonNormiesContainer"
+            style="?themedStyle_calculator_buttonDigit_background"
             android:layout_width="match_parent"
             android:layout_height="380dp"
             android:columnCount="4"
@@ -31,14 +30,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/calculator_actionButton_backspace"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="bsp"
-                    android:textSize="20sp" />
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/calculator_actionButton_backspaceClear"
+                        style="?themedStyle_calculator_buttonAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:id="@+id/calculator_actionButton_backspaceClear_backspaceVisual"
+                        style="?themedStyle_calculator_buttonAction_iconTint"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:elevation="6dp"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_baseline_backspace_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/calculator_actionButton_backspaceClear_clearVisual"
+                        style="?themedStyle_calculator_buttonAction_textOnly"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:elevation="6dp"
+                        android:gravity="center"
+                        android:text="@string/calculator_clear"
+                        android:textSize="20sp"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -48,6 +82,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -57,6 +92,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -66,6 +102,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -85,6 +122,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -94,6 +132,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -103,6 +142,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -112,6 +152,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -121,7 +162,8 @@
                     android:textSize="20sp" />
 
                 <Button
-                    android:layout_width="wrap_content"
+                    style="?themedStyle_calculator_buttonDigit"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:onClick="onCalculatorSymbolButtonClick"
@@ -140,6 +182,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -149,6 +192,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -158,6 +202,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -167,6 +212,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonDigit"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -177,6 +223,7 @@
 
                 <Button
                     android:id="@+id/calculator_actionButton_equals"
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -194,6 +241,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -203,6 +251,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -212,6 +261,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -221,6 +271,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -230,6 +281,7 @@
                     android:textSize="20sp" />
 
                 <Button
+                    style="?themedStyle_calculator_buttonAction"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -246,8 +298,8 @@
             android:id="@+id/timeUnitButtonsExpandableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:orientation="vertical"
+            style="?themedStyle_calculator_buttonTimeUnit_background"
             app:layout_constraintTop_toTopOf="parent">
 
             <FrameLayout
@@ -257,6 +309,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
+                    style="?themedStyle_calculator_buttonTimeUnit"
                     android:id="@+id/timeUnitButtonMillisecond"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -270,6 +323,7 @@
                     android:layout_height="wrap_content">
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonDay1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -281,6 +335,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonHour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -292,6 +347,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonMinute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -303,6 +359,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonSecond"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -332,6 +389,7 @@
 
                     <Button
                         android:id="@+id/timeUnitButtonYear"
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
@@ -342,6 +400,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -353,6 +412,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -364,6 +424,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
+                        style="?themedStyle_calculator_buttonTimeUnit"
                         android:id="@+id/timeUnitButtonDay2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -381,9 +442,9 @@
 
             <LinearLayout
                 android:id="@+id/timeUnitButtonsBottomGestureBar"
+                style="?themedStyle_calculator_scrollSeparatorBackground"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:background="@color/colorAccent"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/timeUnitButtonsBottomRowContainer">

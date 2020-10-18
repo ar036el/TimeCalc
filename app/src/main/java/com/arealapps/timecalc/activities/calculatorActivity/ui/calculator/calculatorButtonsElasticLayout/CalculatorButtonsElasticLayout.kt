@@ -14,33 +14,52 @@ import com.arealapps.timecalc.helpers.native_.PxPoint
 import com.arealapps.timecalc.activities.calculatorActivity.CalculatorActivity
 import com.arealapps.timecalc.utils.swipeGestureHandler.SwipeGestureHandler
 import com.arealapps.timecalc.utils.swipeGestureHandler.SwipeGestureHandlerImpl
-import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout.Actions.*
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.CalculatorButtonsElasticLayout.ButtonActionTypes.*
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.parts.ButtonsContainerBottomPart
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.parts.ButtonsContainerBottomPartImpl
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.parts.ButtonsContainerTopPart
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.calculatorButtonsElasticLayout.parts.ButtonsContainerTopPartImpl
+import com.arealapps.timecalc.utils.VibrationManager
 
 
 interface CalculatorButtonsElasticLayout : HoldsListeners<CalculatorButtonsElasticLayout.Listener>{
+    var isClearButtonEnabled: Boolean
+    var areButtonsClickHapticsEnabled: Boolean
     interface Listener {
-        fun actionButtonWasPressed(action: Actions)
+        fun actionButtonWasPressed(action: ButtonActionTypes)
         fun symbolButtonWasPressed(symbol: Symbol)
     }
-    enum class Actions{ Equals, Backspace, Clear }
+    enum class ButtonActionTypes{ Equals, Backspace, Clear }
 }
 
 
 class CalculatorButtonsElasticLayoutImpl(
     private val activity: CalculatorActivity,
+    isClearButtonEnabled: Boolean,
+    override var areButtonsClickHapticsEnabled: Boolean,
+    private val vibrationManager: VibrationManager,
     private val listenersMgr: ListenersManager<CalculatorButtonsElasticLayout.Listener> = ListenersManager()
 ): CalculatorButtonsElasticLayout, HoldsListeners<CalculatorButtonsElasticLayout.Listener> by listenersMgr {
 
+
+    override var isClearButtonEnabled = false //lateinit
+        set(value) {
+            field = value
+            updateCleanButtonAbility()
+        }
 
     private val buttonsContainerTopPart: ButtonsContainerTopPart = ButtonsContainerTopPartImpl(activity)
     private val buttonsContainerBottomPart: ButtonsContainerBottomPart = ButtonsContainerBottomPartImpl(activity)
     private val swipeGestureHandler: SwipeGestureHandler = createSwipeGestureHandler()
 
 
+    private fun updateCleanButtonAbility() {
+        val backspaceVisual = activity.findViewById<View>(R.id.calculator_actionButton_backspaceClear_backspaceVisual)
+        val clearVisual = activity.findViewById<View>(R.id.calculator_actionButton_backspaceClear_clearVisual)
+
+        clearVisual.visibility = if (isClearButtonEnabled) View.VISIBLE else View.INVISIBLE
+        backspaceVisual.visibility = if (isClearButtonEnabled) View.INVISIBLE else View.VISIBLE
+    }
 
     private fun createSwipeGestureHandler(): SwipeGestureHandler {
         return SwipeGestureHandlerImpl(
@@ -63,8 +82,8 @@ class CalculatorButtonsElasticLayoutImpl(
         ) {
             val pct = subject.toYPercent(newPoint.y)
 
-            buttonsContainerTopPart?.setScrollPercent(pct)
-            buttonsContainerBottomPart?.setScrollPercent(pct)
+            buttonsContainerTopPart.setScrollPercent(pct)
+            buttonsContainerBottomPart.setScrollPercent(pct)
         }
 
         override fun swipeStateHasChanged(
@@ -116,18 +135,30 @@ class CalculatorButtonsElasticLayoutImpl(
     }
 
     private fun setActionButtonsClickListeners() {
-        val backspaceButton: Button = activity.findViewById(R.id.calculator_actionButton_backspace)
+        val backspaceClearButton: Button = activity.findViewById(R.id.calculator_actionButton_backspaceClear)
         val equalsButton: Button = activity.findViewById(R.id.calculator_actionButton_equals)
 
-        backspaceButton.setOnClickListener { listenersMgr.notifyAll { it.actionButtonWasPressed(Backspace) } }
-        backspaceButton.setOnLongClickListener { listenersMgr.notifyAll { it.actionButtonWasPressed(Clear) }; true }
-        equalsButton.setOnClickListener { listenersMgr.notifyAll { it.actionButtonWasPressed(Equals) } }
+        backspaceClearButton.setOnClickListener { onCalculatorSymbolButtonClick(it, Backspace) }
+        backspaceClearButton.setOnLongClickListener { onCalculatorSymbolButtonClick(it, Clear); true }
+        equalsButton.setOnClickListener { onCalculatorSymbolButtonClick(it, Equals) }
     }
 
-    private fun onCalculatorSymbolButtonClick(buttonClicked: Button) {
+    private fun onCalculatorSymbolButtonClick(button: View, actionType: CalculatorButtonsElasticLayout.ButtonActionTypes) {
+        tryToVibrateClick(button)
+        listenersMgr.notifyAll { it.actionButtonWasPressed(actionType) }
+    }
+
+    private fun onCalculatorSymbolButtonClick(button: Button) {
+        tryToVibrateClick(button)
         listenersMgr.notifyAll {
-            val symbol = Symbol.charOf(buttonClicked.getTagAsChar())
+            val symbol = Symbol.charOf(button.getTagAsChar())
             it.symbolButtonWasPressed(symbol)
+        }
+    }
+
+    private fun tryToVibrateClick(button: View) {
+        if (areButtonsClickHapticsEnabled) {
+            vibrationManager.vibrateAsSimpleClick(button)
         }
     }
 
@@ -145,5 +176,6 @@ class CalculatorButtonsElasticLayoutImpl(
 
         setActionButtonsClickListeners()
         activity.doOnCalculatorSymbolButtonClick = ::onCalculatorSymbolButtonClick
+        this.isClearButtonEnabled = isClearButtonEnabled
     }
 }

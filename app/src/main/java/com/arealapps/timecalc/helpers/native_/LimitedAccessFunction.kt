@@ -9,4 +9,6 @@ class LimitedAccessFunction(private val function: (params: Array<out Any?>) -> U
     }
 
     fun grantOneAccess() { accesses = 1 }
+    fun removeAccesses() { accesses = 0 }
+
 }

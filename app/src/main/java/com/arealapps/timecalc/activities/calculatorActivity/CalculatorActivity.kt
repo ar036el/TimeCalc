@@ -9,21 +9,24 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.arealapps.timecalc.R
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
+import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayout
+import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayoutImpl
 import com.arealapps.timecalc.activities.settingsActivity.SettingsActivity
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinator
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinatorImpl
 import com.arealapps.timecalc.calculation_engine.expression.Expression
 import com.arealapps.timecalc.calculation_engine.result.Result
-import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
-import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
 import com.arealapps.timecalc.helpers.android.stringFromRes
 import com.arealapps.timecalc.helpers.native_.LimitedAccessFunction
 import com.arealapps.timecalc.helpers.native_.initOnce
-import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayout
-import com.arealapps.timecalc.activities.calculatorActivity.ui.historyManager.HistoryDrawerLayoutImpl
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.preferences_managers.parts.Preference
 import com.arealapps.timecalc.utils.preferences_managers.parts.PreferencesManager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 
 
 class CalculatorActivity : AppCompatActivity() {
@@ -37,8 +40,10 @@ class CalculatorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        rootUtils.activityThemeApplier.applyTheme(this)
         setContentView(R.layout.activity_calculator)
 
+        initMobileAds()
         initHistoryDrawerLayout()
         initCalculatorCoordinator.grantOneAccess()
 
@@ -52,6 +57,11 @@ class CalculatorActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        tryToLoadABannerAd()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         removeListeners()
@@ -62,10 +72,32 @@ class CalculatorActivity : AppCompatActivity() {
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
-        initCalculatorCoordinator.invokeIfHasAccess()
+        tryToInvokeAllLimitedAccessFunctionsOnFocusChanged()
     }
 
     //--------
+
+    private fun tryToInvokeAllLimitedAccessFunctionsOnFocusChanged() {
+        initCalculatorCoordinator.invokeIfHasAccess()
+        resetCalculator.invokeIfHasAccess()
+        restartActivity.invokeIfHasAccess()
+    }
+
+    private fun tryToLoadABannerAd() {
+        val bannerAdView: AdView = findViewById(R.id.calculatorActivity_bannerAdViewBottom)
+        if (rootUtils.purchasesManager.purchasedNoAds) {
+            bannerAdView.visibility = View.GONE
+            return
+        }
+        bannerAdView.visibility = View.VISIBLE
+        val adRequest = AdRequest.Builder().build()
+        bannerAdView.loadAd(adRequest)
+    }
+
+    private fun initMobileAds() {
+        MobileAds.initialize(this)
+//        updateBannerAdViewsVisibility()
+    }
 
     private fun addListeners() {
         rootUtils.calculatorPreferencesManager.addListener(calculatorPreferencesManagerListener)
@@ -95,9 +127,27 @@ class CalculatorActivity : AppCompatActivity() {
         calculatorCoordinator.addListener(calculatorCoordinatorListener)
     })
 
+    private val resetCalculator = LimitedAccessFunction({
+        rootUtils.timeExpressionUtils.config = rootUtils.configManager.getTimeExpressionConfig() //TODO VERY RISKY!!! it's very main
+        calculatorCoordinator.reset()
+    })
+
+    private val restartActivity = LimitedAccessFunction({
+        rootUtils.timeExpressionUtils.config = rootUtils.configManager.getTimeExpressionConfig() //TODO VERY RISKY!!! it's very main
+        val intent = intent
+        finish()
+        startActivity(intent)
+    })
+
     private val calculatorPreferencesManagerListener = object : PreferencesManager.Listener {
         override fun prefsHaveChanged(changedPreference: Preference<*>) {
-            resetCalculatorForPreferencesChange()
+            if (changedPreference == rootUtils.calculatorPreferencesManager.calculatorTheme) {
+                restartActivity.grantOneAccess()
+                resetCalculator.removeAccesses()
+            } else {
+                restartActivity.removeAccesses()
+                resetCalculator.grantOneAccess()
+            }
         }
     }
 
@@ -131,8 +181,4 @@ class CalculatorActivity : AppCompatActivity() {
         clipboard.setPrimaryClip(clip)
     }
 
-    private fun resetCalculatorForPreferencesChange() {
-        rootUtils.timeExpressionUtils.config = rootUtils.configManager.getTimeExpressionConfig() //TODO VERY RISKY!!! it's very main
-        calculatorCoordinator.reset()
-    }
 }

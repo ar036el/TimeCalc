@@ -21,6 +21,7 @@ import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expres
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.ExpressionLayoutImpl
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayout
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.resultLayout.ResultLayoutImpl
+import com.arealapps.timecalc.appRoot
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
 import com.arealapps.timecalc.helpers.native_.notEquals
@@ -28,6 +29,7 @@ import com.arealapps.timecalc.helpers.native_.or
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.RevealManager
 import com.arealapps.timecalc.utils.RevealManagerImpl
+import com.arealapps.timecalc.utils.preferences_managers.parts.Preference
 
 
 interface CalculatorCoordinator: HoldsListeners<CalculatorCoordinator.Listener> {
@@ -52,7 +54,7 @@ class CalculatorCoordinatorImpl (
     private val resultLayout: ResultLayout = createResultLayoutManager()
     private val displayCoordinator: DisplayCoordinator = DisplayCoordinatorImpl(expressionLayout, resultLayout)
 
-    private var calculatorButtonsElasticLayout: CalculatorButtonsElasticLayout = CalculatorButtonsElasticLayoutImpl(activity)
+    private var calculatorButtonsElasticLayout: CalculatorButtonsElasticLayout = CalculatorButtonsElasticLayoutImpl(activity, false, rootUtils.calculatorPreferencesManager.vibrateKeys.value, rootUtils.vibrationManager)
     private val revealManager: RevealManager = RevealManagerImpl(activity.findViewById(R.id.RevealManagerDrawingSurface))
 
 
@@ -103,7 +105,7 @@ class CalculatorCoordinatorImpl (
         when (state) {
             States.Input -> backspace()
             States.Animation -> finishCurrentAnimation()
-            States.Result -> quickResetDisplayAndSetStateToInput()
+            States.Result -> clear()
         }
     }
 
@@ -161,6 +163,7 @@ class CalculatorCoordinatorImpl (
         displayCoordinator.areResultGesturesEnabled = false
         displayCoordinator.isExpressionTextEditEnabled = true
         state = States.Input
+        calculatorButtonsElasticLayout.isClearButtonEnabled = false
     }
 
     //------
@@ -173,13 +176,13 @@ class CalculatorCoordinatorImpl (
             displayCoordinator,
             errorResult,
             resultLayout
-        ) { state = States.Result }
+        ) { setStateToResult() }
     }
 
     private fun startNormalResultAnimation(expression: Expression, normalOfficialResult: Result) {
         if (currentCalculatorAnimation?.isRunning == true) { throw InternalError() }
         currentCalculatorAnimation = NormalResultRevealAnimation(displayCoordinator) {
-            state = States.Result
+            setStateToResult()
             listenersMgr.notifyAll { it.officialCalculationPerformed(expression, normalOfficialResult) }
         }
     }
@@ -191,7 +194,7 @@ class CalculatorCoordinatorImpl (
             activity.findViewById(R.id.RevealManagerDrawingSurface),
             ::clearDisplay,
             displayCoordinator
-        ) { state = States.Result}
+        ) { quickResetDisplayAndSetStateToInput() }
     }
 
     private fun clearDisplay() {
@@ -205,11 +208,17 @@ class CalculatorCoordinatorImpl (
             activity.findViewById(R.id.resultLayoutContainer),
             null,
             rootUtils.configManager.getConfigForResultLayoutManager(),
-            activity.findViewById<View>(R.id.resultLayout).width.toFloat()
+            activity.findViewById<View>(R.id.resultLayout).width.toFloat(),
+            rootUtils.timeExpressionUtils
         )
     }
 
     //------
+
+    private fun setStateToResult() {
+        state = States.Result
+        calculatorButtonsElasticLayout.isClearButtonEnabled = true
+    }
 
     private fun updateTempResult() {
         val officialResult = resultBuilder.getTempResult(expressionBuilder.getExpression())
@@ -219,6 +228,10 @@ class CalculatorCoordinatorImpl (
     private fun addListeners() {
         expressionBuilder.addListener(listeners.expressionBuilder)
         calculatorButtonsElasticLayout.addListener(listeners.calculatorButtonsElasticLayout)
+
+        rootUtils.calculatorPreferencesManager.vibrateKeys.addListener(listeners.vibrateKeysPref)
+
+
     }
 
     //------
@@ -232,15 +245,21 @@ class CalculatorCoordinatorImpl (
         }
 
         val calculatorButtonsElasticLayout = object : CalculatorButtonsElasticLayout.Listener {
-            override fun actionButtonWasPressed(action: CalculatorButtonsElasticLayout.Actions) {
+            override fun actionButtonWasPressed(action: CalculatorButtonsElasticLayout.ButtonActionTypes) {
                 when (action) {
-                    CalculatorButtonsElasticLayout.Actions.Equals -> equalsButtonPressed()
-                    CalculatorButtonsElasticLayout.Actions.Backspace -> backspaceButtonPressed()
-                    CalculatorButtonsElasticLayout.Actions.Clear -> clearButtonPressed()
+                    CalculatorButtonsElasticLayout.ButtonActionTypes.Equals -> equalsButtonPressed()
+                    CalculatorButtonsElasticLayout.ButtonActionTypes.Backspace -> backspaceButtonPressed()
+                    CalculatorButtonsElasticLayout.ButtonActionTypes.Clear -> clearButtonPressed()
                 }
             }
             override fun symbolButtonWasPressed(symbol: Symbol) {
                 symbolButtonPressed(symbol)
+            }
+        }
+
+        val vibrateKeysPref = object: Preference.Listener<Boolean> {
+            override fun prefHasChanged(preference: Preference<Boolean>, value: Boolean) {
+                this@CalculatorCoordinatorImpl.calculatorButtonsElasticLayout.areButtonsClickHapticsEnabled = value
             }
         }
     }

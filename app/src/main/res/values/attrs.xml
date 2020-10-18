@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="themedStyle_calculator_buttonDigit" format="reference" />
+    <attr name="themedStyle_calculator_buttonDigit_background" format="reference" />
+
+    <attr name="themedStyle_calculator_buttonAction" format="reference" />
+    <attr name="themedStyle_calculator_buttonAction_background" format="reference" />
+    <attr name="themedStyle_calculator_buttonAction_textOnly" format="reference" />
+    <attr name="themedStyle_calculator_buttonAction_iconTint" format="reference" />
+
+    <attr name="themedStyle_calculator_buttonTimeUnit" format="reference" />
+    <attr name="themedStyle_calculator_buttonTimeUnit_background" format="reference" />
+
+    <attr name="themedStyle_calculator_scrollSeparatorBackground" format="reference" />
+    <attr name="themedStyle_calculator_displayBackground" format="reference" />
+    <attr name="themedStyle_calculator_displayText" format="reference" />
+    <attr name="themedStyle_calculator_sideIcons" format="reference" />
+
+
+    <attr name="themedStyle_historyDrawer_titleText" format="reference" />
+    <attr name="themedStyle_historyDrawer_background" format="reference" />
+    <attr name="themedStyle_historyDrawer_icons" format="reference" />
+    <attr name="themedStyle_historyDrawer_divider" format="reference" />
+    <attr name="themedStyle_historyDrawer_displayText" format="reference" />
+    <attr name="themedStyle_historyDrawer_dateHeader" format="reference" />
+
+
+</resources>

@@ -15,8 +15,10 @@
     <string name="internal_prefs_main_autoCollapse_months">autoCollapseMonths</string>
     <string name="internal_prefs_main_autoCollapse_years">autoCollapseYears</string>
 
+    <string name="internal_prefs_main_calculatorTheme">calculatorTheme</string>
 
-<!--    TODO not necessary right now .-.-->
+
+    <!--    TODO not necessary right now .-.-->
     <string-array name="internal_prefs_main_daysInAMonth_entryValues">
         <!--Don't change this order, or this will misbehave-->
         <item>@string/internal_daysInAMonth_28</item>
@@ -44,6 +46,9 @@
     <string name="internal_daysInAYear_365">365</string>
     <string name="internal_daysInAYear_366">366</string>
     <string name="internal_daysInAYear_average">average</string>
+
+    <string name="internal_privacyPolicyURL">https://sites.google.com/view/arealapps-timecalculator/privacy-policy</string>
+    <string name="internal_developerEmail">areal.apps@gmail.com</string>
 
 
 </resources>

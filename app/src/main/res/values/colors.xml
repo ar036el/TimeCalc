@@ -28,8 +28,8 @@
     <color name="errorResultText">#E53935</color>
     <color name="normalResultText">#000000</color>
 
-    <color name="options_background">#A6A6A6</color>
-    <color name="options_item">#FF9C9C</color>
+    <color name="options_background">#E5E5E5</color>
+    <color name="options_item">#FFFFFF</color>
 
     <color name="historyTitleBackground">#FFFFFF</color>
     <color name="historyTitleText">#1E88E5</color>
@@ -37,6 +37,42 @@
 
     <color name="revealColor_normal">#666666</color>
     <color name="revealColor_error">#E53935</color>
+
+
+
+
+    <color name="theme0_colorPrimary">#6200EE</color>
+    <color name="theme0_colorPrimaryDark">#3700B3</color>
+    <color name="theme0_colorAccent">#00C4FF</color>
+    <color name="theme0_colorPrimaryLight">#8E2CFF</color>
+    <color name="theme0_background">#FFFFFF</color>
+    <color name="theme0_textStrong">#000000</color>
+    <color name="theme0_textRegular">#232323</color>
+    <color name="theme0_timeUnitButton">#D5D5D5</color>
+    <color name="theme0_iconTint">#6E6E6E</color>
+
+
+    <color name="theme1_colorPrimary">#9C9C9C</color>
+    <color name="theme1_colorPrimaryDark">#494949</color>
+    <color name="theme1_colorAccent">#9F9F9F</color>
+    <color name="theme1_colorPrimaryLight">#BDBDBD</color>
+    <color name="theme1_background">#FFFFFF</color>
+    <color name="theme1_textStrong">#000000</color>
+    <color name="theme1_textRegular">#232323</color>
+    <color name="theme1_timeUnitButton">#D5D5D5</color>
+    <color name="theme1_iconTint">#6E6E6E</color>
+
+
+    <color name="theme2_colorPrimary">#F9A825</color>
+    <color name="theme2_colorPrimaryDark">#9A6C21</color>
+    <color name="theme2_colorAccent">#635E5E</color>
+    <color name="theme2_colorPrimaryLight">#FFCC79</color>
+    <color name="theme2_background">#000000</color>
+    <color name="theme2_textStrong">#FFFFFF</color>
+    <color name="theme2_textRegular">#C5C5C5</color>
+    <color name="theme2_timeUnitButton">#656565</color>
+    <color name="theme2_iconTint">#C6C6C6</color>
+
 
 
 </resources>

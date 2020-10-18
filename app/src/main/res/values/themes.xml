@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme0_Default" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="colorPrimary">@color/theme0_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme0_colorPrimaryDark</item>
+        <item name="colorAccent">@color/theme0_colorAccent</item>
+
+        <item name="themedStyle_calculator_buttonDigit">@style/themedStyle_0_calculator_buttonDigit</item>
+        <item name="themedStyle_calculator_buttonDigit_background">@style/themedStyle_0_calculator_buttonDigit_background</item>
+
+        <item name="themedStyle_calculator_buttonAction">@style/themedStyle_0_calculator_buttonAction</item>
+        <item name="themedStyle_calculator_buttonAction_textOnly">@style/themedStyle_0_calculator_buttonAction_textOnly</item>
+        <item name="themedStyle_calculator_buttonAction_iconTint">@style/themedStyle_0_calculator_buttonAction_iconTint</item>
+        <item name="themedStyle_calculator_buttonAction_background">@style/themedStyle_0_calculator_buttonAction_background</item>
+
+        <item name="themedStyle_calculator_buttonTimeUnit">@style/themedStyle_0_calculator_buttonTimeUnit</item>
+        <item name="themedStyle_calculator_buttonTimeUnit_background">@style/themedStyle_0_calculator_buttonTimeUnit_background</item>
+
+        <item name="themedStyle_calculator_scrollSeparatorBackground">@style/themedStyle_0_calculator_scrollSeparatorBackground</item>
+        <item name="themedStyle_calculator_displayBackground">@style/themedStyle_0_calculator_displayBackground</item>
+        <item name="themedStyle_calculator_displayText">@style/themedStyle_0_calculator_displayText</item>
+        <item name="themedStyle_calculator_sideIcons">@style/themedStyle_0_calculator_sideIcons</item>
+
+        <item name="themedStyle_historyDrawer_titleText">@style/themedStyle_0_historyDrawer_titleText</item>
+        <item name="themedStyle_historyDrawer_background">@style/themedStyle_0_historyDrawer_background</item>
+        <item name="themedStyle_historyDrawer_icons">@style/themedStyle_0_historyDrawer_icons</item>
+        <item name="themedStyle_historyDrawer_divider">@style/themedStyle_0_historyDrawer_divider</item>
+        <item name="themedStyle_historyDrawer_displayText">@style/themedStyle_0_historyDrawer_displayText</item>
+        <item name="themedStyle_historyDrawer_dateHeader">@style/themedStyle_0_historyDrawer_dateHeader</item>
+
+
+
+    </style>
+
+    <style name="Theme1" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/theme1_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme1_colorPrimaryDark</item>
+        <item name="colorAccent">@color/theme1_colorAccent</item>
+
+        <item name="themedStyle_calculator_buttonDigit">@style/themedStyle_1_calculator_buttonDigit</item>
+        <item name="themedStyle_calculator_buttonDigit_background">@style/themedStyle_1_calculator_buttonDigit_background</item>
+
+        <item name="themedStyle_calculator_buttonAction">@style/themedStyle_1_calculator_buttonAction</item>
+        <item name="themedStyle_calculator_buttonAction_textOnly">@style/themedStyle_1_calculator_buttonAction_textOnly</item>
+        <item name="themedStyle_calculator_buttonAction_iconTint">@style/themedStyle_1_calculator_buttonAction_iconTint</item>
+        <item name="themedStyle_calculator_buttonAction_background">@style/themedStyle_1_calculator_buttonAction_background</item>
+
+        <item name="themedStyle_calculator_buttonTimeUnit">@style/themedStyle_1_calculator_buttonTimeUnit</item>
+        <item name="themedStyle_calculator_buttonTimeUnit_background">@style/themedStyle_1_calculator_buttonTimeUnit_background</item>
+
+        <item name="themedStyle_calculator_scrollSeparatorBackground">@style/themedStyle_1_calculator_scrollSeparatorBackground</item>
+        <item name="themedStyle_calculator_displayBackground">@style/themedStyle_1_calculator_displayBackground</item>
+        <item name="themedStyle_calculator_displayText">@style/themedStyle_1_calculator_displayText</item>
+        <item name="themedStyle_calculator_sideIcons">@style/themedStyle_1_calculator_sideIcons</item>
+
+        <item name="themedStyle_historyDrawer_titleText">@style/themedStyle_1_historyDrawer_titleText</item>
+        <item name="themedStyle_historyDrawer_background">@style/themedStyle_1_historyDrawer_background</item>
+        <item name="themedStyle_historyDrawer_icons">@style/themedStyle_1_historyDrawer_icons</item>
+        <item name="themedStyle_historyDrawer_divider">@style/themedStyle_1_historyDrawer_divider</item>
+        <item name="themedStyle_historyDrawer_displayText">@style/themedStyle_1_historyDrawer_displayText</item>
+        <item name="themedStyle_historyDrawer_dateHeader">@style/themedStyle_1_historyDrawer_dateHeader</item>
+
+
+
+
+    </style>
+
+
+    <style name="Theme2" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/theme2_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme2_colorPrimaryDark</item>
+        <item name="colorAccent">@color/theme2_colorAccent</item>
+
+        <item name="themedStyle_calculator_buttonDigit">@style/themedStyle_2_calculator_buttonDigit</item>
+        <item name="themedStyle_calculator_buttonDigit_background">@style/themedStyle_2_calculator_buttonDigit_background</item>
+
+        <item name="themedStyle_calculator_buttonAction">@style/themedStyle_2_calculator_buttonAction</item>
+        <item name="themedStyle_calculator_buttonAction_textOnly">@style/themedStyle_2_calculator_buttonAction_textOnly</item>
+        <item name="themedStyle_calculator_buttonAction_iconTint">@style/themedStyle_2_calculator_buttonAction_iconTint</item>
+        <item name="themedStyle_calculator_buttonAction_background">@style/themedStyle_2_calculator_buttonAction_background</item>
+
+        <item name="themedStyle_calculator_buttonTimeUnit">@style/themedStyle_2_calculator_buttonTimeUnit</item>
+        <item name="themedStyle_calculator_buttonTimeUnit_background">@style/themedStyle_2_calculator_buttonTimeUnit_background</item>
+
+        <item name="themedStyle_calculator_scrollSeparatorBackground">@style/themedStyle_2_calculator_scrollSeparatorBackground</item>
+        <item name="themedStyle_calculator_displayBackground">@style/themedStyle_2_calculator_displayBackground</item>
+        <item name="themedStyle_calculator_displayText">@style/themedStyle_2_calculator_displayText</item>
+        <item name="themedStyle_calculator_sideIcons">@style/themedStyle_2_calculator_sideIcons</item>
+
+        <item name="themedStyle_historyDrawer_titleText">@style/themedStyle_2_historyDrawer_titleText</item>
+        <item name="themedStyle_historyDrawer_background">@style/themedStyle_2_historyDrawer_background</item>
+        <item name="themedStyle_historyDrawer_icons">@style/themedStyle_2_historyDrawer_icons</item>
+        <item name="themedStyle_historyDrawer_divider">@style/themedStyle_2_historyDrawer_divider</item>
+        <item name="themedStyle_historyDrawer_displayText">@style/themedStyle_2_historyDrawer_displayText</item>
+        <item name="themedStyle_historyDrawer_dateHeader">@style/themedStyle_2_historyDrawer_dateHeader</item>
+
+
+    </style>
+
+</resources>

@@ -59,13 +59,12 @@ class ResultBuilderImpl(
     private fun getResult(tokens: List<ExpressionToken>): Result {
         try {
             val formulaBuilder = FormulaBuilder()
-            tokens
 
             tokens.forEach {
                 formulaBuilder.addExpressionToken(it)
             }
 
-            var preResultNumeral = formulaBuilder.solve()
+            val preResultNumeral = formulaBuilder.solve()
             return createResult(preResultNumeral)
 
         } catch (e: BadExpressionException) {
@@ -105,7 +104,7 @@ class ResultBuilderImpl(
                         segmentBuilder.addOperator(Operator.Multiplication)
                     }
                     else if (getLastComponent() is Numeral_SegmentComponent && (getLastComponent() as Numeral_SegmentComponent).numeral is PreResultNumeral_TimeAsMillis) {
-                        segmentBuilder.addOperator(Operator.Plus)
+                        segmentBuilder.addTimeUnitsSilentPlus()
                     }
                     when (exprToken) {
                         is DigitExprToken -> numberBuilder.addDigit(exprToken.digit)
@@ -138,7 +137,7 @@ class ResultBuilderImpl(
                         throw BadExpressionException()
                     }
                     closeAndAddNumberIfInQueue()
-                    segmentBuilder.addOperator(Operator.Multiplication)
+                    segmentBuilder.addTimeUnitsSilentMultip()
                     segmentBuilder.addMilliseconds(timeExpressionUtils.convertTimeValues(toNum(1), exprToken.timeUnit, TimeUnit.Milli))
                     areTimeUnitBeingUsed = true
                 }
@@ -176,6 +175,12 @@ class ResultBuilderImpl(
         }
         fun addOperator(operator: Operator) {
             currentSegment.add(Operator_SegmentComponent(operator))
+        }
+        fun addTimeUnitsSilentPlus() {
+            currentSegment.add(TimeUnitsSilentPlus_SegmentComponent())
+        }
+        fun addTimeUnitsSilentMultip() {
+            currentSegment.add(TimeUnitsSilentMultip_SegmentComponent())
         }
         fun openSegment() {
             val newSegment = Segment(currentSegment)
@@ -222,9 +227,7 @@ class ResultBuilderImpl(
 
         private fun Segment.solve(): Numeral_SegmentComponent {
             //check if the expression was parsed right
-            if (components.isEmpty()) {
-                throw BadExpressionException()
-            }
+            if (components.isEmpty()) { throw BadExpressionException() }
             components.forEachIndexed {index, component ->
                 if (index % 2 == 0 && component !is SegmentOrNumeral_SegmentComponent
                     || index % 2 == 1 && component !is Operator_SegmentComponent
@@ -233,6 +236,28 @@ class ResultBuilderImpl(
                 }
             }
 
+            //solve all time units silent operations (e.g. "2h4m" is "2*1h+4*1m)
+            while (true) {
+                val silentMultipIndex = components.indexOfFirst {
+                    it is TimeUnitsSilentMultip_SegmentComponent
+                }
+                if (silentMultipIndex == -1) {
+                    break
+                }
+                solveSingleOperation(silentMultipIndex)
+            }
+            while (true) {
+                val silentPlusIndex = components.indexOfFirst {
+                    it is TimeUnitsSilentPlus_SegmentComponent
+                }
+                if (silentPlusIndex == -1) {
+                    break
+                }
+                solveSingleOperation(silentPlusIndex)
+            }
+
+
+            //turn all "*-5" and "*+5" into "*(-5)" and "*5"
             while (true) {
                 val firstItemIndex = components.indexOfFirst {
                     val firstItem = it
@@ -251,13 +276,14 @@ class ResultBuilderImpl(
                 solveSingleOperation(firstItemIndex+2)
             }
 
+
             //solve all multiplicative operations
             while (true) {
-                val operatorIndex = components.indexOfFirst { it is Operator_SegmentComponent && it.isMultiplicative }
-                if (operatorIndex == -1) {
+                val multiplicativeOperatorIndex = components.indexOfFirst { it is Operator_SegmentComponent && it.isMultiplicative }
+                if (multiplicativeOperatorIndex == -1) {
                     break
                 }
-                solveSingleOperation(operatorIndex)
+                solveSingleOperation(multiplicativeOperatorIndex)
             }
 
 
@@ -317,10 +343,12 @@ class ResultBuilderImpl(
     }
     class Numeral_SegmentComponent(val numeral: PreResultNumeral) :
         SegmentOrNumeral_SegmentComponent
-    class Operator_SegmentComponent(val operator: Operator) : SegmentComponent {    //todo change all 'operator' to 'operation'?
+    open class Operator_SegmentComponent(val operator: Operator) : SegmentComponent {    //todo change all 'operator' to 'operation'?
         val isAdditive = operator.type == Operator.Types.Additive
         val isMultiplicative = !isAdditive
     }
+    class TimeUnitsSilentPlus_SegmentComponent : Operator_SegmentComponent(Operator.Plus)
+    class TimeUnitsSilentMultip_SegmentComponent : Operator_SegmentComponent(Operator.Multiplication)
 
 
     class NumberBuilder {

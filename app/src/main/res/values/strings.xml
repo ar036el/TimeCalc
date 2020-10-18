@@ -85,12 +85,21 @@
     <string name="settings_daysInAYear">Days in a year</string>
     <string name="settings_daysInAMonth">Days in a month</string>
     <string name="settings_vibrateKeys">Vibrate on button press</string>
-    <string name="settings_getPremium_Button">Get Premium</string>
+    <string name="settings_getPremium_title">Get Full version</string>
+    <string name="settings_getPremium_button">Get Premium</string>
     <string name="settings_getPremium_desc_line1">No more ads</string>
-
     <string name="settings_autoCollapseTimeUnits">Auto-collapse time units</string>
     <string name="settings_autoCollapseTimeUnits_dialogHeader">Select which time units to auto-collapse:</string>
+    <string name="settings_calculatorTheme">Calculator theme</string>
+    <string name="settings_rateUs">Rate Time Calculator</string>
+    <string name="settings_sendFeedback">Send quick feedback</string>
+    <string name="settings_contactUs">Contact Us</string>
+    <string name="settings_privacyPolicy">Privacy Policy</string>
 
+
+    <string name="buyPremium_purchasingNotAvailableMessage">Sorry, Purchasing is not available right now.\nCheck your internet connection or try again later</string>
+    <string name="buyPremium_purchaseButtonAction">Get Premium - @pr</string>
+    <string name="buyPremium_alreadyPurchased">Already Purchased</string>
 
 
     <string name="clearHistoryDialogMessage">Clear all history?</string>

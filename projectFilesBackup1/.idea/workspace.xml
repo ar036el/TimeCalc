@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <device id="pixel_2" />
+        <device id="pixel" />
+        <device id="pixel_2_xl" />
+      </config>
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a8d168e1-ebb7-4f13-a35f-120d35924abe" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/organize_later/delays.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/utils/ActivityThemeApplier.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/crap_theme_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/crap_theme_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/crap_theme_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_backspace_24.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/font/abeezee.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/attrs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/font_certs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/preloaded_fonts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/arnon.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/arnon.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/CalculatorActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/CalculatorActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/calculatorButtonsElasticLayout/CalculatorButtonsElasticLayout.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/calculatorButtonsElasticLayout/CalculatorButtonsElasticLayout.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/expressionInputText/ExpressionLayout.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/expressionInputText/ExpressionLayout.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/expressionInputText/parts/HookedEditText.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/expressionInputText/parts/HookedEditText.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/resultLayout/CollapseMechanism.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/resultLayout/CollapseMechanism.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/resultLayout/ResultLayout.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/calculatorActivity/ui/calculator/resultLayout/ResultLayout.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/settingsActivity/SettingsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/activities/settingsActivity/SettingsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/calculatorCoordinator/CalculatorCoordinator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/calculatorCoordinator/CalculatorCoordinator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/result/ResultBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/result/ResultBuilder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/timeExpression/TimeExpression.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/timeExpression/TimeExpression.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/helpers/native_/LimitedAccessFunction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/helpers/native_/LimitedAccessFunction.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/organize_later/errorIf.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/organize_later/errorIf.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/utils/RootUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/utils/RootUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/utils/preferences_managers/CalculatorPreferencesManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/utils/preferences_managers/CalculatorPreferencesManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_calculator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_calculator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/artifact_calculator_buttons_drawerlike_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/artifact_calculator_buttons_drawerlike_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/artifact_calculator_result.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/artifact_calculator_result.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/artifact_history_drawer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/artifact_history_drawer.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/artifact_history_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/artifact_history_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings_internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings_internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="175" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="ece652d1" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Kotlin Interface" />
+        <option value="Kotlin Class" />
+        <option value="resourceFile" />
+        <option value="layoutResourceFile" />
+        <option value="valueResourceFile" />
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="5d15c180392d75656b1bb3575be47caeeb34ba16" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="ProjectId" id="1gbaogM6Aohx7oCMBrgApID9pW8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/drawable" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="settings.github" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\utils\preferences_managers\parts" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\calculation_engine\timeExpression" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\calculation_engine\calculatorCoordinatorNew\calcAnimation" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\organize_later" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\calculatorActivity\ui\historyManager\database" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.arealapps.timecalc.helpers.native_" />
+      <recent name="el.arn.timecalc.organize_later" />
+      <recent name="el.arn.timecalc" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.arealapps.timecalc.settingsActivity" />
+      <recent name="com.arealapps.timecalc.calculation_engine.calculatorCoordinatorNew" />
+      <recent name="com.arealapps.timecalc.calculatorActivity.ui.historyManager.database" />
+      <recent name="com.arealapps.timecalc.organize_later.HistoryManager.recyclerView" />
+      <recent name="el.arn.timecalc.calculatorActivity.ui.expressionInputText.parts" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="el.arn.timecalc" />
+      <recent name="el.arn.timecalc.helpers" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\res\drawable" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\utils" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\com\arealapps\timecalc\helpers\android" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\res\layout" />
+      <recent name="C:\Users\arnon\Desktop\github desktop repos\play-billing-samples\TimeCalc\app\src\main\java\el\arn\timecalc\organize_later\HistoryManager" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android App.app">
+    <configuration name="TimeExpressionTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arealapps.timecalc.junitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arealapps.timecalc.junitTests" />
+      <option name="MAIN_CLASS_NAME" value="com.arealapps.timecalc.junitTests.TimeExpressionTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimeResultUITest.hello" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arealapps.timecalc.junitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="el.arn.timecalc.tests" />
+      <option name="MAIN_CLASS_NAME" value="el.arn.timecalc.tests.TimeResultUITest" />
+      <option name="METHOD_NAME" value="hello" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ResultBuilderTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arealapps.timecalc.junitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arealapps.timecalc.junitTests" />
+      <option name="MAIN_CLASS_NAME" value="com.arealapps.timecalc.junitTests.ResultBuilderTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConditionsKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.arealapps.timecalc.helpers.native_.ConditionsKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HelloWorldKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.arealapps.timecalc.HelloWorldKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Android JUnit.TimeExpressionTest" />
+        <item itemvalue="Kotlin.HelloWorldKt" />
+        <item itemvalue="Kotlin.ConditionsKt" />
+        <item itemvalue="Android JUnit.TimeResultUITest.hello" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a8d168e1-ebb7-4f13-a35f-120d35924abe" name="Default Changelist" comment="" />
+      <created>1598385921094</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1598385921094</updated>
+    </task>
+    <task id="LOCAL-00001" summary="initial build">
+      <created>1600458078217</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1600458078217</updated>
+    </task>
+    <task id="LOCAL-00002" summary="initial build">
+      <created>1600617429903</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1600617429903</updated>
+    </task>
+    <task id="LOCAL-00003" summary="initial build">
+      <created>1600747287515</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1600747287515</updated>
+    </task>
+    <task id="LOCAL-00004" summary="initial build">
+      <created>1600909199695</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1600909199695</updated>
+    </task>
+    <task id="LOCAL-00005" summary="initial build">
+      <created>1600985747957</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1600985747957</updated>
+    </task>
+    <task id="LOCAL-00006" summary="initial build">
+      <created>1600991713628</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1600991713628</updated>
+    </task>
+    <task id="LOCAL-00007" summary="initial build">
+      <created>1601092485692</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1601092485692</updated>
+    </task>
+    <task id="LOCAL-00008" summary="initial build">
+      <created>1601258023719</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1601258023719</updated>
+    </task>
+    <task id="LOCAL-00009" summary="initial build">
+      <created>1601335917998</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1601335917998</updated>
+    </task>
+    <task id="LOCAL-00010" summary="initial build">
+      <created>1601458227712</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1601458227712</updated>
+    </task>
+    <task id="LOCAL-00011" summary="initial build">
+      <created>1601599374405</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1601599374405</updated>
+    </task>
+    <task id="LOCAL-00012" summary="initial build">
+      <created>1601626855200</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1601626855200</updated>
+    </task>
+    <task id="LOCAL-00013" summary="initial build">
+      <created>1602175288006</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1602175288006</updated>
+    </task>
+    <task id="LOCAL-00014" summary="initial build">
+      <created>1602179092701</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1602179092701</updated>
+    </task>
+    <task id="LOCAL-00015" summary="initial build">
+      <created>1602180244589</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1602180244589</updated>
+    </task>
+    <task id="LOCAL-00016" summary="initial build">
+      <created>1602183791228</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1602183791228</updated>
+    </task>
+    <task id="LOCAL-00017" summary="initial build">
+      <created>1602184923730</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1602184923730</updated>
+    </task>
+    <task id="LOCAL-00018" summary="initial build">
+      <created>1602185519128</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1602185519128</updated>
+    </task>
+    <task id="LOCAL-00019" summary="initial build">
+      <created>1602247124507</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1602247124507</updated>
+    </task>
+    <task id="LOCAL-00020" summary="initial build">
+      <created>1602249699166</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1602249699166</updated>
+    </task>
+    <task id="LOCAL-00021" summary="initial build">
+      <created>1602252781114</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1602252781114</updated>
+    </task>
+    <task id="LOCAL-00022" summary="initial build">
+      <created>1602270903315</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1602270903315</updated>
+    </task>
+    <task id="LOCAL-00023" summary="initial build">
+      <created>1602352126770</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1602352126770</updated>
+    </task>
+    <task id="LOCAL-00024" summary="initial build">
+      <created>1602382314875</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1602382314875</updated>
+    </task>
+    <task id="LOCAL-00025" summary="initial build">
+      <created>1602544371144</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1602544371144</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="initial build" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial build" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="140" y="142" width="1643" height="758" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1600905244682">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="93" y="93" width="1095" height="495" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1280.680@0.0.1280.680" timestamp="1600751770175" />
+    <state x="140" y="142" width="1643" height="758" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600905244682" />
+    <state x="2652" y="326" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1602359489949">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2652" y="326" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602359489949" />
+    <state x="2568" y="90" key="#com.intellij.ide.util.MemberChooser" timestamp="1602543909278">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="658" y="-993" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601549718030" />
+    <state x="2568" y="90" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602543909278" />
+    <state x="432" y="57" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680@0.0.1280.680" timestamp="1601736853104" />
+    <state x="648" y="87" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602085574382" />
+    <state x="2389" y="448" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1602629806452">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="479" y="-635" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601558839939" />
+    <state x="2389" y="448" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602629806452" />
+    <state x="469" y="445" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600812176515" />
+    <state x="756" y="400" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages" timestamp="1600811831831">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="756" y="400" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/0.0.1920.1040@0.0.1920.1040" timestamp="1600811831831" />
+    <state x="1920" y="3" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1602543903868">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="10" y="-1080" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601559035638" />
+    <state x="1920" y="3" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602543903868" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1280.680@0.0.1280.680" timestamp="1601739918403" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601445647957" />
+    <state x="2610" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602625153818">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2610" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602625153818" />
+    <state x="460" y="175" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1280.680@0.0.1280.680" timestamp="1601638829393" />
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1602092571962" />
+    <state x="2550" y="11" width="579" height="671" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog" timestamp="1602356127983">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="640" y="-1072" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601558788584" />
+    <state x="2550" y="11" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602356127983" />
+    <state x="420" y="5" width="579" height="671" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1601735567637" />
+    <state x="630" y="8" width="535" height="672" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600972476796" />
+    <state x="657" y="357" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1600808909169">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="657" y="357" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1600808909169" />
+    <state x="2252" y="150" key="AndroidCreateResourceDirectoryDialog" timestamp="1602709836486">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2252" y="150" key="AndroidCreateResourceDirectoryDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602709836486" />
+    <state x="221" y="96" key="AndroidCreateResourceDirectoryDialog/0.0.1280.680@0.0.1280.680" timestamp="1601720116769" />
+    <state x="332" y="147" key="AndroidCreateResourceFileDialog" timestamp="1601447506182">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="221" y="96" key="AndroidCreateResourceFileDialog/0.0.1280.680@0.0.1280.680" timestamp="1600460845630" />
+    <state x="332" y="147" key="AndroidCreateResourceFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601447506182" />
+    <state x="818" y="333" key="AndroidCreateXmlResourceDialog" timestamp="1601449423089">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="818" y="333" key="AndroidCreateXmlResourceDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601449423089" />
+    <state x="754" y="-918" key="AndroidProcessChooserDialog" timestamp="1601551288276">
+      <screen x="10" y="-1080" width="1920" height="1040" />
+    </state>
+    <state x="754" y="-918" key="AndroidProcessChooserDialog/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551288276" />
+    <state x="496" y="106" key="AndroidProcessChooserDialog/0.0.1280.680@0.0.1280.680" timestamp="1600739936403" />
+    <state x="2670" y="122" width="834" height="716" key="CommitChangelistDialog2" timestamp="1602544370002">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2670" y="122" width="834" height="716" key="CommitChangelistDialog2/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602544370002" />
+    <state x="0" y="0" key="CommitChangelistDialog2/0.0.1280.680@0.0.1280.680" timestamp="1601626853578" />
+    <state x="278" y="0" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601258022738" />
+    <state width="450" height="455" key="DebuggerActiveHint" timestamp="1600538758882">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="450" height="455" key="DebuggerActiveHint/0.0.1280.680@0.0.1280.680" timestamp="1600538758882" />
+    <state x="2355" y="233" key="DiffContextDialog" timestamp="1602424613344">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2355" y="233" key="DiffContextDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602424613344" />
+    <state x="2560" y="278" key="Downloadable.Font.Dialog.Size" timestamp="1602714838584">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2560" y="278" key="Downloadable.Font.Dialog.Size/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602714838584" />
+    <state width="1877" height="96" key="GridCell.Tab.0.bottom" timestamp="1602632103345">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858490" />
+    <state width="1877" height="96" key="GridCell.Tab.0.bottom/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602632103345" />
+    <state width="1236" height="49" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601736012894" />
+    <state width="1877" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354402" />
+    <state width="1877" height="96" key="GridCell.Tab.0.center" timestamp="1602632103344">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858490" />
+    <state width="1877" height="96" key="GridCell.Tab.0.center/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602632103344" />
+    <state width="1236" height="49" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601736012893" />
+    <state width="1877" height="280" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354402" />
+    <state width="1877" height="96" key="GridCell.Tab.0.left" timestamp="1602632103344">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858490" />
+    <state width="1877" height="96" key="GridCell.Tab.0.left/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602632103344" />
+    <state width="1236" height="49" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601736012893" />
+    <state width="1877" height="280" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354402" />
+    <state width="1877" height="96" key="GridCell.Tab.0.right" timestamp="1602632103345">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858490" />
+    <state width="1877" height="96" key="GridCell.Tab.0.right/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602632103345" />
+    <state width="1236" height="49" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601736012893" />
+    <state width="1877" height="280" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354402" />
+    <state width="1877" height="124" key="GridCell.Tab.1.bottom" timestamp="1602609555151">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.1.bottom/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858491" />
+    <state width="1877" height="124" key="GridCell.Tab.1.bottom/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602609555151" />
+    <state width="1236" height="162" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601647850355" />
+    <state width="1877" height="280" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354403" />
+    <state width="1877" height="124" key="GridCell.Tab.1.center" timestamp="1602609555151">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.1.center/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858491" />
+    <state width="1877" height="124" key="GridCell.Tab.1.center/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602609555151" />
+    <state width="1236" height="162" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1601647850355" />
+    <state width="1877" height="280" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354403" />
+    <state width="1877" height="124" key="GridCell.Tab.1.left" timestamp="1602609555151">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.1.left/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858490" />
+    <state width="1877" height="124" key="GridCell.Tab.1.left/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602609555151" />
+    <state width="1236" height="162" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1601647850355" />
+    <state width="1877" height="280" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354402" />
+    <state width="1877" height="124" key="GridCell.Tab.1.right" timestamp="1602609555151">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="281" key="GridCell.Tab.1.right/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601551858491" />
+    <state width="1877" height="124" key="GridCell.Tab.1.right/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602609555151" />
+    <state width="1236" height="162" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1601647850355" />
+    <state width="1877" height="280" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602097354403" />
+    <state x="2565" y="234" key="RollbackChangesDialog" timestamp="1602348557020">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2565" y="234" key="RollbackChangesDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602348557020" />
+    <state x="681" y="260" width="570" height="524" key="StructurePopup" timestamp="1600981032734">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="681" y="260" width="570" height="524" key="StructurePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1600981032734" />
+    <state x="2472" y="228" key="Vcs.Push.Dialog.v2" timestamp="1602544367193">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2472" y="228" key="Vcs.Push.Dialog.v2/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602544367193" />
+    <state x="368" y="147" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1601626863121" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601258035232" />
+    <state x="2012" y="95" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1602247281289">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2012" y="95" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602247281289" />
+    <state x="2424" y="254" key="com.intellij.ide.util.TipDialog" timestamp="1602424588301">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2424" y="254" key="com.intellij.ide.util.TipDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602424588301" />
+    <state x="336" y="164" key="com.intellij.ide.util.TipDialog/0.0.1280.680@0.0.1280.680" timestamp="1600084555145" />
+    <state x="65" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1600529133077">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="65" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.680@0.0.1280.680" timestamp="1600529133077" />
+    <state x="2689" y="440" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602725419393">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2689" y="440" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602725419393" />
+    <state x="500" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1600818670592">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="500" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1600818670592" />
+    <state x="2424" y="113" width="1109" height="927" key="find.popup" timestamp="1602725688216">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="514" y="-970" width="1109" height="927" key="find.popup/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601561433827" />
+    <state x="2424" y="113" width="1109" height="927" key="find.popup/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602725688216" />
+    <state x="336" y="72" width="842" height="606" key="find.popup/0.0.1280.680@0.0.1280.680" timestamp="1601742398108" />
+    <state x="504" y="110" width="1109" height="927" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1602094151262" />
+    <state width="450" height="117" key="javadoc.popup.new" timestamp="1602381115128">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state width="450" height="117" key="javadoc.popup.new/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602381115128" />
+    <state width="300" height="76" key="javadoc.popup.new/0.0.1280.680@0.0.1280.680" timestamp="1601430118169" />
+    <state width="450" height="117" key="javadoc.popup.new/0.0.1920.1040@0.0.1920.1040" timestamp="1602096421048" />
+    <state x="2495" y="3" key="refactoring.ChangeSignatureDialog" timestamp="1602380016109">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="2495" y="3" key="refactoring.ChangeSignatureDialog/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602380016109" />
+    <state x="383" y="0" key="refactoring.ChangeSignatureDialog/0.0.1280.680@0.0.1280.680" timestamp="1601644124759" />
+    <state x="575" y="0" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600819181202" />
+    <state x="447" y="231" width="672" height="677" key="run.anything.popup" timestamp="1602092542891">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="298" y="151" width="672" height="677" key="run.anything.popup/0.0.1280.680@0.0.1280.680" timestamp="1601741535565" />
+    <state x="447" y="231" width="672" height="677" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1602092542891" />
+    <state x="2375" y="5" width="1008" height="1037" key="search.everywhere.popup" timestamp="1602725396399">
+      <screen x="1920" y="3" width="1920" height="1040" />
+    </state>
+    <state x="466" y="-1078" width="1008" height="245" key="search.everywhere.popup/0.0.1280.680/10.-1080.1920.1040@10.-1080.1920.1040" timestamp="1601560793186" />
+    <state x="2375" y="5" width="1008" height="1037" key="search.everywhere.popup/0.0.1280.680/1920.3.1920.1040@1920.3.1920.1040" timestamp="1602725396399" />
+    <state x="304" y="1" width="672" height="160" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1601742291468" />
+    <state x="455" y="2" width="1008" height="1037" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1602095389553" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/test/java/com/arealapps/timecalc/HelloWorld.kt</url>
+          <line>43</line>
+          <option name="timeStamp" value="201" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/organize_later/reveal_maker/RevealMakerImpl.kt</url>
+          <line>54</line>
+          <option name="timeStamp" value="213" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/arealapps/timecalc/calculation_engine/result/ResultBuilder.kt</url>
+          <line>255</line>
+          <option name="timeStamp" value="215" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/app/src/test/java/com/arealapps/timecalc/junitTests/ResultBuilderTest.kt</url>
+          <line>8</line>
+          <properties class="el.arn.timecalc.tests.ResultBuilderTest">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/TimeCalc$BigDecimalEngineTest_createSimpleBigDecimalFromDigits_testDecimalPoints.ic" NAME="BigDecimalEngineTest.createSimpleBigDecimalFromDigits_testDecimalPoints Coverage Results" MODIFIED="1598528410017" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>el.arn.timecalc.*</FILTER>
+    </SUITE>
+  </component>
+</project>

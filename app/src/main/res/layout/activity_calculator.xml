@@ -2,9 +2,9 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calcActivity_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/calcActivity_drawerLayout"
     tools:context=".activities.calculatorActivity.CalculatorActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,6 +13,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/calculatorTopPart"
+            style="?themedStyle_calculator_displayBackground"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/calculator_drawerLayoutButtons"
@@ -20,6 +21,7 @@
 
             <ImageButton
                 android:id="@+id/settingsButton"
+                style="?themedStyle_calculator_sideIcons"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="?android:selectableItemBackgroundBorderless"
@@ -36,6 +38,7 @@
 
             <ImageButton
                 android:id="@+id/showHistoryButton"
+                style="?themedStyle_calculator_sideIcons"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:background="?android:selectableItemBackgroundBorderless"
@@ -76,13 +79,13 @@
 
                         <com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
                             android:id="@+id/calculator_expressionEditText"
+                            style="?themedStyle_calculator_displayText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:gravity="end"
                             android:inputType="text"
                             android:requiresFadingEdge="horizontal"
-                            android:textColor="@drawable/edittext_all_normal_text_color"
                             android:textSize="@dimen/expressionEditText_maxTextSize_fullyEnabled" />
                     </LinearLayout>
                 </LinearLayout>
@@ -104,7 +107,8 @@
             <FrameLayout
                 android:id="@+id/RevealManagerDrawingSurface"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -113,12 +117,32 @@
             android:id="@+id/calculator_drawerLayoutButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toTopOf="@+id/calculatorActivity_bannerAdViewBottomContainer">
 
             <include layout="@layout/artifact_calculator_buttons_drawerlike_layout" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/calculatorActivity_bannerAdViewBottomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="?themedStyle_calculator_buttonDigit_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/calculatorActivity_bannerAdViewBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="300dp"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                >
+                <!--            ads:adUnitId="ca-app-pub-9977856148079152/4823043150"-->
+            </com.google.android.gms.ads.AdView>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -127,7 +151,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
 
-    <include layout="@layout/artifact_history_drawer" />
+        <include layout="@layout/artifact_history_drawer" />
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

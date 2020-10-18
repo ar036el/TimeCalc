@@ -13,6 +13,8 @@ import com.arealapps.timecalc.activities.calculatorActivity.CalculatorActivity
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.EditTextAutosizeMaker
 import com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts.HookedEditText
 import com.arealapps.timecalc.helpers.native_.initOnce
+import com.arealapps.timecalc.organize_later.setIntervalUiCompat
+import com.arealapps.timecalc.organize_later.setTimeoutUiCompat
 import com.arealapps.timecalc.rootUtils
 import kotlin.math.min
 
@@ -103,10 +105,20 @@ class ExpressionLayoutImpl(
             }
         }
 
+        override fun onTextPaste(textBeforePaste: String) {
+            restoreToLastTextAfterPasteWithALittleDelayForThisToWork(textBeforePaste)
+        }
+
         private fun fixSelectionPositionByConvertingToExpressionAndBackToString(selectionPosition: Int): Int {
             val expression = expressionBuilder.getExpression()
             return expressionToStringConverter.expressionIndexToStringIndex(expression,
                 expressionToStringConverter.stringIndexToExpressionIndex(expression, selectionPosition))
+        }
+
+        private fun restoreToLastTextAfterPasteWithALittleDelayForThisToWork(textBeforePaste: String) {
+            setTimeoutUiCompat(activity, 30) {
+                editText.setText(textBeforePaste, TextView.BufferType.EDITABLE)
+            }
         }
     }
 

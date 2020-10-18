@@ -29,7 +29,8 @@ class TimeExpressionImpl(
             val timeUnit = it.first
             var value = totalMillisBuffer.convertTo(Milli, timeUnit, false)
             value = if (timeUnit == Milli) {
-                value.round(config.decimalPointsToRoundForMillis, Num.RoundingOptions.Even)
+                value.round(config.decimalPointsToRoundForMillis, Num.RoundingOptions.Up)
+                //TODO right now, when it's smaller that 0.01 (2 decimal points), it just gives this number. I can deliver a message that said it's lower that this, so in display it would be something like ">0.01"
             } else {
                 value.floor()
             }

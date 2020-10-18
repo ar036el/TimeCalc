@@ -1,15 +1,20 @@
 package com.arealapps.timecalc.activities.calculatorActivity.ui.calculator.expressionInputText.parts
 
+import android.R
 import android.content.Context
 import android.util.AttributeSet
 import com.arealapps.timecalc.helpers.listeners_engine.HoldsListeners
 import com.arealapps.timecalc.helpers.listeners_engine.ListenersManager
+import com.arealapps.timecalc.organize_later.setTimeoutUiCompat
+import com.arealapps.timecalc.organize_later.testSetInterval
 
 
 class HookedEditText : androidx.appcompat.widget.AppCompatEditText {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context,
+        attrs,
+        defStyle)
 
 
     val listenersHolder: HoldsListeners<Listener> get() = listenersMgr!!
@@ -20,7 +25,15 @@ class HookedEditText : androidx.appcompat.widget.AppCompatEditText {
         listenersMgr?.notifyAll { it.onSelectionChanged(this, selectionStart, selectionEnd) }
     }
 
+    override fun onTextContextMenuItem(id: Int): Boolean {
+        if  (id == R.id.paste) {
+            listenersMgr?.notifyAll { it.onTextPaste(text.toString()) }
+        }
+        return super.onTextContextMenuItem(id)
+    }
+
     interface Listener {
         fun onSelectionChanged(subject: HookedEditText, selectionStart: Int, selectionEnd: Int)
+        fun onTextPaste(textBeforePaste: String)
     }
 }
