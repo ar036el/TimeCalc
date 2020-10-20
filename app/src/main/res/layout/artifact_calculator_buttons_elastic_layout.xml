@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonNormiesContainer"
+            android:id="@+id/regularButtonsContainer"
             style="?themedStyle_calculator_buttonDigit_background"
             android:layout_width="match_parent"
             android:layout_height="380dp"
@@ -246,6 +246,16 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:onClick="onCalculatorSymbolButtonClick"
+                    android:tag="%"
+                    android:text="@string/calculator_operator_percent"
+                    android:textSize="20sp" />
+
+                <Button
+                    style="?themedStyle_calculator_buttonAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="+"
                     android:text="@string/calculator_operator_plus"
                     android:textSize="20sp" />
@@ -278,16 +288,6 @@
                     android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="/"
                     android:text="@string/calculator_operator_division"
-                    android:textSize="20sp" />
-
-                <Button
-                    style="?themedStyle_calculator_buttonAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:onClick="onCalculatorSymbolButtonClick"
-                    android:tag="%"
-                    android:text="@string/calculator_operator_percent"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -450,6 +450,7 @@
                 app:layout_constraintTop_toBottomOf="@id/timeUnitButtonsBottomRowContainer">
 
                 <ImageView
+                    android:id="@+id/calculator_separatorIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_keyboard_arrow_down_black_24dp" />

@@ -2,7 +2,8 @@
 <resources>
 
     <string name="internal_prefs_main">calcMain</string>
-    
+    <string name="internal_prefs_tutorialShowcaseManager">tutorialShowcaseManager</string>
+
     <string name="internal_prefs_main_daysInAMonth">daysInAMonth</string>
     <string name="internal_prefs_main_daysInAYear">daysInAYear</string>
     <string name="internal_prefs_main_vibrateKeys">vibrateKeys</string>

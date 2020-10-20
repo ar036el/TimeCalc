@@ -24,6 +24,8 @@ interface TimeBlock : HoldsListeners<TimeBlock.Listener> {
     var visibilityPercentage: Float
     var isMaximizedSymbolVisible: Boolean
 
+    fun getBlockView(): View
+
     interface Listener {
         fun onBlockSingleClick(subject: TimeBlock)
         fun onBlockDoubleClick(subject: TimeBlock)
@@ -81,6 +83,9 @@ class TimeBlockImpl(
         get() = maximizeIcon.visibility == View.INVISIBLE
         set(isVisible) { maximizeIcon.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE }
 
+    override fun getBlockView(): View {
+        return blockLayout
+    }
 
     private fun setNumberTextView(number: Num) {
         numberTextView.text = number.toStringWithGroupingFormatting()

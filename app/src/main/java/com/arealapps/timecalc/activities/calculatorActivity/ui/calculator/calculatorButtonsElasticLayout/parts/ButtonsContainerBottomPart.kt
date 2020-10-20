@@ -23,7 +23,7 @@ class ButtonsContainerBottomPartImpl(activity: Activity) : ButtonsContainerBotto
 
 
 
-    private val containerLayout: ViewGroup = activity.findViewById(R.id.buttonNormiesContainer)
+    private val containerLayout: ViewGroup = activity.findViewById(R.id.regularButtonsContainer)
 
     override fun setScrollPercent(percent: Float) { //todo needs to be an interface for every other one
         containerLayout.heightByLayoutParams = percentToValue(percent, MAX_LAYOUT_HEIGHT, MIN_LAYOUT_HEIGHT).toInt()

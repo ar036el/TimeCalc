@@ -5,6 +5,8 @@ import com.arealapps.timecalc.appRoot
 import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.calculation_engine.converters.*
 import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtilsImpl
+import com.arealapps.timecalc.organize_later.tutoriaShowcase.TutorialShowcaseManager
+import com.arealapps.timecalc.organize_later.tutoriaShowcase.TutorialShowcaseManagerImpl
 import com.arealapps.timecalc.utils.config.ConfigManager
 import com.arealapps.timecalc.utils.config.ConfigManagerImpl
 import com.arealapps.timecalc.utils.preferences_managers.CalculatorPreferencesManager
@@ -20,9 +22,10 @@ interface RootUtils {
     val resultToDatabaseStringConverter: ResultToDatabaseStringConverter
     val resultToReadableStringConverter: ResultToReadableStringConverter
     val calculatorPreferencesManager: CalculatorPreferencesManager
-    val activityThemeApplier: ActivityThemeApplier
+    val activityInitUtils: ActivityInitUtils
     val vibrationManager: VibrationManager
     val purchasesManager: PurchasesManager
+    val tutorialShowcaseManager: TutorialShowcaseManager
 }
 
 class RootUtilsImpl(app: Application) : RootUtils {
@@ -33,7 +36,8 @@ class RootUtilsImpl(app: Application) : RootUtils {
     override val toastManager: ToastManager = ToastManagerImpl(app.applicationContext)
     override val resultToDatabaseStringConverter = ResultToDatabaseStringConverterImpl(timeExpressionUtils)
     override val resultToReadableStringConverter = ResultToReadableStringConverterImpl()
-    override val activityThemeApplier = ActivityThemeApplierImpl(calculatorPreferencesManager)
+    override val activityInitUtils = ActivityInitUtilsImpl(calculatorPreferencesManager)
     override val vibrationManager = VibrationManagerImpl()
     override val purchasesManager = PurchasesManagerImpl(appRoot.applicationContext)
+    override val tutorialShowcaseManager = TutorialShowcaseManagerImpl()
 }

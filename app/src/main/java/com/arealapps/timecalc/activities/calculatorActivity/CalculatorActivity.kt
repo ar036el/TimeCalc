@@ -40,19 +40,18 @@ class CalculatorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rootUtils.activityThemeApplier.applyTheme(this)
+        rootUtils.activityInitUtils.initTheme(this)
         setContentView(R.layout.activity_calculator)
 
         initMobileAds()
         initHistoryDrawerLayout()
         initCalculatorCoordinator.grantOneAccess()
-
         addListeners()
 
-        findViewById<ImageButton>(R.id.settingsButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.calculator_settingsButton).setOnClickListener {
             openSettingsActivity()
         }
-        findViewById<ImageButton>(R.id.showHistoryButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.calculator_showHistoryButton).setOnClickListener {
             historyDrawerLayout.openDrawer()
         }
     }
@@ -60,6 +59,7 @@ class CalculatorActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         tryToLoadABannerAd()
+        tryToStartTutorialShowcase()
     }
 
     override fun onDestroy() {
@@ -77,6 +77,13 @@ class CalculatorActivity : AppCompatActivity() {
 
     //--------
 
+    private fun tryToStartTutorialShowcase() {
+        val showcaseMgr = rootUtils.tutorialShowcaseManager
+        if (!showcaseMgr.wasCompletedAtLeastOnce && !showcaseMgr.isRunning) {
+            showcaseMgr.start(this)
+        }
+    }
+
     private fun tryToInvokeAllLimitedAccessFunctionsOnFocusChanged() {
         initCalculatorCoordinator.invokeIfHasAccess()
         resetCalculator.invokeIfHasAccess()
@@ -85,7 +92,7 @@ class CalculatorActivity : AppCompatActivity() {
 
     private fun tryToLoadABannerAd() {
         val bannerAdView: AdView = findViewById(R.id.calculatorActivity_bannerAdViewBottom)
-        if (rootUtils.purchasesManager.purchasedNoAds) {
+        if (true) {
             bannerAdView.visibility = View.GONE
             return
         }

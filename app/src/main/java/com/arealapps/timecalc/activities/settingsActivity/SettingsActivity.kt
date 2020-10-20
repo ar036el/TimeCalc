@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rootUtils.activityThemeApplier.applyTheme(this)
+        rootUtils.activityInitUtils.initTheme(this)
         setContentView(R.layout.activity_settings)
 
         calcPrefsManager = rootUtils.calculatorPreferencesManager
@@ -61,10 +61,6 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.actionItem_contactUs).setOnClickListener {
             openIntentSendEmailToDeveloper()
-        }
-
-        findViewById<View>(R.id.actionItem_sendFeedback).setOnClickListener {
-            //todo
         }
 
         findViewById<View>(R.id.actionItem_privacyPolicy).setOnClickListener {

@@ -8,10 +8,12 @@ import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.createZero
 import com.arealapps.timecalc.calculation_engine.result.MixedResult
+import com.arealapps.timecalc.calculation_engine.result.NumberResult
 import com.arealapps.timecalc.calculation_engine.result.Result
 import com.arealapps.timecalc.calculation_engine.result.TimeResult
 import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 import com.arealapps.timecalc.helpers.native_.*
+import com.arealapps.timecalc.organize_later.tutoriaShowcase.data.Script
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.PercentAnimation
 import com.arealapps.timecalc.utils.isRunning
@@ -43,8 +45,10 @@ class CollapseMechanismImpl(
     private var TimeBlock.state
         get() = _timeBlocks.blockStates[this.timeUnit]
         set(value) {
+            val oldValue = _timeBlocks.blockStates[this.timeUnit]
             _timeBlocks.blockStates[this.timeUnit] = value
             this.isMaximizedSymbolVisible = (value == TimeBlockStates.Maximized)
+            notifyTutorialShowcaseManagerAboutTimeBlockStateChange(this, value, oldValue)
         }
     private var TimeBlock.originalNumber
         get() = _timeBlocks.originalNumber[this.timeUnit]
@@ -273,6 +277,29 @@ class CollapseMechanismImpl(
             }
         }
         throw InternalError() //if reached to end of list and no maximized block found
+    }
+
+
+    //todo needs to be outside, from a listener (state was updated)
+    private fun notifyTutorialShowcaseManagerAboutTimeBlockStateChange(timeBlock: TimeBlock, state: TimeBlockStates, prevState: TimeBlockStates) {
+        if (!rootUtils.tutorialShowcaseManager.isRunning) return
+
+        var event: Script.Events? = null
+
+        if (state == TimeBlockStates.Maximized && prevState == TimeBlockStates.Normal) {
+            event = Script.Events.CollapsedTimeBlock
+        }
+        else if (state == TimeBlockStates.Normal && prevState == TimeBlockStates.Collapsed) {
+            event = Script.Events.RevealedTimeBlock
+        }
+        else if (state in setOf(TimeBlockStates.Normal, TimeBlockStates.Maximized) && prevState == TimeBlockStates.HiddenEmpty) {
+            event = Script.Events.TimeBlockAppeared
+        }
+
+        if (event != null) {
+            rootUtils.tutorialShowcaseManager.doIfRunning()?.framesContentData?.timeBlockTarget = timeBlock.getBlockView()
+            rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvent(event)
+        }
     }
 
 

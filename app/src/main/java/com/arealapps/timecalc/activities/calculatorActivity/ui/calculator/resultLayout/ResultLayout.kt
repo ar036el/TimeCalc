@@ -14,6 +14,8 @@ import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
 import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.helpers.android.*
 import com.arealapps.timecalc.helpers.native_.*
+import com.arealapps.timecalc.organize_later.tutoriaShowcase.data.Script
+import com.arealapps.timecalc.rootUtils
 import kotlin.math.min
 
 interface ResultLayout {
@@ -166,6 +168,7 @@ class ResultLayoutImpl(
             setScrollViewToEnd()
             doWhenFinished?.invoke()
         }
+        notifyTutorialShowcaseManagerAboutResultChanges()
     }
 
     private fun initTextValueForNewResult(result: Result?) {
@@ -194,6 +197,18 @@ class ResultLayoutImpl(
         layout.doWhenDynamicVariablesAreReady {
             layoutContainer.heightByLayoutParams = it.height
         }
+    }
+
+    //todo needs to be outside, from a listener (result was updated)
+    private fun notifyTutorialShowcaseManagerAboutResultChanges() {
+        val event = when (result) {
+            is NumberResult -> Script.Events.CalculatedNumberResult
+            is TimeResult -> Script.Events.CalculatedTimeResult
+            is MixedResult -> Script.Events.CalculatedMixedResult
+            null -> return
+            else -> throw NotImplementedError()
+        }
+        rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvent(event)
     }
 
     init {

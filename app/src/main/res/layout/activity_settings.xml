@@ -337,7 +337,9 @@
         </LinearLayout>
     </LinearLayout>
 
+<!--   todo add later maybe ↓-->
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/actionItem_sendFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

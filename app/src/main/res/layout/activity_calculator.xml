@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/settingsButton"
+                android:id="@+id/calculator_settingsButton"
                 style="?themedStyle_calculator_sideIcons"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -37,7 +37,7 @@
 
 
             <ImageButton
-                android:id="@+id/showHistoryButton"
+                android:id="@+id/calculator_showHistoryButton"
                 style="?themedStyle_calculator_sideIcons"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/calculatorActivity_bannerAdViewBottomContainer">
 
-            <include layout="@layout/artifact_calculator_buttons_drawerlike_layout" />
+            <include layout="@layout/artifact_calculator_buttons_elastic_layout" />
         </LinearLayout>
 
         <LinearLayout
