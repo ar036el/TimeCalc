@@ -17,9 +17,9 @@ class FramesContentData(activity: CalculatorActivity) {
         return framesWithFrameData.getValue(frame)
     }
 
-    private val delayInStart = 1000
+    private val delayInStart = 2000
     private val delayBetweenFrames = 100
-    private val delayAfterEvent = 500
+    private val delayAfterEvent = 300
     @StringRes private val buttonNext = R.string.showcaseTutorial_button_next
     @StringRes private val buttonTry = R.string.showcaseTutorial_button_try
     @StringRes private val buttonFinish = R.string.showcaseTutorial_button_finish
@@ -27,7 +27,7 @@ class FramesContentData(activity: CalculatorActivity) {
     private val framesWithFrameData = mapOf(
         Script.Frames._0 to FrameData(delayInStart, { centerPointTarget ?: error("forgot to assign centerPointTarget") }, R.string.showcaseTutorial_frame0_title, R.string.showcaseTutorial_frame0_content, buttonNext),
         Script.Frames._1a to FrameData(delayBetweenFrames, { activity.findViewById(R.id.regularButtonsContainer) }, null, R.string.showcaseTutorial_frame1a, buttonNext),
-        Script.Frames._1b to FrameData(delayBetweenFrames, { activity.findViewById(R.id.timeUnitButtonsTopRowContainer) }, null, R.string.showcaseTutorial_frame1b, buttonNext),
+        Script.Frames._1b to FrameData(delayBetweenFrames, { activity.findViewById(R.id.timeUnitButtonMinute) }, null, R.string.showcaseTutorial_frame1b, buttonNext),
         Script.Frames._1c to FrameData(delayBetweenFrames, { activity.findViewById(R.id.calculator_separatorIcon) }, null, R.string.showcaseTutorial_frame1c, buttonNext),
         Script.Frames._2a1 to FrameData(delayBetweenFrames, { activity.findViewById(R.id.regularButtonsContainer) }, null, R.string.showcaseTutorial_frame2a1, buttonTry),
         Script.Frames._2a2 to FrameData(delayAfterEvent, { activity.findViewById(R.id.resultLayout_containerForResize) }, null, R.string.showcaseTutorial_frame2a2, buttonNext),

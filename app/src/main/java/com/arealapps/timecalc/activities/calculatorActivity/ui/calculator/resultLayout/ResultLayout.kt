@@ -14,8 +14,6 @@ import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpression
 import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionUtils
 import com.arealapps.timecalc.helpers.android.*
 import com.arealapps.timecalc.helpers.native_.*
-import com.arealapps.timecalc.organize_later.tutoriaShowcase.data.Script
-import com.arealapps.timecalc.rootUtils
 import kotlin.math.min
 
 interface ResultLayout {
@@ -71,7 +69,7 @@ class ResultLayoutImpl(
 
     private var timeBlocks: TimeVariable<TimeBlock> by initOnce()
     private val autosizeApplier: AutosizeApplier = initAutosizeApplier(widthThresholdInPx)
-    private var collapseMechanism: CollapseMechanism by initOnce()
+    private var timeBlocksCollapseMechanism: TimeBlocksCollapseMechanism by initOnce()
 
     private val scrollViewContainer: HorizontalScrollView by lazy { layout.findViewById(R.id.resultLayout_scrollView) }
     private val textValueTextView: TextView by lazy { layout.findViewById(R.id.resultLayout_textValue) }
@@ -146,12 +144,12 @@ class ResultLayoutImpl(
     private val timeBlockListener = object: TimeBlock.Listener {
         override fun onBlockSingleClick(subject: TimeBlock) {
             if (this@ResultLayoutImpl.areGesturesEnabled) {
-                collapseMechanism.tryToCollapseTimeBlockWithAnimation(subject)
+                timeBlocksCollapseMechanism.tryToCollapseTimeBlockWithAnimation(subject)
             }
         }
         override fun onBlockDoubleClick(subject: TimeBlock) {
             if (this@ResultLayoutImpl.areGesturesEnabled) {
-                collapseMechanism.tryToRevealTimeBlockWithAnimation(subject)
+                timeBlocksCollapseMechanism.tryToRevealTimeBlockWithAnimation(subject)
             }
         }
         override fun blockWidthHasChanged(subject: TimeBlock, newWidth: Int) {}
@@ -162,13 +160,12 @@ class ResultLayoutImpl(
     }
 
     private fun initLayoutComponentsForNewResult(doWhenFinished: (() -> Unit)? = null) {
-        collapseMechanism.initTimeBlocksForNewResult(resultAsTimeExpression, config.autoCollapseTimeValues)
+        timeBlocksCollapseMechanism.initTimeBlocksForNewResult(resultAsTimeExpression, config.autoCollapseTimeValues)
         initTextValueForNewResult(result)
         autosizeApplier.updateLayoutSize {
             setScrollViewToEnd()
             doWhenFinished?.invoke()
         }
-        notifyTutorialShowcaseManagerAboutResultChanges()
     }
 
     private fun initTextValueForNewResult(result: Result?) {
@@ -199,23 +196,11 @@ class ResultLayoutImpl(
         }
     }
 
-    //todo needs to be outside, from a listener (result was updated)
-    private fun notifyTutorialShowcaseManagerAboutResultChanges() {
-        val event = when (result) {
-            is NumberResult -> Script.Events.CalculatedNumberResult
-            is TimeResult -> Script.Events.CalculatedTimeResult
-            is MixedResult -> Script.Events.CalculatedMixedResult
-            null -> return
-            else -> throw NotImplementedError()
-        }
-        rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvent(event)
-    }
-
     init {
         createTimeBlocks()
         timeBlocks.toList().forEach{ it.addListener(timeBlockListener) }
 
-        collapseMechanism = CollapseMechanismImpl(timeBlocks, resultAsTimeExpression) {
+        timeBlocksCollapseMechanism = TimeBlocksCollapseMechanismImpl(timeBlocks, resultAsTimeExpression) {
             autosizeApplier.updateLayoutSize()
         }
 

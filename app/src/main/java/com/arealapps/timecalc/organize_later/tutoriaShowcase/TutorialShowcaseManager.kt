@@ -25,7 +25,7 @@ interface TutorialShowcaseManager {
 
     fun start(activity: CalculatorActivity)
 //    fun finish(treatAsCompleted: Boolean)
-    fun notifyEvent(event: Script.Events)
+    fun notifyEvents(vararg events: Script.Events)
 
     //↓ for hooking the time block target. returns [null] if not running
     val framesContentData: FramesContentData?
@@ -61,9 +61,9 @@ class TutorialShowcaseManagerImpl: TutorialShowcaseManager {
         showcase!!.start()
     }
 
-    override fun notifyEvent(event: Script.Events) {
-        if (isRunning) {
-            showcase!!.notifyEventWasOccurred(event)
+    override fun notifyEvents(vararg events: Script.Events) {
+        if (isRunning && events.isNotEmpty()) {
+            showcase!!.notifyEventsWereOccurred(*events)
         }
     }
 

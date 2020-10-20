@@ -39,7 +39,7 @@
     <color name="revealColor_error">#E53935</color>
 
     showcaseMaskColor
-    <color name="tutorialShowcase_maskColor">#79335075</color>
+    <color name="tutorialShowcase_maskColor">#BA335075</color>
 
 
 
@@ -57,7 +57,7 @@
 
     <color name="theme1_colorPrimary">#D3D3D3</color>
     <color name="theme1_colorPrimaryDark">#A5A5A5</color>
-    <color name="theme1_colorAccent">#DAD3C5</color>
+    <color name="theme1_colorAccent">#F3EAD6</color>
     <color name="theme1_colorPrimaryLight">#939393</color>
     <color name="theme1_background">#FFFFFF</color>
     <color name="theme1_textStrong">#000000</color>
@@ -68,7 +68,7 @@
 
     <color name="theme2_colorPrimary">#E19A27</color>
     <color name="theme2_colorPrimaryDark">#9A640C</color>
-    <color name="theme2_colorAccent">#554731</color>
+    <color name="theme2_colorAccent">#3E331F</color>
     <color name="theme2_colorPrimaryLight">#FFCC79</color>
     <color name="theme2_background">#000000</color>
     <color name="theme2_textStrong">#FFFFFF</color>

@@ -43,7 +43,7 @@ object Script {
         object FinishShowcase: FrameActions()
     }
 
-    fun getFrameNextAction(frame: Frames): FrameActions {
+    fun getFrameNextAction(frame: Frames, scriptInstance: ScriptInstance): FrameActions {
         return when (frame) {
             Frames._0 -> FrameActions.GoToNextFrame(Frames._1a)
             Frames._1a -> FrameActions.GoToNextFrame(Frames._1b)
@@ -53,15 +53,42 @@ object Script {
             Frames._2a1 -> FrameActions.WaitForEvent
             Frames._2a2 -> FrameActions.GoToNextFrame(Frames._2b1)
             Frames._2b1 -> FrameActions.WaitForEvent
-            Frames._2b2 -> FrameActions.GoToNextFrame(Frames._2b2)
+            Frames._2b2 -> {
+                if (scriptInstance.getStateFor(Events.TimeBlockAppeared) == ScriptInstance.EventStates.New) {
+                    FrameActions.WaitForEvent
+                } else {
+                    FrameActions.GoToNextFrame(Frames._2c1)
+                }
+            }
             Frames._2c1 -> FrameActions.WaitForEvent
-            Frames._2c2 -> FrameActions.GoToNextFrame(Frames._4a)
+            Frames._2c2 -> {
+                if (scriptInstance.getStateFor(Events.TimeBlockAppeared) == ScriptInstance.EventStates.New) {
+                    FrameActions.WaitForEvent
+                } else {
+                    FrameActions.GoToNextFrame(Frames._4a)
+                }
+            }
 
             Frames._3a -> FrameActions.GoToNextFrame(Frames._3b1)
             Frames._3b1 -> FrameActions.WaitForEvent
             Frames._3b2 -> FrameActions.GoToNextFrame(Frames._3c1)
             Frames._3c1 -> FrameActions.WaitForEvent
-            Frames._3c2 -> FrameActions.GoToNextFrame(Frames._4a)
+            Frames._3c2 -> {
+                if (scriptInstance.getStateFor(Events.CalculatedNumberResult) == ScriptInstance.EventStates.New
+                    || scriptInstance.getStateFor(Events.CalculatedTimeResult) == ScriptInstance.EventStates.New
+                    || scriptInstance.getStateFor(Events.CalculatedMixedResult) == ScriptInstance.EventStates.New) {
+                    FrameActions.WaitForEvent
+                } else if (scriptInstance.getStateFor(Events.CalculatedNumberResult) == ScriptInstance.EventStates.NotIntroduced) {
+                    FrameActions.GoToNextFrame(Frames._2a1)
+                } else if (scriptInstance.getStateFor(Events.CalculatedTimeResult) == ScriptInstance.EventStates.NotIntroduced) {
+                    FrameActions.GoToNextFrame(Frames._2b1)
+                } else if (scriptInstance.getStateFor(Events.CalculatedMixedResult) == ScriptInstance.EventStates.NotIntroduced) {
+                    FrameActions.GoToNextFrame(Frames._2c1)
+                } else {
+                    FrameActions.GoToNextFrame(Frames._4a)
+                }
+            }
+
             Frames._4a -> FrameActions.GoToNextFrame(Frames._4b)
             Frames._4b -> FrameActions.GoToNextFrame(Frames._5)
             Frames._5 -> FrameActions.FinishShowcase
@@ -73,36 +100,50 @@ object Script {
         val neededActionsBefore: (ScriptInstance) -> Unit
         val nextFrame: Frames
         when {
+
+            newEvents.contains(Events.CalculatedMixedResult) -> {
+                neededActionsBefore = {
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.CalculatedNumberResult, Events.CalculatedTimeResult, Events.CalculatedMixedResult)
+                }
+                nextFrame = Frames._2c2
+            }
+            newEvents.contains(Events.CalculatedTimeResult) -> {
+                neededActionsBefore = {
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.CalculatedNumberResult, Events.CalculatedTimeResult)
+                }
+                nextFrame = Frames._2b2
+            }
+            newEvents.contains(Events.CalculatedNumberResult) -> {
+                neededActionsBefore = {
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.CalculatedNumberResult)
+                }
+                nextFrame = Frames._2a2
+            }
+
+
             newEvents.contains(Events.TimeBlockAppeared) -> {
-                neededActionsBefore = { it.setEvents(ScriptInstance.EventStates.NotIntroduced,
-                    Events.CollapsedTimeBlock,
-                    Events.RevealedTimeBlock) }
+                neededActionsBefore = {
+                    it.setEvents(ScriptInstance.EventStates.NotIntroduced, Events.CollapsedTimeBlock, Events.RevealedTimeBlock)
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.TimeBlockAppeared)
+                }
                 nextFrame = Frames._3a
             }
             newEvents.contains(Events.CollapsedTimeBlock) -> {
-                neededActionsBefore = { errorIf{ it.getStateFor(Events.TimeBlockAppeared) != ScriptInstance.EventStates.Consumed } }
+                neededActionsBefore = {
+                    errorIf{ it.getStateFor(Events.TimeBlockAppeared) != ScriptInstance.EventStates.Consumed }
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.CollapsedTimeBlock)
+                }
                 nextFrame = Frames._3b2
             }
             newEvents.contains(Events.RevealedTimeBlock) -> {
-                neededActionsBefore = { errorIf{ it.getStateFor(Events.TimeBlockAppeared) != ScriptInstance.EventStates.Consumed } }
+                neededActionsBefore = {
+                    errorIf{ it.getStateFor(Events.TimeBlockAppeared) != ScriptInstance.EventStates.Consumed }
+                    it.setEvents(ScriptInstance.EventStates.Consumed, Events.RevealedTimeBlock)
+                }
                 nextFrame = Frames._3c2
             }
 
-            newEvents.contains(Events.CalculatedMixedResult) -> {
-                neededActionsBefore = { it.setEvents(ScriptInstance.EventStates.Consumed,
-                    Events.CalculatedNumberResult,
-                    Events.CalculatedTimeResult) }
-                nextFrame = Frames._2c2
-            }
-            newEvents.contains(Events.CalculatedTimeResult) -> {
-                neededActionsBefore = { it.setEvents(ScriptInstance.EventStates.Consumed,
-                    Events.CalculatedNumberResult) }
-                nextFrame = Frames._2c2
-            }
-            newEvents.contains(Events.CalculatedTimeResult) -> {
-                neededActionsBefore = {}
-                nextFrame = Frames._2a2
-            }
+
             else -> {
                 return null
             }
@@ -120,6 +161,8 @@ interface ScriptInstance {
     fun getStateFor(event: Script.Events): EventStates
     fun getStateFor(frame: Script.Frames): FrameState
 
+    val currentFrame: Script.Frames
+
     enum class EventStates { NotIntroduced, New, Consumed }
     enum class FrameState { NotIntroduced, Active, Finished }
 }
@@ -130,6 +173,13 @@ class ScriptInstanceImpl : ScriptInstance {
         ScriptInstance.EventStates.NotIntroduced) }.toMap().toMutableMap()
     private val framesWithStates = Script.Frames.values().map { Pair(it,
         ScriptInstance.FrameState.NotIntroduced) }.toMap().toMutableMap()
+
+    override val currentFrame: Script.Frames
+        get() {
+            val activeFrames = getAllFramesFor(ScriptInstance.FrameState.Active)
+            errorIf { activeFrames.size != 1 }
+            return activeFrames.first()
+        }
 
     override fun setEvents(state: ScriptInstance.EventStates, vararg events: Script.Events) {
         events.forEach { eventsWithStates[it] = state }

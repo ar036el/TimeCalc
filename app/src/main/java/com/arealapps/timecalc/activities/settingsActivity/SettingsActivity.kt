@@ -10,6 +10,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import com.arealapps.timecalc.R
 import com.arealapps.timecalc.activities.settingsActivity.ui.SelectAutoCollapseUnitsDialog
 import com.arealapps.timecalc.calculation_engine.timeExpression.TimeExpressionConfig
@@ -135,9 +136,9 @@ class SettingsActivity : AppCompatActivity() {
         val nextButton: ImageButton = findViewById(R.id.setting_calculatorTheme_next)
         val thumbnail: ImageButton = findViewById(R.id.setting_calculatorTheme_thumbnail)
         val thumbnailResOptions = listOf(
-            R.drawable.crap_theme_0,
-            R.drawable.crap_theme_1,
-            R.drawable.crap_theme_2,
+            R.color.theme0_colorPrimary,
+            R.color.theme1_colorPrimaryDark,
+            R.color.theme2_colorPrimaryDark,
         )
         val pref = calcPrefsManager.calculatorTheme
         val prefPossibleIndices = pref.possibleValues!!
@@ -147,7 +148,7 @@ class SettingsActivity : AppCompatActivity() {
             errorIf { newIndex !in prefPossibleIndices }
             prevButton.isEnabled = (newIndex != 0)
             nextButton.isEnabled = (newIndex != prefPossibleIndices.last())
-            thumbnail.setImageResource(thumbnailResOptions[newIndex])
+            thumbnail.setColorFilter(ContextCompat.getColor(this, thumbnailResOptions[newIndex]), android.graphics.PorterDuff.Mode.SRC_IN);
             pref.value = newIndex
         }
 

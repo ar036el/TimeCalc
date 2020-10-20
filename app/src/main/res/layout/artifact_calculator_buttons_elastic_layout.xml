@@ -309,13 +309,15 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <Button
+                    android:visibility="invisible"
                     style="?themedStyle_calculator_buttonTimeUnit"
                     android:id="@+id/timeUnitButtonMillisecond"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onCalculatorSymbolButtonClick"
                     android:tag="l"
-                    android:text="milli" />
+                    android:text="@string/calculator_timeUnit_millisecond_title"
+                    />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/timeUnitButtonsTopRow"
@@ -329,7 +331,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="d"
-                        android:text="day"
+                        android:text="@string/calculator_timeUnit_day_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonHour"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -341,7 +343,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="h"
-                        android:text="hour"
+                        android:text="@string/calculator_timeUnit_hour_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonMinute"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonDay1"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -353,7 +355,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="m"
-                        android:text="minute"
+                        android:text="@string/calculator_timeUnit_minute_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonSecond"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonHour"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -365,7 +367,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="s"
-                        android:text="second"
+                        android:text="@string/calculator_timeUnit_second_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonMinute"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -383,6 +385,7 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:visibility="invisible"
                     android:id="@+id/timeUnitButtonsBottomRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -394,7 +397,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="y"
-                        android:text="year"
+                        android:text="@string/calculator_timeUnit_year_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonMonth"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -406,7 +409,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="o"
-                        android:text="month"
+                        android:text="@string/calculator_timeUnit_month_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonWeek"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonYear"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -418,7 +421,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="w"
-                        android:text="week"
+                        android:text="@string/calculator_timeUnit_week_title"
                         app:layout_constraintEnd_toStartOf="@id/timeUnitButtonDay2"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonMonth"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -430,7 +433,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="onCalculatorSymbolButtonClick"
                         android:tag="d"
-                        android:text="day"
+                        android:text="@string/calculator_timeUnit_day_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/timeUnitButtonWeek"
                         app:layout_constraintTop_toTopOf="parent" />

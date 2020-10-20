@@ -17,10 +17,14 @@ import com.arealapps.timecalc.activities.settingsActivity.SettingsActivity
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinator
 import com.arealapps.timecalc.calculation_engine.calculatorCoordinator.CalculatorCoordinatorImpl
 import com.arealapps.timecalc.calculation_engine.expression.Expression
+import com.arealapps.timecalc.calculation_engine.result.MixedResult
+import com.arealapps.timecalc.calculation_engine.result.NumberResult
 import com.arealapps.timecalc.calculation_engine.result.Result
+import com.arealapps.timecalc.calculation_engine.result.TimeResult
 import com.arealapps.timecalc.helpers.android.stringFromRes
 import com.arealapps.timecalc.helpers.native_.LimitedAccessFunction
 import com.arealapps.timecalc.helpers.native_.initOnce
+import com.arealapps.timecalc.organize_later.tutoriaShowcase.data.Script
 import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.preferences_managers.parts.Preference
 import com.arealapps.timecalc.utils.preferences_managers.parts.PreferencesManager
@@ -161,6 +165,7 @@ class CalculatorActivity : AppCompatActivity() {
     private val calculatorCoordinatorListener = object: CalculatorCoordinator.Listener {
         override fun officialCalculationPerformed(expression: Expression, result: Result) {
             historyDrawerLayout.saveItem(expression, result)
+            notifyTutorialShowcaseManagerAboutResultChanges(result)
         }
     }
 
@@ -186,6 +191,25 @@ class CalculatorActivity : AppCompatActivity() {
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
         clipboard.setPrimaryClip(clip)
+    }
+
+    private fun notifyTutorialShowcaseManagerAboutResultChanges(result: Result) {
+        val events = mutableSetOf<Script.Events>()
+        when (result) {
+            is NumberResult -> {
+                events.add(Script.Events.CalculatedNumberResult)
+            }
+            is TimeResult -> {
+                events.add(Script.Events.CalculatedTimeResult)
+                events.add(Script.Events.TimeBlockAppeared)
+            }
+            is MixedResult -> {
+                events.add(Script.Events.CalculatedMixedResult)
+                events.add(Script.Events.TimeBlockAppeared)
+            }
+            else -> throw NotImplementedError()
+        }
+        rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvents(*events.toTypedArray())
     }
 
 }

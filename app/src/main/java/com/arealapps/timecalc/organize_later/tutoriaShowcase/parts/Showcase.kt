@@ -18,7 +18,7 @@ interface Showcase: HoldsListeners<Showcase.Listener> {
     fun finish()
 
     val framesContentData: FramesContentData
-    fun notifyEventWasOccurred(event: Script.Events)
+    fun notifyEventsWereOccurred(vararg events: Script.Events)
 
     interface Listener {
         fun stateWasChanged(subject: Showcase, newState: States)
@@ -61,10 +61,13 @@ class ShowcaseImpl(
         }
     }
 
-    override fun notifyEventWasOccurred(event: Script.Events) {
-        if (scriptInstance.getStateFor(event) == ScriptInstance.EventStates.NotIntroduced) {
-            scriptInstance.setEvents(ScriptInstance.EventStates.New, event)
+    override fun notifyEventsWereOccurred(vararg events: Script.Events) {
+        events.forEach { event ->
+            if (scriptInstance.getStateFor(event) == ScriptInstance.EventStates.NotIntroduced) {
+                scriptInstance.setEvents(ScriptInstance.EventStates.New, event)
+            }
         }
+
         if (!currentFrame.isRunning) {
             tryToInvokeFrameByNewEvents()
         }
@@ -98,7 +101,7 @@ class ShowcaseImpl(
             finishShowcase()
         }
 
-        val frameNextAction = Script.getFrameNextAction(frame)
+        val frameNextAction = Script.getFrameNextAction(frame, scriptInstance)
         when (frameNextAction) {
             is Script.FrameActions.GoToNextFrame -> showFrame(frameNextAction.frame)
             is Script.FrameActions.WaitForEvent -> setToWaitForEvent()

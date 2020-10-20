@@ -68,6 +68,8 @@ class ButtonsContainerTopPartImpl(activity: CalculatorActivity, initScrollPercen
             val buttonWidth = button3.width
             val distanceBetweenButtons = button4.x - button3.x - buttonWidth
 
+            container.visibility = View.VISIBLE
+
             hiddenButtonRight.visibility = View.VISIBLE
             hiddenButtonRight.x = button4.x + buttonWidth + distanceBetweenButtons
             hiddenButtonRight.y = button4.y
@@ -91,6 +93,8 @@ class ButtonsContainerTopPartImpl(activity: CalculatorActivity, initScrollPercen
         }
 
         init {
+            buttonsContainer.visibility = View.VISIBLE
+
             minX = buttonsContainer.width.toFloat()
             maxX = buttonsContainer.x
 //                buttonsContainer.x = minX

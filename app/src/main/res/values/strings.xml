@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Timey - Time Calculator</string>
+    <string name="app_name">Time Calculator</string>
 
 
     <string name="calculator_digit_1">1</string>
@@ -50,7 +50,7 @@
     <string name="calculator_timeUnit_month_full">months</string>
     <string name="calculator_timeUnit_year_full">years</string>
 
-    <string name="calculator_timeUnit_millisecond_title">Millisecond</string>
+    <string name="calculator_timeUnit_millisecond_title">Milli</string>
     <string name="calculator_timeUnit_second_title">Second</string>
     <string name="calculator_timeUnit_minute_title">Minute</string>
     <string name="calculator_timeUnit_hour_title">Hour</string>
@@ -120,25 +120,25 @@
     <string name="showcaseTutorial_frame0_content">First, let\'s have a fast tutorial</string>
 
     <string name="showcaseTutorial_frame1a">Those are the action keys, use them like any other calculator.</string>
-    <string name="showcaseTutorial_frame1b">Those are time units. each converts a number into a time value.\ne.g. 30 + minutes, 2 + hours, etc.</string>
-    <string name="showcaseTutorial_frame1c">The time bar has a drawer that contains other time units you can use. Slide it down to open it.</string>
+    <string name="showcaseTutorial_frame1b">This is a Time Unit. each converts a number into a time value.\ne.g. 30 + minutes, 2 + hours, etc.</string>
+    <string name="showcaseTutorial_frame1c">The Time Bar has a drawer that contains other time units you can use. Later, you slide it down to open it.</string>
     <string name="showcaseTutorial_frame2a1">First, try calculating an expression like a normal calculator, without using time units.\nPress [5][+][7]\nand press [=]</string>
     <string name="showcaseTutorial_frame2a2">Great! this is a Simple Number Result.</string>
     <string name="showcaseTutorial_frame2b1">Now, make a Time Result by using time units from the Time Bar.\nPress [5][hour][5][minutes][x][2]\nand press [=]</string>
     <string name="showcaseTutorial_frame2b2">Great! this is a Time Result</string>
-    <string name="showcaseTutorial_frame2c1">Now, make something unique- a Mixed Result.\nPress [5][seconds][+][3]</string>
+    <string name="showcaseTutorial_frame2c1">Now, make something unique- a Mixed Result.\nPress [5][seconds][+][3]\nand press [=]</string>
     <string name="showcaseTutorial_frame2c2">This is a Mixed Result!\nTime values and simple numbers cannot be mixed with +/- solely, so when this happens, the result may look like this.</string>
-    <string name="showcaseTutorial_frame3a">Those are Time Blocks. Every block in your result represents a single time value.</string>
-    <string name="showcaseTutorial_frame3b1">Sometimes you want to convert the time result to a smaller unit (e.g. 1 day -> 24 hours -> 1440 minutes and so on).\nFor that, you need to collapse the block.\nClick on one of the time blocks.</string>
-    <string name="showcaseTutorial_frame3b2">You just collapsed a time block!</string>
+    <string name="showcaseTutorial_frame3a">Those are Time Blocks. Each represents a single time value.</string>
+    <string name="showcaseTutorial_frame3b1">Sometimes you want to convert the time result to a smaller unit (e.g. 1 day -> 24 hours -> 1440 minutes and so on).\nFor that, you need to collapse the block.\n\nClick on one of the time blocks.</string>
+    <string name="showcaseTutorial_frame3b2">You just collapsed a time block!\nYou can keep collapsing until you\'ve reached milliseconds.</string>
     <string name="showcaseTutorial_frame3c1">Now, restore the collapsed block into it\'s original shape. Double click on the collapsed block.</string>
     <string name="showcaseTutorial_frame3c2">Great! The block was revealed</string>
     <string name="showcaseTutorial_frame4a_title">History</string>
-    <string name="showcaseTutorial_frame4a_content">Access all previous calculations. you can also copy them to clipboard from there.</string>
+    <string name="showcaseTutorial_frame4a_content">From here you can access all previous calculations. There\'s an option there to also copy them into your clipboard.</string>
     <string name="showcaseTutorial_frame4b_title">Settings</string>
     <string name="showcaseTutorial_frame4b_content">Custom themes, other time conversions and more.</string>
     <string name="showcaseTutorial_frame5_title">That\'s it!</string>
-    <string name="showcaseTutorial_frame5_content">Enjoy our app!\nDon\'t forget to rate us in the app store ❤</string>
+    <string name="showcaseTutorial_frame5_content">Enjoy our app!</string>
 <!--    todo eehhh?? ya sure to write it like this with the rate us??-->
 
 

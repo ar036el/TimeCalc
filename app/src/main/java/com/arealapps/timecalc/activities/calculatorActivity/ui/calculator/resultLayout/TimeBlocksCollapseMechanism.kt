@@ -7,10 +7,6 @@ import com.arealapps.timecalc.calculation_engine.basics.MutableTimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.Num
 import com.arealapps.timecalc.calculation_engine.basics.TimeVariable
 import com.arealapps.timecalc.calculation_engine.basics.createZero
-import com.arealapps.timecalc.calculation_engine.result.MixedResult
-import com.arealapps.timecalc.calculation_engine.result.NumberResult
-import com.arealapps.timecalc.calculation_engine.result.Result
-import com.arealapps.timecalc.calculation_engine.result.TimeResult
 import com.arealapps.timecalc.calculation_engine.symbol.TimeUnit
 import com.arealapps.timecalc.helpers.native_.*
 import com.arealapps.timecalc.organize_later.tutoriaShowcase.data.Script
@@ -18,17 +14,17 @@ import com.arealapps.timecalc.rootUtils
 import com.arealapps.timecalc.utils.PercentAnimation
 import com.arealapps.timecalc.utils.isRunning
 
-interface CollapseMechanism {
+interface TimeBlocksCollapseMechanism {
     fun initTimeBlocksForNewResult(currentResultAsTimeExpression: TimeExpression, blocksToAutoCollapseOnInit: TimeVariable<Boolean>)
     fun tryToCollapseTimeBlockWithAnimation(target: TimeBlock)
     fun tryToRevealTimeBlockWithAnimation(target: TimeBlock)
 }
 
-class CollapseMechanismImpl(
+class TimeBlocksCollapseMechanismImpl(
     private val timeBlocks: TimeVariable<TimeBlock>,
     private var currentResultAsTimeExpression: TimeExpression,
     private val doWhenChanged: () -> Unit
-) : CollapseMechanism {
+) : TimeBlocksCollapseMechanism {
 
     private val TIMEBLOCK_VISIBILITY_THRESHOLD = 0.3
     private val VISIBITITY_ANIMATION_DURATION = 200L
@@ -282,23 +278,29 @@ class CollapseMechanismImpl(
 
     //todo needs to be outside, from a listener (state was updated)
     private fun notifyTutorialShowcaseManagerAboutTimeBlockStateChange(timeBlock: TimeBlock, state: TimeBlockStates, prevState: TimeBlockStates) {
-        if (!rootUtils.tutorialShowcaseManager.isRunning) return
+        if (!rootUtils.tutorialShowcaseManager.isRunning || state == TimeBlockStates.HiddenEmpty) return
 
         var event: Script.Events? = null
+        var useAsTimeBlockTarget = false
 
-        if (state == TimeBlockStates.Maximized && prevState == TimeBlockStates.Normal) {
+        if (state == TimeBlockStates.Maximized && prevState in setOf(TimeBlockStates.Normal, TimeBlockStates.HiddenEmpty)) {
             event = Script.Events.CollapsedTimeBlock
+            useAsTimeBlockTarget = true
         }
         else if (state == TimeBlockStates.Normal && prevState == TimeBlockStates.Collapsed) {
             event = Script.Events.RevealedTimeBlock
+            useAsTimeBlockTarget = true
         }
         else if (state in setOf(TimeBlockStates.Normal, TimeBlockStates.Maximized) && prevState == TimeBlockStates.HiddenEmpty) {
-            event = Script.Events.TimeBlockAppeared
+            useAsTimeBlockTarget = true
+        }
+
+        if (useAsTimeBlockTarget) {
+            rootUtils.tutorialShowcaseManager.doIfRunning()?.framesContentData?.timeBlockTarget = timeBlock.getBlockView()
         }
 
         if (event != null) {
-            rootUtils.tutorialShowcaseManager.doIfRunning()?.framesContentData?.timeBlockTarget = timeBlock.getBlockView()
-            rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvent(event)
+            rootUtils.tutorialShowcaseManager.doIfRunning()?.notifyEvents(event)
         }
     }
 
