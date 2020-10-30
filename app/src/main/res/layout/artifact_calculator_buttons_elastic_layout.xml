@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.arealapps.timecalc.utils.swipeGestureHandler.TouchSurfaceLayout
+    <com.arealapps.timecalculator.utils.swipeGestureHandler.TouchSurfaceLayout
         android:id="@+id/touchSurface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -463,6 +463,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </com.arealapps.timecalc.utils.swipeGestureHandler.TouchSurfaceLayout>
+    </com.arealapps.timecalculator.utils.swipeGestureHandler.TouchSurfaceLayout>
 
 </LinearLayout>

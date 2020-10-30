@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.arealapps.timecalc">
+    package="com.arealapps.timecalculator">
 
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
-        android:name="com.arealapps.timecalc.AppRoot"
+        android:name="com.arealapps.timecalculator.AppRoot"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,25 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme0_Default">
 
-        <activity android:name="com.arealapps.timecalc.activities.calculatorActivity.CalculatorActivity">
+        <activity android:name="com.arealapps.timecalculator.activities.calculatorActivity.CalculatorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.arealapps.timecalc.activities.settingsActivity.SettingsActivity"/>
-        <activity android:name="com.arealapps.timecalc.TestingActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+        <activity android:name="com.arealapps.timecalculator.activities.settingsActivity.SettingsActivity"/>
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
-
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9977856148079152~9885149214"/>

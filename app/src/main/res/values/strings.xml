@@ -71,14 +71,14 @@
         <item>29 Days</item>
         <item>30 Days</item>
         <item>31 Days</item>
-        <item>Average (30.8888009crap)</item>
+        <item>Average (30.42)</item>
     </string-array>
 
     <string-array name="options_daysInAYear">
         <!--Don't change this order, or this will misbehave!-->
         <item>365 Days</item>
         <item>366 Days</item>
-        <item>average (365.8888009crap)</item>
+        <item>average (365.2422)</item>
     </string-array>
 
 
@@ -95,6 +95,8 @@
     <string name="settings_sendFeedback">Send quick feedback</string>
     <string name="settings_contactUs">Contact Us</string>
     <string name="settings_privacyPolicy">Privacy Policy</string>
+    <string name="settings_restartTutorialShowcase">Restart tutorial showcase</string>
+    <string name="settings_restartTutorialShowcase_Message">Tutorial showcase will be restarted</string>
 
 
     <string name="buyPremium_purchasingNotAvailableMessage">Sorry, Purchasing is not available right now.\nCheck your internet connection or try again later</string>

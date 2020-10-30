@@ -1,0 +1,4 @@
+package com.arealapps.timecalculator.helpers.meta
+
+@Target(AnnotationTarget.FUNCTION)
+annotation class TestedPrivateFunctionWithNoSideEffects

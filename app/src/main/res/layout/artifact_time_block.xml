@@ -31,7 +31,7 @@
                     android:layout_margin="1dp"
                     android:scaleType="fitCenter"
                     style="?themedStyle_calculator_sideIcons"
-                    android:src="@drawable/ic_dot_crap" />
+                    android:src="@drawable/timeblock_maximized_dot" />
 
                 <LinearLayout
                     android:id="@+id/timeResultBlock_background"

@@ -55,8 +55,8 @@
     <color name="theme0_iconTint">#6E6E6E</color>
 
 
-    <color name="theme1_colorPrimary">#D3D3D3</color>
-    <color name="theme1_colorPrimaryDark">#A5A5A5</color>
+    <color name="theme1_colorPrimary">#BCBCBC</color>
+    <color name="theme1_colorPrimaryDark">#A6A6A6</color>
     <color name="theme1_colorAccent">#F3EAD6</color>
     <color name="theme1_colorPrimaryLight">#939393</color>
     <color name="theme1_background">#FFFFFF</color>
